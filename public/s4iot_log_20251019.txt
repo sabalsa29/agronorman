@@ -1,0 +1,7150 @@
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760853392",
+    "fecha": "2025-10-19 00:00:01",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760853392",
+        "temp_npk_lv1": 793,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 79,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1360,
+        "hum_sns_lv1": 8111,
+        "co2_sns_lv1": 48181,
+        "fecha": "25\/10\/19,05:56:32-24",
+        "voltaje": 4119,
+        "contador_mnsj": 166,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760853801",
+    "fecha": "2025-10-19 00:03:27",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760853801",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 1966,
+        "hum_sns_lv1": 7316,
+        "co2_sns_lv1": 33225,
+        "fecha": "25\/10\/19,06:03:21-24",
+        "voltaje": 4093,
+        "contador_mnsj": 19,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760853801",
+    "fecha": "2025-10-19 00:04:28",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760853801",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 1966,
+        "hum_sns_lv1": 7316,
+        "co2_sns_lv1": 33225,
+        "fecha": "25\/10\/19,06:03:21-24",
+        "voltaje": 4093,
+        "contador_mnsj": 19,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760853801",
+    "fecha": "2025-10-19 00:06:30",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760853801",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 1966,
+        "hum_sns_lv1": 7316,
+        "co2_sns_lv1": 33225,
+        "fecha": "25\/10\/19,06:03:21-24",
+        "voltaje": 4093,
+        "contador_mnsj": 19,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760854189",
+    "fecha": "2025-10-19 00:09:56",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760854189",
+        "temp_npk_lv1": 793,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 79,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1342,
+        "hum_sns_lv1": 8127,
+        "co2_sns_lv1": 48353,
+        "fecha": "25\/10\/19,06:09:49-24",
+        "voltaje": 4107,
+        "contador_mnsj": 167,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760854189",
+    "fecha": "2025-10-19 00:11:00",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760854189",
+        "temp_npk_lv1": 793,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 79,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1342,
+        "hum_sns_lv1": 8127,
+        "co2_sns_lv1": 48353,
+        "fecha": "25\/10\/19,06:09:49-24",
+        "voltaje": 4107,
+        "contador_mnsj": 167,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760854189",
+    "fecha": "2025-10-19 00:13:07",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760854189",
+        "temp_npk_lv1": 793,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 79,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1342,
+        "hum_sns_lv1": 8127,
+        "co2_sns_lv1": 48353,
+        "fecha": "25\/10\/19,06:09:49-24",
+        "voltaje": 4107,
+        "contador_mnsj": 167,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760854598",
+    "fecha": "2025-10-19 00:16:45",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760854598",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1972,
+        "hum_sns_lv1": 7505,
+        "co2_sns_lv1": 34026,
+        "fecha": "25\/10\/19,06:16:38-24",
+        "voltaje": 4087,
+        "contador_mnsj": 20,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760854598",
+    "fecha": "2025-10-19 00:17:54",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760854598",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1972,
+        "hum_sns_lv1": 7505,
+        "co2_sns_lv1": 34026,
+        "fecha": "25\/10\/19,06:16:38-24",
+        "voltaje": 4087,
+        "contador_mnsj": 20,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760854598",
+    "fecha": "2025-10-19 00:19:58",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760854598",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1972,
+        "hum_sns_lv1": 7505,
+        "co2_sns_lv1": 34026,
+        "fecha": "25\/10\/19,06:16:38-24",
+        "voltaje": 4087,
+        "contador_mnsj": 20,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760854987",
+    "fecha": "2025-10-19 00:23:13",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760854987",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1322,
+        "hum_sns_lv1": 8127,
+        "co2_sns_lv1": 48662,
+        "fecha": "25\/10\/19,06:23:07-24",
+        "voltaje": 4116,
+        "contador_mnsj": 168,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760854987",
+    "fecha": "2025-10-19 00:24:19",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760854987",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1322,
+        "hum_sns_lv1": 8127,
+        "co2_sns_lv1": 48662,
+        "fecha": "25\/10\/19,06:23:07-24",
+        "voltaje": 4116,
+        "contador_mnsj": 168,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760854987",
+    "fecha": "2025-10-19 00:26:30",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760854987",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 625,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1322,
+        "hum_sns_lv1": 8127,
+        "co2_sns_lv1": 48662,
+        "fecha": "25\/10\/19,06:23:07-24",
+        "voltaje": 4116,
+        "contador_mnsj": 168,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760855397",
+    "fecha": "2025-10-19 00:30:04",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760855397",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1945,
+        "hum_sns_lv1": 7869,
+        "co2_sns_lv1": 32179,
+        "fecha": "25\/10\/19,06:29:57-24",
+        "voltaje": 4090,
+        "contador_mnsj": 21,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760855397",
+    "fecha": "2025-10-19 00:31:08",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760855397",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1945,
+        "hum_sns_lv1": 7869,
+        "co2_sns_lv1": 32179,
+        "fecha": "25\/10\/19,06:29:57-24",
+        "voltaje": 4090,
+        "contador_mnsj": 21,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760855397",
+    "fecha": "2025-10-19 00:33:03",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760855397",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1945,
+        "hum_sns_lv1": 7869,
+        "co2_sns_lv1": 32179,
+        "fecha": "25\/10\/19,06:29:57-24",
+        "voltaje": 4090,
+        "contador_mnsj": 21,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760855784",
+    "fecha": "2025-10-19 00:36:30",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760855784",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1310,
+        "hum_sns_lv1": 8142,
+        "co2_sns_lv1": 48739,
+        "fecha": "25\/10\/19,06:36:24-24",
+        "voltaje": 4116,
+        "contador_mnsj": 169,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760855784",
+    "fecha": "2025-10-19 00:37:37",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760855784",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1310,
+        "hum_sns_lv1": 8142,
+        "co2_sns_lv1": 48739,
+        "fecha": "25\/10\/19,06:36:24-24",
+        "voltaje": 4116,
+        "contador_mnsj": 169,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760855784",
+    "fecha": "2025-10-19 00:39:54",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760855784",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1310,
+        "hum_sns_lv1": 8142,
+        "co2_sns_lv1": 48739,
+        "fecha": "25\/10\/19,06:36:24-24",
+        "voltaje": 4116,
+        "contador_mnsj": 169,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760856195",
+    "fecha": "2025-10-19 00:43:21",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760856195",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1932,
+        "hum_sns_lv1": 8005,
+        "co2_sns_lv1": 31794,
+        "fecha": "25\/10\/19,06:43:15-24",
+        "voltaje": 4091,
+        "contador_mnsj": 22,
+        "ber": 99,
+        "rssi": 31,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760856195",
+    "fecha": "2025-10-19 00:44:27",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760856195",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1932,
+        "hum_sns_lv1": 8005,
+        "co2_sns_lv1": 31794,
+        "fecha": "25\/10\/19,06:43:15-24",
+        "voltaje": 4091,
+        "contador_mnsj": 22,
+        "ber": 99,
+        "rssi": 31,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760856195",
+    "fecha": "2025-10-19 00:46:36",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760856195",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1932,
+        "hum_sns_lv1": 8005,
+        "co2_sns_lv1": 31794,
+        "fecha": "25\/10\/19,06:43:15-24",
+        "voltaje": 4091,
+        "contador_mnsj": 22,
+        "ber": 99,
+        "rssi": 31,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760856581",
+    "fecha": "2025-10-19 00:49:48",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760856581",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1303,
+        "hum_sns_lv1": 8134,
+        "co2_sns_lv1": 48898,
+        "fecha": "25\/10\/19,06:49:41-24",
+        "voltaje": 4116,
+        "contador_mnsj": 170,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760856581",
+    "fecha": "2025-10-19 00:50:52",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760856581",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1303,
+        "hum_sns_lv1": 8134,
+        "co2_sns_lv1": 48898,
+        "fecha": "25\/10\/19,06:49:41-24",
+        "voltaje": 4116,
+        "contador_mnsj": 170,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760856581",
+    "fecha": "2025-10-19 00:52:44",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760856581",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 78,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1303,
+        "hum_sns_lv1": 8134,
+        "co2_sns_lv1": 48898,
+        "fecha": "25\/10\/19,06:49:41-24",
+        "voltaje": 4116,
+        "contador_mnsj": 170,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760856993",
+    "fecha": "2025-10-19 00:57:41",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760856993",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1919,
+        "hum_sns_lv1": 8101,
+        "co2_sns_lv1": 32955,
+        "fecha": "25\/10\/19,06:56:33-24",
+        "voltaje": 4090,
+        "contador_mnsj": 23,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760856993",
+    "fecha": "2025-10-19 00:58:40",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760856993",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1919,
+        "hum_sns_lv1": 8101,
+        "co2_sns_lv1": 32955,
+        "fecha": "25\/10\/19,06:56:33-24",
+        "voltaje": 4090,
+        "contador_mnsj": 23,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760856993",
+    "fecha": "2025-10-19 01:00:45",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760856993",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1919,
+        "hum_sns_lv1": 8101,
+        "co2_sns_lv1": 32955,
+        "fecha": "25\/10\/19,06:56:33-24",
+        "voltaje": 4090,
+        "contador_mnsj": 23,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760857378",
+    "fecha": "2025-10-19 01:03:05",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760857378",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 77,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1293,
+        "hum_sns_lv1": 8165,
+        "co2_sns_lv1": 48836,
+        "fecha": "25\/10\/19,07:02:58-24",
+        "voltaje": 4115,
+        "contador_mnsj": 171,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760857378",
+    "fecha": "2025-10-19 01:04:11",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760857378",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 77,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1293,
+        "hum_sns_lv1": 8165,
+        "co2_sns_lv1": 48836,
+        "fecha": "25\/10\/19,07:02:58-24",
+        "voltaje": 4115,
+        "contador_mnsj": 171,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760857378",
+    "fecha": "2025-10-19 01:06:16",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760857378",
+        "temp_npk_lv1": 792,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 77,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1293,
+        "hum_sns_lv1": 8165,
+        "co2_sns_lv1": 48836,
+        "fecha": "25\/10\/19,07:02:58-24",
+        "voltaje": 4115,
+        "contador_mnsj": 171,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760857853",
+    "fecha": "2025-10-19 01:10:59",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760857853",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 222,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1921,
+        "hum_sns_lv1": 8108,
+        "co2_sns_lv1": 32588,
+        "fecha": "25\/10\/19,07:10:53-24",
+        "voltaje": 4082,
+        "contador_mnsj": 24,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760857853",
+    "fecha": "2025-10-19 01:12:05",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760857853",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 222,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1921,
+        "hum_sns_lv1": 8108,
+        "co2_sns_lv1": 32588,
+        "fecha": "25\/10\/19,07:10:53-24",
+        "voltaje": 4082,
+        "contador_mnsj": 24,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760857853",
+    "fecha": "2025-10-19 01:13:55",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760857853",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 222,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1921,
+        "hum_sns_lv1": 8108,
+        "co2_sns_lv1": 32588,
+        "fecha": "25\/10\/19,07:10:53-24",
+        "voltaje": 4082,
+        "contador_mnsj": 24,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760858176",
+    "fecha": "2025-10-19 01:16:23",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760858176",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 77,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1290,
+        "hum_sns_lv1": 8166,
+        "co2_sns_lv1": 49103,
+        "fecha": "25\/10\/19,07:16:16-24",
+        "voltaje": 4113,
+        "contador_mnsj": 172,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760858176",
+    "fecha": "2025-10-19 01:17:22",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760858176",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 77,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1290,
+        "hum_sns_lv1": 8166,
+        "co2_sns_lv1": 49103,
+        "fecha": "25\/10\/19,07:16:16-24",
+        "voltaje": 4113,
+        "contador_mnsj": 172,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760858176",
+    "fecha": "2025-10-19 01:19:30",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760858176",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 77,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1290,
+        "hum_sns_lv1": 8166,
+        "co2_sns_lv1": 49103,
+        "fecha": "25\/10\/19,07:16:16-24",
+        "voltaje": 4113,
+        "contador_mnsj": 172,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760858650",
+    "fecha": "2025-10-19 01:24:17",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760858650",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1918,
+        "hum_sns_lv1": 8114,
+        "co2_sns_lv1": 33144,
+        "fecha": "25\/10\/19,07:24:10-24",
+        "voltaje": 4089,
+        "contador_mnsj": 25,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760858650",
+    "fecha": "2025-10-19 01:25:26",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760858650",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1918,
+        "hum_sns_lv1": 8114,
+        "co2_sns_lv1": 33144,
+        "fecha": "25\/10\/19,07:24:10-24",
+        "voltaje": 4089,
+        "contador_mnsj": 25,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760858650",
+    "fecha": "2025-10-19 01:27:30",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760858650",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1918,
+        "hum_sns_lv1": 8114,
+        "co2_sns_lv1": 33144,
+        "fecha": "25\/10\/19,07:24:10-24",
+        "voltaje": 4089,
+        "contador_mnsj": 25,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760858974",
+    "fecha": "2025-10-19 01:29:40",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760858974",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1289,
+        "hum_sns_lv1": 8172,
+        "co2_sns_lv1": 49595,
+        "fecha": "25\/10\/19,07:29:34-24",
+        "voltaje": 4112,
+        "contador_mnsj": 173,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760858974",
+    "fecha": "2025-10-19 01:30:50",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760858974",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1289,
+        "hum_sns_lv1": 8172,
+        "co2_sns_lv1": 49595,
+        "fecha": "25\/10\/19,07:29:34-24",
+        "voltaje": 4112,
+        "contador_mnsj": 173,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760858974",
+    "fecha": "2025-10-19 01:32:48",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760858974",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1289,
+        "hum_sns_lv1": 8172,
+        "co2_sns_lv1": 49595,
+        "fecha": "25\/10\/19,07:29:34-24",
+        "voltaje": 4112,
+        "contador_mnsj": 173,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760859448",
+    "fecha": "2025-10-19 01:37:34",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760859448",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1925,
+        "hum_sns_lv1": 8090,
+        "co2_sns_lv1": 32634,
+        "fecha": "25\/10\/19,07:37:28-24",
+        "voltaje": 4086,
+        "contador_mnsj": 26,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760859448",
+    "fecha": "2025-10-19 01:38:40",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760859448",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1925,
+        "hum_sns_lv1": 8090,
+        "co2_sns_lv1": 32634,
+        "fecha": "25\/10\/19,07:37:28-24",
+        "voltaje": 4086,
+        "contador_mnsj": 26,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760859448",
+    "fecha": "2025-10-19 01:40:45",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760859448",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1925,
+        "hum_sns_lv1": 8090,
+        "co2_sns_lv1": 32634,
+        "fecha": "25\/10\/19,07:37:28-24",
+        "voltaje": 4086,
+        "contador_mnsj": 26,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760859771",
+    "fecha": "2025-10-19 01:42:58",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760859771",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1283,
+        "hum_sns_lv1": 8188,
+        "co2_sns_lv1": 48872,
+        "fecha": "25\/10\/19,07:42:51-24",
+        "voltaje": 4102,
+        "contador_mnsj": 174,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760859771",
+    "fecha": "2025-10-19 01:44:08",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760859771",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1283,
+        "hum_sns_lv1": 8188,
+        "co2_sns_lv1": 48872,
+        "fecha": "25\/10\/19,07:42:51-24",
+        "voltaje": 4102,
+        "contador_mnsj": 174,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760859771",
+    "fecha": "2025-10-19 01:46:11",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760859771",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1283,
+        "hum_sns_lv1": 8188,
+        "co2_sns_lv1": 48872,
+        "fecha": "25\/10\/19,07:42:51-24",
+        "voltaje": 4102,
+        "contador_mnsj": 174,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760860246",
+    "fecha": "2025-10-19 01:50:52",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760860246",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1933,
+        "hum_sns_lv1": 8099,
+        "co2_sns_lv1": 31756,
+        "fecha": "25\/10\/19,07:50:46-24",
+        "voltaje": 4082,
+        "contador_mnsj": 27,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760860246",
+    "fecha": "2025-10-19 01:51:55",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760860246",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1933,
+        "hum_sns_lv1": 8099,
+        "co2_sns_lv1": 31756,
+        "fecha": "25\/10\/19,07:50:46-24",
+        "voltaje": 4082,
+        "contador_mnsj": 27,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760860246",
+    "fecha": "2025-10-19 01:53:52",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760860246",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1933,
+        "hum_sns_lv1": 8099,
+        "co2_sns_lv1": 31756,
+        "fecha": "25\/10\/19,07:50:46-24",
+        "voltaje": 4082,
+        "contador_mnsj": 27,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760860569",
+    "fecha": "2025-10-19 01:56:15",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760860569",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1275,
+        "hum_sns_lv1": 8186,
+        "co2_sns_lv1": 49285,
+        "fecha": "25\/10\/19,07:56:09-24",
+        "voltaje": 4110,
+        "contador_mnsj": 175,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760860569",
+    "fecha": "2025-10-19 01:57:18",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760860569",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1275,
+        "hum_sns_lv1": 8186,
+        "co2_sns_lv1": 49285,
+        "fecha": "25\/10\/19,07:56:09-24",
+        "voltaje": 4110,
+        "contador_mnsj": 175,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760860569",
+    "fecha": "2025-10-19 01:59:36",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760860569",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 259,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 76,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1275,
+        "hum_sns_lv1": 8186,
+        "co2_sns_lv1": 49285,
+        "fecha": "25\/10\/19,07:56:09-24",
+        "voltaje": 4110,
+        "contador_mnsj": 175,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760861044",
+    "fecha": "2025-10-19 02:04:11",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760861044",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8113,
+        "co2_sns_lv1": 32066,
+        "fecha": "25\/10\/19,08:04:04-24",
+        "voltaje": 4080,
+        "contador_mnsj": 28,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760861044",
+    "fecha": "2025-10-19 02:05:12",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760861044",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8113,
+        "co2_sns_lv1": 32066,
+        "fecha": "25\/10\/19,08:04:04-24",
+        "voltaje": 4080,
+        "contador_mnsj": 28,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760861044",
+    "fecha": "2025-10-19 02:07:10",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760861044",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8113,
+        "co2_sns_lv1": 32066,
+        "fecha": "25\/10\/19,08:04:04-24",
+        "voltaje": 4080,
+        "contador_mnsj": 28,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760861366",
+    "fecha": "2025-10-19 02:09:33",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760861366",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1256,
+        "hum_sns_lv1": 8198,
+        "co2_sns_lv1": 48369,
+        "fecha": "25\/10\/19,08:09:26-24",
+        "voltaje": 4107,
+        "contador_mnsj": 176,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760861366",
+    "fecha": "2025-10-19 02:10:39",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760861366",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1256,
+        "hum_sns_lv1": 8198,
+        "co2_sns_lv1": 48369,
+        "fecha": "25\/10\/19,08:09:26-24",
+        "voltaje": 4107,
+        "contador_mnsj": 176,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760861366",
+    "fecha": "2025-10-19 02:12:38",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760861366",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1256,
+        "hum_sns_lv1": 8198,
+        "co2_sns_lv1": 48369,
+        "fecha": "25\/10\/19,08:09:26-24",
+        "voltaje": 4107,
+        "contador_mnsj": 176,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760861842",
+    "fecha": "2025-10-19 02:18:36",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760861842",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1940,
+        "hum_sns_lv1": 8135,
+        "co2_sns_lv1": 32451,
+        "fecha": "25\/10\/19,08:17:22-24",
+        "voltaje": 4086,
+        "contador_mnsj": 29,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760861842",
+    "fecha": "2025-10-19 02:19:41",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760861842",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1940,
+        "hum_sns_lv1": 8135,
+        "co2_sns_lv1": 32451,
+        "fecha": "25\/10\/19,08:17:22-24",
+        "voltaje": 4086,
+        "contador_mnsj": 29,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760861842",
+    "fecha": "2025-10-19 02:21:50",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760861842",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1148,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1940,
+        "hum_sns_lv1": 8135,
+        "co2_sns_lv1": 32451,
+        "fecha": "25\/10\/19,08:17:22-24",
+        "voltaje": 4086,
+        "contador_mnsj": 29,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760862163",
+    "fecha": "2025-10-19 02:22:50",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760862163",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1248,
+        "hum_sns_lv1": 8224,
+        "co2_sns_lv1": 49671,
+        "fecha": "25\/10\/19,08:22:43-24",
+        "voltaje": 4109,
+        "contador_mnsj": 177,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760862163",
+    "fecha": "2025-10-19 02:23:58",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760862163",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1248,
+        "hum_sns_lv1": 8224,
+        "co2_sns_lv1": 49671,
+        "fecha": "25\/10\/19,08:22:43-24",
+        "voltaje": 4109,
+        "contador_mnsj": 177,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760862163",
+    "fecha": "2025-10-19 02:26:14",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760862163",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 626,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1248,
+        "hum_sns_lv1": 8224,
+        "co2_sns_lv1": 49671,
+        "fecha": "25\/10\/19,08:22:43-24",
+        "voltaje": 4109,
+        "contador_mnsj": 177,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760862707",
+    "fecha": "2025-10-19 02:31:54",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760862707",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1898,
+        "hum_sns_lv1": 8230,
+        "co2_sns_lv1": 33599,
+        "fecha": "25\/10\/19,08:31:47-24",
+        "voltaje": 4086,
+        "contador_mnsj": 30,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760862707",
+    "fecha": "2025-10-19 02:32:57",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760862707",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1898,
+        "hum_sns_lv1": 8230,
+        "co2_sns_lv1": 33599,
+        "fecha": "25\/10\/19,08:31:47-24",
+        "voltaje": 4086,
+        "contador_mnsj": 30,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760862707",
+    "fecha": "2025-10-19 02:34:48",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760862707",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 597,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1898,
+        "hum_sns_lv1": 8230,
+        "co2_sns_lv1": 33599,
+        "fecha": "25\/10\/19,08:31:47-24",
+        "voltaje": 4086,
+        "contador_mnsj": 30,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760862961",
+    "fecha": "2025-10-19 02:36:07",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760862961",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1259,
+        "hum_sns_lv1": 8235,
+        "co2_sns_lv1": 48161,
+        "fecha": "25\/10\/19,08:36:01-24",
+        "voltaje": 4096,
+        "contador_mnsj": 178,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760862961",
+    "fecha": "2025-10-19 02:37:08",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760862961",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1259,
+        "hum_sns_lv1": 8235,
+        "co2_sns_lv1": 48161,
+        "fecha": "25\/10\/19,08:36:01-24",
+        "voltaje": 4096,
+        "contador_mnsj": 178,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760862961",
+    "fecha": "2025-10-19 02:39:21",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760862961",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1259,
+        "hum_sns_lv1": 8235,
+        "co2_sns_lv1": 48161,
+        "fecha": "25\/10\/19,08:36:01-24",
+        "voltaje": 4096,
+        "contador_mnsj": 178,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760863505",
+    "fecha": "2025-10-19 02:45:12",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760863505",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1858,
+        "hum_sns_lv1": 8261,
+        "co2_sns_lv1": 32310,
+        "fecha": "25\/10\/19,08:45:05-24",
+        "voltaje": 4079,
+        "contador_mnsj": 31,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760863505",
+    "fecha": "2025-10-19 02:46:09",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760863505",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1858,
+        "hum_sns_lv1": 8261,
+        "co2_sns_lv1": 32310,
+        "fecha": "25\/10\/19,08:45:05-24",
+        "voltaje": 4079,
+        "contador_mnsj": 31,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760863505",
+    "fecha": "2025-10-19 02:48:02",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760863505",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1858,
+        "hum_sns_lv1": 8261,
+        "co2_sns_lv1": 32310,
+        "fecha": "25\/10\/19,08:45:05-24",
+        "voltaje": 4079,
+        "contador_mnsj": 31,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760863758",
+    "fecha": "2025-10-19 02:49:25",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760863758",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1304,
+        "hum_sns_lv1": 8265,
+        "co2_sns_lv1": 49527,
+        "fecha": "25\/10\/19,08:49:18-24",
+        "voltaje": 4106,
+        "contador_mnsj": 179,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760863758",
+    "fecha": "2025-10-19 02:50:31",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760863758",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1304,
+        "hum_sns_lv1": 8265,
+        "co2_sns_lv1": 49527,
+        "fecha": "25\/10\/19,08:49:18-24",
+        "voltaje": 4106,
+        "contador_mnsj": 179,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760863758",
+    "fecha": "2025-10-19 02:52:48",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760863758",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 15,
+        "temp_sns_lv1": 1304,
+        "hum_sns_lv1": 8265,
+        "co2_sns_lv1": 49527,
+        "fecha": "25\/10\/19,08:49:18-24",
+        "voltaje": 4106,
+        "contador_mnsj": 179,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760864304",
+    "fecha": "2025-10-19 02:58:30",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760864304",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1851,
+        "hum_sns_lv1": 8303,
+        "co2_sns_lv1": 32310,
+        "fecha": "25\/10\/19,08:58:24-24",
+        "voltaje": 4085,
+        "contador_mnsj": 32,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760864304",
+    "fecha": "2025-10-19 02:59:28",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760864304",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1851,
+        "hum_sns_lv1": 8303,
+        "co2_sns_lv1": 32310,
+        "fecha": "25\/10\/19,08:58:24-24",
+        "voltaje": 4085,
+        "contador_mnsj": 32,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760864304",
+    "fecha": "2025-10-19 03:01:26",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760864304",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1851,
+        "hum_sns_lv1": 8303,
+        "co2_sns_lv1": 32310,
+        "fecha": "25\/10\/19,08:58:24-24",
+        "voltaje": 4085,
+        "contador_mnsj": 32,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760864556",
+    "fecha": "2025-10-19 03:02:42",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760864556",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1346,
+        "hum_sns_lv1": 8296,
+        "co2_sns_lv1": 49977,
+        "fecha": "25\/10\/19,09:02:36-24",
+        "voltaje": 4099,
+        "contador_mnsj": 180,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760864556",
+    "fecha": "2025-10-19 03:03:52",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760864556",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1346,
+        "hum_sns_lv1": 8296,
+        "co2_sns_lv1": 49977,
+        "fecha": "25\/10\/19,09:02:36-24",
+        "voltaje": 4099,
+        "contador_mnsj": 180,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760864556",
+    "fecha": "2025-10-19 03:05:49",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760864556",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 75,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1346,
+        "hum_sns_lv1": 8296,
+        "co2_sns_lv1": 49977,
+        "fecha": "25\/10\/19,09:02:36-24",
+        "voltaje": 4099,
+        "contador_mnsj": 180,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760865101",
+    "fecha": "2025-10-19 03:11:48",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760865101",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1102,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1861,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 34754,
+        "fecha": "25\/10\/19,09:11:41-24",
+        "voltaje": 4077,
+        "contador_mnsj": 33,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760865101",
+    "fecha": "2025-10-19 03:12:52",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760865101",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1102,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1861,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 34754,
+        "fecha": "25\/10\/19,09:11:41-24",
+        "voltaje": 4077,
+        "contador_mnsj": 33,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760865101",
+    "fecha": "2025-10-19 03:15:00",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760865101",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 596,
+        "cond_npk_lv1": 1102,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1861,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 34754,
+        "fecha": "25\/10\/19,09:11:41-24",
+        "voltaje": 4077,
+        "contador_mnsj": 33,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760865353",
+    "fecha": "2025-10-19 03:15:59",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760865353",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1369,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 48991,
+        "fecha": "25\/10\/19,09:15:53-24",
+        "voltaje": 4106,
+        "contador_mnsj": 181,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760865353",
+    "fecha": "2025-10-19 03:16:57",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760865353",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1369,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 48991,
+        "fecha": "25\/10\/19,09:15:53-24",
+        "voltaje": 4106,
+        "contador_mnsj": 181,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760865353",
+    "fecha": "2025-10-19 03:18:52",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760865353",
+        "temp_npk_lv1": 791,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1369,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 48991,
+        "fecha": "25\/10\/19,09:15:53-24",
+        "voltaje": 4106,
+        "contador_mnsj": 181,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760865899",
+    "fecha": "2025-10-19 03:25:07",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760865899",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 595,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1877,
+        "hum_sns_lv1": 8313,
+        "co2_sns_lv1": 32729,
+        "fecha": "25\/10\/19,09:24:59-24",
+        "voltaje": 4075,
+        "contador_mnsj": 34,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760865899",
+    "fecha": "2025-10-19 03:26:04",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760865899",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 595,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1877,
+        "hum_sns_lv1": 8313,
+        "co2_sns_lv1": 32729,
+        "fecha": "25\/10\/19,09:24:59-24",
+        "voltaje": 4075,
+        "contador_mnsj": 34,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760865899",
+    "fecha": "2025-10-19 03:28:15",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760865899",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 595,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1877,
+        "hum_sns_lv1": 8313,
+        "co2_sns_lv1": 32729,
+        "fecha": "25\/10\/19,09:24:59-24",
+        "voltaje": 4075,
+        "contador_mnsj": 34,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760866150",
+    "fecha": "2025-10-19 03:29:17",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760866150",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1394,
+        "hum_sns_lv1": 8267,
+        "co2_sns_lv1": 49667,
+        "fecha": "25\/10\/19,09:29:10-24",
+        "voltaje": 4105,
+        "contador_mnsj": 182,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760866150",
+    "fecha": "2025-10-19 03:30:25",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760866150",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1394,
+        "hum_sns_lv1": 8267,
+        "co2_sns_lv1": 49667,
+        "fecha": "25\/10\/19,09:29:10-24",
+        "voltaje": 4105,
+        "contador_mnsj": 182,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760866150",
+    "fecha": "2025-10-19 03:32:21",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760866150",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1394,
+        "hum_sns_lv1": 8267,
+        "co2_sns_lv1": 49667,
+        "fecha": "25\/10\/19,09:29:10-24",
+        "voltaje": 4105,
+        "contador_mnsj": 182,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760866699",
+    "fecha": "2025-10-19 03:38:25",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760866699",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1905,
+        "hum_sns_lv1": 8246,
+        "co2_sns_lv1": 33845,
+        "fecha": "25\/10\/19,09:38:19-24",
+        "voltaje": 4082,
+        "contador_mnsj": 35,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760866699",
+    "fecha": "2025-10-19 03:39:34",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760866699",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1905,
+        "hum_sns_lv1": 8246,
+        "co2_sns_lv1": 33845,
+        "fecha": "25\/10\/19,09:38:19-24",
+        "voltaje": 4082,
+        "contador_mnsj": 35,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760866699",
+    "fecha": "2025-10-19 03:41:26",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760866699",
+        "temp_npk_lv1": 426,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1905,
+        "hum_sns_lv1": 8246,
+        "co2_sns_lv1": 33845,
+        "fecha": "25\/10\/19,09:38:19-24",
+        "voltaje": 4082,
+        "contador_mnsj": 35,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760866947",
+    "fecha": "2025-10-19 03:42:34",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760866947",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1360,
+        "hum_sns_lv1": 8241,
+        "co2_sns_lv1": 50420,
+        "fecha": "25\/10\/19,09:42:27-24",
+        "voltaje": 4104,
+        "contador_mnsj": 183,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760866947",
+    "fecha": "2025-10-19 03:43:41",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760866947",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1360,
+        "hum_sns_lv1": 8241,
+        "co2_sns_lv1": 50420,
+        "fecha": "25\/10\/19,09:42:27-24",
+        "voltaje": 4104,
+        "contador_mnsj": 183,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760866947",
+    "fecha": "2025-10-19 03:45:41",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760866947",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1360,
+        "hum_sns_lv1": 8241,
+        "co2_sns_lv1": 50420,
+        "fecha": "25\/10\/19,09:42:27-24",
+        "voltaje": 4104,
+        "contador_mnsj": 183,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760867496",
+    "fecha": "2025-10-19 03:51:43",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760867496",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1919,
+        "hum_sns_lv1": 8240,
+        "co2_sns_lv1": 31975,
+        "fecha": "25\/10\/19,09:51:36-24",
+        "voltaje": 4083,
+        "contador_mnsj": 36,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760867496",
+    "fecha": "2025-10-19 03:52:46",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760867496",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1919,
+        "hum_sns_lv1": 8240,
+        "co2_sns_lv1": 31975,
+        "fecha": "25\/10\/19,09:51:36-24",
+        "voltaje": 4083,
+        "contador_mnsj": 36,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760867496",
+    "fecha": "2025-10-19 03:54:52",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760867496",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1919,
+        "hum_sns_lv1": 8240,
+        "co2_sns_lv1": 31975,
+        "fecha": "25\/10\/19,09:51:36-24",
+        "voltaje": 4083,
+        "contador_mnsj": 36,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760867745",
+    "fecha": "2025-10-19 03:55:51",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760867745",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1314,
+        "hum_sns_lv1": 8256,
+        "co2_sns_lv1": 49812,
+        "fecha": "25\/10\/19,09:55:45-24",
+        "voltaje": 4106,
+        "contador_mnsj": 184,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760867745",
+    "fecha": "2025-10-19 03:56:56",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760867745",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1314,
+        "hum_sns_lv1": 8256,
+        "co2_sns_lv1": 49812,
+        "fecha": "25\/10\/19,09:55:45-24",
+        "voltaje": 4106,
+        "contador_mnsj": 184,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760867745",
+    "fecha": "2025-10-19 03:59:04",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760867745",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 74,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1314,
+        "hum_sns_lv1": 8256,
+        "co2_sns_lv1": 49812,
+        "fecha": "25\/10\/19,09:55:45-24",
+        "voltaje": 4106,
+        "contador_mnsj": 184,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760868294",
+    "fecha": "2025-10-19 04:05:01",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760868294",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8278,
+        "co2_sns_lv1": 33185,
+        "fecha": "25\/10\/19,10:04:54-24",
+        "voltaje": 4074,
+        "contador_mnsj": 37,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760868294",
+    "fecha": "2025-10-19 04:06:00",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760868294",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8278,
+        "co2_sns_lv1": 33185,
+        "fecha": "25\/10\/19,10:04:54-24",
+        "voltaje": 4074,
+        "contador_mnsj": 37,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760868294",
+    "fecha": "2025-10-19 04:07:56",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760868294",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 220,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8278,
+        "co2_sns_lv1": 33185,
+        "fecha": "25\/10\/19,10:04:54-24",
+        "voltaje": 4074,
+        "contador_mnsj": 37,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760868542",
+    "fecha": "2025-10-19 04:09:09",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760868542",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1291,
+        "hum_sns_lv1": 8295,
+        "co2_sns_lv1": 50107,
+        "fecha": "25\/10\/19,10:09:02-24",
+        "voltaje": 4105,
+        "contador_mnsj": 185,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760868542",
+    "fecha": "2025-10-19 04:10:11",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760868542",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1291,
+        "hum_sns_lv1": 8295,
+        "co2_sns_lv1": 50107,
+        "fecha": "25\/10\/19,10:09:02-24",
+        "voltaje": 4105,
+        "contador_mnsj": 185,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760868542",
+    "fecha": "2025-10-19 04:12:12",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760868542",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1291,
+        "hum_sns_lv1": 8295,
+        "co2_sns_lv1": 50107,
+        "fecha": "25\/10\/19,10:09:02-24",
+        "voltaje": 4105,
+        "contador_mnsj": 185,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760869092",
+    "fecha": "2025-10-19 04:18:18",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760869092",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1929,
+        "hum_sns_lv1": 8306,
+        "co2_sns_lv1": 33046,
+        "fecha": "25\/10\/19,10:18:12-24",
+        "voltaje": 4074,
+        "contador_mnsj": 38,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760869092",
+    "fecha": "2025-10-19 04:19:29",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760869092",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1929,
+        "hum_sns_lv1": 8306,
+        "co2_sns_lv1": 33046,
+        "fecha": "25\/10\/19,10:18:12-24",
+        "voltaje": 4074,
+        "contador_mnsj": 38,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760869092",
+    "fecha": "2025-10-19 04:21:33",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760869092",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1929,
+        "hum_sns_lv1": 8306,
+        "co2_sns_lv1": 33046,
+        "fecha": "25\/10\/19,10:18:12-24",
+        "voltaje": 4074,
+        "contador_mnsj": 38,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760869340",
+    "fecha": "2025-10-19 04:22:26",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760869340",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1303,
+        "hum_sns_lv1": 8304,
+        "co2_sns_lv1": 51138,
+        "fecha": "25\/10\/19,10:22:20-24",
+        "voltaje": 4104,
+        "contador_mnsj": 186,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760869340",
+    "fecha": "2025-10-19 04:23:23",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760869340",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1303,
+        "hum_sns_lv1": 8304,
+        "co2_sns_lv1": 51138,
+        "fecha": "25\/10\/19,10:22:20-24",
+        "voltaje": 4104,
+        "contador_mnsj": 186,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760869340",
+    "fecha": "2025-10-19 04:25:40",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760869340",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1303,
+        "hum_sns_lv1": 8304,
+        "co2_sns_lv1": 51138,
+        "fecha": "25\/10\/19,10:22:20-24",
+        "voltaje": 4104,
+        "contador_mnsj": 186,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760869890",
+    "fecha": "2025-10-19 04:31:37",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760869890",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1928,
+        "hum_sns_lv1": 8336,
+        "co2_sns_lv1": 33971,
+        "fecha": "25\/10\/19,10:31:30-24",
+        "voltaje": 4074,
+        "contador_mnsj": 39,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760869890",
+    "fecha": "2025-10-19 04:32:42",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760869890",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1928,
+        "hum_sns_lv1": 8336,
+        "co2_sns_lv1": 33971,
+        "fecha": "25\/10\/19,10:31:30-24",
+        "voltaje": 4074,
+        "contador_mnsj": 39,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760869890",
+    "fecha": "2025-10-19 04:34:46",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760869890",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1928,
+        "hum_sns_lv1": 8336,
+        "co2_sns_lv1": 33971,
+        "fecha": "25\/10\/19,10:31:30-24",
+        "voltaje": 4074,
+        "contador_mnsj": 39,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760870136",
+    "fecha": "2025-10-19 04:35:43",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760870136",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1297,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 50032,
+        "fecha": "25\/10\/19,10:35:36-24",
+        "voltaje": 4101,
+        "contador_mnsj": 187,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760870136",
+    "fecha": "2025-10-19 04:36:53",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760870136",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1297,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 50032,
+        "fecha": "25\/10\/19,10:35:36-24",
+        "voltaje": 4101,
+        "contador_mnsj": 187,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760870136",
+    "fecha": "2025-10-19 04:38:41",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760870136",
+        "temp_npk_lv1": 790,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 73,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1297,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 50032,
+        "fecha": "25\/10\/19,10:35:36-24",
+        "voltaje": 4101,
+        "contador_mnsj": 187,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760870688",
+    "fecha": "2025-10-19 04:44:55",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760870688",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8373,
+        "co2_sns_lv1": 32796,
+        "fecha": "25\/10\/19,10:44:48-24",
+        "voltaje": 4074,
+        "contador_mnsj": 40,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760870688",
+    "fecha": "2025-10-19 04:46:00",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760870688",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8373,
+        "co2_sns_lv1": 32796,
+        "fecha": "25\/10\/19,10:44:48-24",
+        "voltaje": 4074,
+        "contador_mnsj": 40,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760870688",
+    "fecha": "2025-10-19 04:48:11",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760870688",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8373,
+        "co2_sns_lv1": 32796,
+        "fecha": "25\/10\/19,10:44:48-24",
+        "voltaje": 4074,
+        "contador_mnsj": 40,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760870934",
+    "fecha": "2025-10-19 04:49:01",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760870934",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1291,
+        "hum_sns_lv1": 8292,
+        "co2_sns_lv1": 50982,
+        "fecha": "25\/10\/19,10:48:54-24",
+        "voltaje": 4098,
+        "contador_mnsj": 188,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760870934",
+    "fecha": "2025-10-19 04:49:57",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760870934",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1291,
+        "hum_sns_lv1": 8292,
+        "co2_sns_lv1": 50982,
+        "fecha": "25\/10\/19,10:48:54-24",
+        "voltaje": 4098,
+        "contador_mnsj": 188,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760870934",
+    "fecha": "2025-10-19 04:52:05",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760870934",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 258,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1291,
+        "hum_sns_lv1": 8292,
+        "co2_sns_lv1": 50982,
+        "fecha": "25\/10\/19,10:48:54-24",
+        "voltaje": 4098,
+        "contador_mnsj": 188,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760871486",
+    "fecha": "2025-10-19 04:58:12",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760871486",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8385,
+        "co2_sns_lv1": 33805,
+        "fecha": "25\/10\/19,10:58:06-24",
+        "voltaje": 4077,
+        "contador_mnsj": 41,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760871486",
+    "fecha": "2025-10-19 04:59:21",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760871486",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8385,
+        "co2_sns_lv1": 33805,
+        "fecha": "25\/10\/19,10:58:06-24",
+        "voltaje": 4077,
+        "contador_mnsj": 41,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760871486",
+    "fecha": "2025-10-19 05:01:21",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760871486",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1923,
+        "hum_sns_lv1": 8385,
+        "co2_sns_lv1": 33805,
+        "fecha": "25\/10\/19,10:58:06-24",
+        "voltaje": 4077,
+        "contador_mnsj": 41,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760871731",
+    "fecha": "2025-10-19 05:02:19",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760871731",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1287,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 50507,
+        "fecha": "25\/10\/19,11:02:11-24",
+        "voltaje": 4101,
+        "contador_mnsj": 189,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760871731",
+    "fecha": "2025-10-19 05:03:28",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760871731",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1287,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 50507,
+        "fecha": "25\/10\/19,11:02:11-24",
+        "voltaje": 4101,
+        "contador_mnsj": 189,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760871731",
+    "fecha": "2025-10-19 05:05:41",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760871731",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1287,
+        "hum_sns_lv1": 8288,
+        "co2_sns_lv1": 50507,
+        "fecha": "25\/10\/19,11:02:11-24",
+        "voltaje": 4101,
+        "contador_mnsj": 189,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760872284",
+    "fecha": "2025-10-19 05:11:30",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760872284",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1111,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1925,
+        "hum_sns_lv1": 8383,
+        "co2_sns_lv1": 32628,
+        "fecha": "25\/10\/19,11:11:24-24",
+        "voltaje": 4078,
+        "contador_mnsj": 42,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760872284",
+    "fecha": "2025-10-19 05:12:37",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760872284",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1111,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1925,
+        "hum_sns_lv1": 8383,
+        "co2_sns_lv1": 32628,
+        "fecha": "25\/10\/19,11:11:24-24",
+        "voltaje": 4078,
+        "contador_mnsj": 42,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760872284",
+    "fecha": "2025-10-19 05:14:38",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760872284",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1111,
+        "nit_npk_lv1": 79,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1925,
+        "hum_sns_lv1": 8383,
+        "co2_sns_lv1": 32628,
+        "fecha": "25\/10\/19,11:11:24-24",
+        "voltaje": 4078,
+        "contador_mnsj": 42,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760872529",
+    "fecha": "2025-10-19 05:15:36",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760872529",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1266,
+        "hum_sns_lv1": 8301,
+        "co2_sns_lv1": 49682,
+        "fecha": "25\/10\/19,11:15:29-24",
+        "voltaje": 4096,
+        "contador_mnsj": 190,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760872529",
+    "fecha": "2025-10-19 05:16:37",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760872529",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1266,
+        "hum_sns_lv1": 8301,
+        "co2_sns_lv1": 49682,
+        "fecha": "25\/10\/19,11:15:29-24",
+        "voltaje": 4096,
+        "contador_mnsj": 190,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760872529",
+    "fecha": "2025-10-19 05:18:34",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760872529",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1266,
+        "hum_sns_lv1": 8301,
+        "co2_sns_lv1": 49682,
+        "fecha": "25\/10\/19,11:15:29-24",
+        "voltaje": 4096,
+        "contador_mnsj": 190,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760873082",
+    "fecha": "2025-10-19 05:24:49",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760873082",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1933,
+        "hum_sns_lv1": 8368,
+        "co2_sns_lv1": 33298,
+        "fecha": "25\/10\/19,11:24:42-24",
+        "voltaje": 4077,
+        "contador_mnsj": 43,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760873082",
+    "fecha": "2025-10-19 05:25:57",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760873082",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1933,
+        "hum_sns_lv1": 8368,
+        "co2_sns_lv1": 33298,
+        "fecha": "25\/10\/19,11:24:42-24",
+        "voltaje": 4077,
+        "contador_mnsj": 43,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760873082",
+    "fecha": "2025-10-19 05:27:47",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760873082",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 115,
+        "temp_sns_lv1": 1933,
+        "hum_sns_lv1": 8368,
+        "co2_sns_lv1": 33298,
+        "fecha": "25\/10\/19,11:24:42-24",
+        "voltaje": 4077,
+        "contador_mnsj": 43,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760873327",
+    "fecha": "2025-10-19 05:28:53",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760873327",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1235,
+        "hum_sns_lv1": 8299,
+        "co2_sns_lv1": 49882,
+        "fecha": "25\/10\/19,11:28:47-24",
+        "voltaje": 4099,
+        "contador_mnsj": 191,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760873327",
+    "fecha": "2025-10-19 05:29:59",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760873327",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1235,
+        "hum_sns_lv1": 8299,
+        "co2_sns_lv1": 49882,
+        "fecha": "25\/10\/19,11:28:47-24",
+        "voltaje": 4099,
+        "contador_mnsj": 191,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760873327",
+    "fecha": "2025-10-19 05:32:03",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760873327",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1235,
+        "hum_sns_lv1": 8299,
+        "co2_sns_lv1": 49882,
+        "fecha": "25\/10\/19,11:28:47-24",
+        "voltaje": 4099,
+        "contador_mnsj": 191,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760873880",
+    "fecha": "2025-10-19 05:38:06",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760873880",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8368,
+        "co2_sns_lv1": 33604,
+        "fecha": "25\/10\/19,11:38:00-24",
+        "voltaje": 4070,
+        "contador_mnsj": 44,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760873880",
+    "fecha": "2025-10-19 05:39:09",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760873880",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8368,
+        "co2_sns_lv1": 33604,
+        "fecha": "25\/10\/19,11:38:00-24",
+        "voltaje": 4070,
+        "contador_mnsj": 44,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760873880",
+    "fecha": "2025-10-19 05:41:11",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760873880",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8368,
+        "co2_sns_lv1": 33604,
+        "fecha": "25\/10\/19,11:38:00-24",
+        "voltaje": 4070,
+        "contador_mnsj": 44,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760874124",
+    "fecha": "2025-10-19 05:42:11",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760874124",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1206,
+        "hum_sns_lv1": 8339,
+        "co2_sns_lv1": 50362,
+        "fecha": "25\/10\/19,11:42:04-24",
+        "voltaje": 4093,
+        "contador_mnsj": 192,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760874124",
+    "fecha": "2025-10-19 05:43:10",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760874124",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1206,
+        "hum_sns_lv1": 8339,
+        "co2_sns_lv1": 50362,
+        "fecha": "25\/10\/19,11:42:04-24",
+        "voltaje": 4093,
+        "contador_mnsj": 192,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760874124",
+    "fecha": "2025-10-19 05:45:02",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760874124",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 72,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1206,
+        "hum_sns_lv1": 8339,
+        "co2_sns_lv1": 50362,
+        "fecha": "25\/10\/19,11:42:04-24",
+        "voltaje": 4093,
+        "contador_mnsj": 192,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760874677",
+    "fecha": "2025-10-19 05:51:25",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760874677",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1943,
+        "hum_sns_lv1": 8393,
+        "co2_sns_lv1": 31919,
+        "fecha": "25\/10\/19,11:51:17-24",
+        "voltaje": 4078,
+        "contador_mnsj": 45,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760874677",
+    "fecha": "2025-10-19 05:52:27",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760874677",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1943,
+        "hum_sns_lv1": 8393,
+        "co2_sns_lv1": 31919,
+        "fecha": "25\/10\/19,11:51:17-24",
+        "voltaje": 4078,
+        "contador_mnsj": 45,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760874677",
+    "fecha": "2025-10-19 05:54:30",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760874677",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1943,
+        "hum_sns_lv1": 8393,
+        "co2_sns_lv1": 31919,
+        "fecha": "25\/10\/19,11:51:17-24",
+        "voltaje": 4078,
+        "contador_mnsj": 45,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760874922",
+    "fecha": "2025-10-19 05:55:28",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760874922",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1186,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 49152,
+        "fecha": "25\/10\/19,11:55:22-24",
+        "voltaje": 4097,
+        "contador_mnsj": 193,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760874922",
+    "fecha": "2025-10-19 05:56:32",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760874922",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1186,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 49152,
+        "fecha": "25\/10\/19,11:55:22-24",
+        "voltaje": 4097,
+        "contador_mnsj": 193,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760874922",
+    "fecha": "2025-10-19 05:58:23",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760874922",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1186,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 49152,
+        "fecha": "25\/10\/19,11:55:22-24",
+        "voltaje": 4097,
+        "contador_mnsj": 193,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760875476",
+    "fecha": "2025-10-19 06:04:43",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760875476",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8414,
+        "co2_sns_lv1": 32297,
+        "fecha": "25\/10\/19,12:04:36-24",
+        "voltaje": 4071,
+        "contador_mnsj": 46,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760875476",
+    "fecha": "2025-10-19 06:05:39",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760875476",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8414,
+        "co2_sns_lv1": 32297,
+        "fecha": "25\/10\/19,12:04:36-24",
+        "voltaje": 4071,
+        "contador_mnsj": 46,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760875476",
+    "fecha": "2025-10-19 06:07:56",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760875476",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 224,
+        "phos_npk_lv1": 112,
+        "temp_sns_lv1": 1937,
+        "hum_sns_lv1": 8414,
+        "co2_sns_lv1": 32297,
+        "fecha": "25\/10\/19,12:04:36-24",
+        "voltaje": 4071,
+        "contador_mnsj": 46,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760875719",
+    "fecha": "2025-10-19 06:08:45",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760875719",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1179,
+        "hum_sns_lv1": 8357,
+        "co2_sns_lv1": 48597,
+        "fecha": "25\/10\/19,12:08:39-24",
+        "voltaje": 4097,
+        "contador_mnsj": 194,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760875719",
+    "fecha": "2025-10-19 06:09:44",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760875719",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1179,
+        "hum_sns_lv1": 8357,
+        "co2_sns_lv1": 48597,
+        "fecha": "25\/10\/19,12:08:39-24",
+        "voltaje": 4097,
+        "contador_mnsj": 194,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760875719",
+    "fecha": "2025-10-19 06:11:41",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760875719",
+        "temp_npk_lv1": 789,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1179,
+        "hum_sns_lv1": 8357,
+        "co2_sns_lv1": 48597,
+        "fecha": "25\/10\/19,12:08:39-24",
+        "voltaje": 4097,
+        "contador_mnsj": 194,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760876275",
+    "fecha": "2025-10-19 06:18:00",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760876275",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1943,
+        "hum_sns_lv1": 8407,
+        "co2_sns_lv1": 33488,
+        "fecha": "25\/10\/19,12:17:55-24",
+        "voltaje": 4069,
+        "contador_mnsj": 47,
+        "ber": 99,
+        "rssi": 31,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760876275",
+    "fecha": "2025-10-19 06:19:02",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760876275",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1943,
+        "hum_sns_lv1": 8407,
+        "co2_sns_lv1": 33488,
+        "fecha": "25\/10\/19,12:17:55-24",
+        "voltaje": 4069,
+        "contador_mnsj": 47,
+        "ber": 99,
+        "rssi": 31,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760876275",
+    "fecha": "2025-10-19 06:21:11",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760876275",
+        "temp_npk_lv1": 427,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1120,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 227,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1943,
+        "hum_sns_lv1": 8407,
+        "co2_sns_lv1": 33488,
+        "fecha": "25\/10\/19,12:17:55-24",
+        "voltaje": 4069,
+        "contador_mnsj": 47,
+        "ber": 99,
+        "rssi": 31,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760876516",
+    "fecha": "2025-10-19 06:22:02",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760876516",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1164,
+        "hum_sns_lv1": 8332,
+        "co2_sns_lv1": 50377,
+        "fecha": "25\/10\/19,12:21:56-24",
+        "voltaje": 4092,
+        "contador_mnsj": 195,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760876516",
+    "fecha": "2025-10-19 06:23:06",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760876516",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1164,
+        "hum_sns_lv1": 8332,
+        "co2_sns_lv1": 50377,
+        "fecha": "25\/10\/19,12:21:56-24",
+        "voltaje": 4092,
+        "contador_mnsj": 195,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760876516",
+    "fecha": "2025-10-19 06:25:14",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760876516",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 71,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1164,
+        "hum_sns_lv1": 8332,
+        "co2_sns_lv1": 50377,
+        "fecha": "25\/10\/19,12:21:56-24",
+        "voltaje": 4092,
+        "contador_mnsj": 195,
+        "ber": 99,
+        "rssi": 14,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760877073",
+    "fecha": "2025-10-19 06:31:19",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760877073",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1111,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1945,
+        "hum_sns_lv1": 8404,
+        "co2_sns_lv1": 32837,
+        "fecha": "25\/10\/19,12:31:13-24",
+        "voltaje": 4067,
+        "contador_mnsj": 48,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760877073",
+    "fecha": "2025-10-19 06:32:20",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760877073",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1111,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1945,
+        "hum_sns_lv1": 8404,
+        "co2_sns_lv1": 32837,
+        "fecha": "25\/10\/19,12:31:13-24",
+        "voltaje": 4067,
+        "contador_mnsj": 48,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760877073",
+    "fecha": "2025-10-19 06:34:31",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760877073",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1111,
+        "nit_npk_lv1": 81,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1945,
+        "hum_sns_lv1": 8404,
+        "co2_sns_lv1": 32837,
+        "fecha": "25\/10\/19,12:31:13-24",
+        "voltaje": 4067,
+        "contador_mnsj": 48,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760877313",
+    "fecha": "2025-10-19 06:35:20",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760877313",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1157,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 49655,
+        "fecha": "25\/10\/19,12:35:13-24",
+        "voltaje": 4095,
+        "contador_mnsj": 196,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760877313",
+    "fecha": "2025-10-19 06:36:20",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760877313",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1157,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 49655,
+        "fecha": "25\/10\/19,12:35:13-24",
+        "voltaje": 4095,
+        "contador_mnsj": 196,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760877313",
+    "fecha": "2025-10-19 06:38:16",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760877313",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1157,
+        "hum_sns_lv1": 8338,
+        "co2_sns_lv1": 49655,
+        "fecha": "25\/10\/19,12:35:13-24",
+        "voltaje": 4095,
+        "contador_mnsj": 196,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760877870",
+    "fecha": "2025-10-19 06:44:36",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760877870",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1949,
+        "hum_sns_lv1": 8397,
+        "co2_sns_lv1": 31904,
+        "fecha": "25\/10\/19,12:44:30-24",
+        "voltaje": 4066,
+        "contador_mnsj": 49,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760877870",
+    "fecha": "2025-10-19 06:45:40",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760877870",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1949,
+        "hum_sns_lv1": 8397,
+        "co2_sns_lv1": 31904,
+        "fecha": "25\/10\/19,12:44:30-24",
+        "voltaje": 4066,
+        "contador_mnsj": 49,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760877870",
+    "fecha": "2025-10-19 06:47:32",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760877870",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 229,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1949,
+        "hum_sns_lv1": 8397,
+        "co2_sns_lv1": 31904,
+        "fecha": "25\/10\/19,12:44:30-24",
+        "voltaje": 4066,
+        "contador_mnsj": 49,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760878111",
+    "fecha": "2025-10-19 06:48:37",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760878111",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1165,
+        "hum_sns_lv1": 8364,
+        "co2_sns_lv1": 50403,
+        "fecha": "25\/10\/19,12:48:31-24",
+        "voltaje": 4090,
+        "contador_mnsj": 197,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760878111",
+    "fecha": "2025-10-19 06:49:41",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760878111",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1165,
+        "hum_sns_lv1": 8364,
+        "co2_sns_lv1": 50403,
+        "fecha": "25\/10\/19,12:48:31-24",
+        "voltaje": 4090,
+        "contador_mnsj": 197,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760878111",
+    "fecha": "2025-10-19 06:51:56",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760878111",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1165,
+        "hum_sns_lv1": 8364,
+        "co2_sns_lv1": 50403,
+        "fecha": "25\/10\/19,12:48:31-24",
+        "voltaje": 4090,
+        "contador_mnsj": 197,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760878668",
+    "fecha": "2025-10-19 06:57:55",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760878668",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1956,
+        "hum_sns_lv1": 8394,
+        "co2_sns_lv1": 33071,
+        "fecha": "25\/10\/19,12:57:48-24",
+        "voltaje": 4072,
+        "contador_mnsj": 50,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760878668",
+    "fecha": "2025-10-19 06:58:55",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760878668",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1956,
+        "hum_sns_lv1": 8394,
+        "co2_sns_lv1": 33071,
+        "fecha": "25\/10\/19,12:57:48-24",
+        "voltaje": 4072,
+        "contador_mnsj": 50,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760878668",
+    "fecha": "2025-10-19 07:00:52",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760878668",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1139,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 225,
+        "phos_npk_lv1": 113,
+        "temp_sns_lv1": 1956,
+        "hum_sns_lv1": 8394,
+        "co2_sns_lv1": 33071,
+        "fecha": "25\/10\/19,12:57:48-24",
+        "voltaje": 4072,
+        "contador_mnsj": 50,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760878909",
+    "fecha": "2025-10-19 07:01:54",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760878909",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1174,
+        "hum_sns_lv1": 8362,
+        "co2_sns_lv1": 50184,
+        "fecha": "25\/10\/19,13:01:49-24",
+        "voltaje": 4092,
+        "contador_mnsj": 198,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760878909",
+    "fecha": "2025-10-19 07:03:01",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760878909",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1174,
+        "hum_sns_lv1": 8362,
+        "co2_sns_lv1": 50184,
+        "fecha": "25\/10\/19,13:01:49-24",
+        "voltaje": 4092,
+        "contador_mnsj": 198,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760878909",
+    "fecha": "2025-10-19 07:05:04",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760878909",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1174,
+        "hum_sns_lv1": 8362,
+        "co2_sns_lv1": 50184,
+        "fecha": "25\/10\/19,13:01:49-24",
+        "voltaje": 4092,
+        "contador_mnsj": 198,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760879466",
+    "fecha": "2025-10-19 07:11:13",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760879466",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1960,
+        "hum_sns_lv1": 8383,
+        "co2_sns_lv1": 31837,
+        "fecha": "25\/10\/19,13:11:06-24",
+        "voltaje": 4075,
+        "contador_mnsj": 51,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760879466",
+    "fecha": "2025-10-19 07:12:22",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760879466",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1960,
+        "hum_sns_lv1": 8383,
+        "co2_sns_lv1": 31837,
+        "fecha": "25\/10\/19,13:11:06-24",
+        "voltaje": 4075,
+        "contador_mnsj": 51,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760879466",
+    "fecha": "2025-10-19 07:14:33",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760879466",
+        "temp_npk_lv1": 428,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1129,
+        "nit_npk_lv1": 80,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 114,
+        "temp_sns_lv1": 1960,
+        "hum_sns_lv1": 8383,
+        "co2_sns_lv1": 31837,
+        "fecha": "25\/10\/19,13:11:06-24",
+        "voltaje": 4075,
+        "contador_mnsj": 51,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760879705",
+    "fecha": "2025-10-19 07:15:12",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760879705",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1192,
+        "hum_sns_lv1": 8386,
+        "co2_sns_lv1": 49539,
+        "fecha": "25\/10\/19,13:15:05-24",
+        "voltaje": 4094,
+        "contador_mnsj": 199,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760879705",
+    "fecha": "2025-10-19 07:16:18",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760879705",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1192,
+        "hum_sns_lv1": 8386,
+        "co2_sns_lv1": 49539,
+        "fecha": "25\/10\/19,13:15:05-24",
+        "voltaje": 4094,
+        "contador_mnsj": 199,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760879705",
+    "fecha": "2025-10-19 07:18:30",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760879705",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 70,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 7,
+        "phos_npk_lv1": 14,
+        "temp_sns_lv1": 1192,
+        "hum_sns_lv1": 8386,
+        "co2_sns_lv1": 49539,
+        "fecha": "25\/10\/19,13:15:05-24",
+        "voltaje": 4094,
+        "contador_mnsj": 199,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760880263",
+    "fecha": "2025-10-19 07:24:37",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760880263",
+        "temp_npk_lv1": 429,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 84,
+        "pot_npk_lv1": 237,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 1984,
+        "hum_sns_lv1": 8321,
+        "co2_sns_lv1": 31726,
+        "fecha": "25\/10\/19,13:24:23-24",
+        "voltaje": 4067,
+        "contador_mnsj": 52,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760880263",
+    "fecha": "2025-10-19 07:25:38",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760880263",
+        "temp_npk_lv1": 429,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 84,
+        "pot_npk_lv1": 237,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 1984,
+        "hum_sns_lv1": 8321,
+        "co2_sns_lv1": 31726,
+        "fecha": "25\/10\/19,13:24:23-24",
+        "voltaje": 4067,
+        "contador_mnsj": 52,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760880263",
+    "fecha": "2025-10-19 07:27:48",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760880263",
+        "temp_npk_lv1": 429,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 594,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 84,
+        "pot_npk_lv1": 237,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 1984,
+        "hum_sns_lv1": 8321,
+        "co2_sns_lv1": 31726,
+        "fecha": "25\/10\/19,13:24:23-24",
+        "voltaje": 4067,
+        "contador_mnsj": 52,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760880503",
+    "fecha": "2025-10-19 07:28:30",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760880503",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1234,
+        "hum_sns_lv1": 8414,
+        "co2_sns_lv1": 48876,
+        "fecha": "25\/10\/19,13:28:23-24",
+        "voltaje": 4090,
+        "contador_mnsj": 200,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760880503",
+    "fecha": "2025-10-19 07:29:38",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760880503",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1234,
+        "hum_sns_lv1": 8414,
+        "co2_sns_lv1": 48876,
+        "fecha": "25\/10\/19,13:28:23-24",
+        "voltaje": 4090,
+        "contador_mnsj": 200,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760880503",
+    "fecha": "2025-10-19 07:31:26",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760880503",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1234,
+        "hum_sns_lv1": 8414,
+        "co2_sns_lv1": 48876,
+        "fecha": "25\/10\/19,13:28:23-24",
+        "voltaje": 4090,
+        "contador_mnsj": 200,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760881069",
+    "fecha": "2025-10-19 07:37:55",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760881069",
+        "temp_npk_lv1": 432,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 82,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 2093,
+        "hum_sns_lv1": 8094,
+        "co2_sns_lv1": 34271,
+        "fecha": "25\/10\/19,13:37:49-24",
+        "voltaje": 4079,
+        "contador_mnsj": 53,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760881069",
+    "fecha": "2025-10-19 07:39:00",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760881069",
+        "temp_npk_lv1": 432,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 82,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 2093,
+        "hum_sns_lv1": 8094,
+        "co2_sns_lv1": 34271,
+        "fecha": "25\/10\/19,13:37:49-24",
+        "voltaje": 4079,
+        "contador_mnsj": 53,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760881069",
+    "fecha": "2025-10-19 07:41:14",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760881069",
+        "temp_npk_lv1": 432,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 82,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 2093,
+        "hum_sns_lv1": 8094,
+        "co2_sns_lv1": 34271,
+        "fecha": "25\/10\/19,13:37:49-24",
+        "voltaje": 4079,
+        "contador_mnsj": 53,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760881300",
+    "fecha": "2025-10-19 07:41:47",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760881300",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1275,
+        "hum_sns_lv1": 8412,
+        "co2_sns_lv1": 47462,
+        "fecha": "25\/10\/19,13:41:40-24",
+        "voltaje": 4099,
+        "contador_mnsj": 201,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760881300",
+    "fecha": "2025-10-19 07:42:50",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760881300",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1275,
+        "hum_sns_lv1": 8412,
+        "co2_sns_lv1": 47462,
+        "fecha": "25\/10\/19,13:41:40-24",
+        "voltaje": 4099,
+        "contador_mnsj": 201,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760881300",
+    "fecha": "2025-10-19 07:44:48",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760881300",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 257,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1275,
+        "hum_sns_lv1": 8412,
+        "co2_sns_lv1": 47462,
+        "fecha": "25\/10\/19,13:41:40-24",
+        "voltaje": 4099,
+        "contador_mnsj": 201,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760881866",
+    "fecha": "2025-10-19 07:51:12",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760881866",
+        "temp_npk_lv1": 434,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1177,
+        "nit_npk_lv1": 83,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 2114,
+        "hum_sns_lv1": 8054,
+        "co2_sns_lv1": 33661,
+        "fecha": "25\/10\/19,13:51:06-24",
+        "voltaje": 4072,
+        "contador_mnsj": 54,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760881866",
+    "fecha": "2025-10-19 07:52:14",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760881866",
+        "temp_npk_lv1": 434,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1177,
+        "nit_npk_lv1": 83,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 2114,
+        "hum_sns_lv1": 8054,
+        "co2_sns_lv1": 33661,
+        "fecha": "25\/10\/19,13:51:06-24",
+        "voltaje": 4072,
+        "contador_mnsj": 54,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760881866",
+    "fecha": "2025-10-19 07:54:21",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760881866",
+        "temp_npk_lv1": 434,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1177,
+        "nit_npk_lv1": 83,
+        "pot_npk_lv1": 231,
+        "phos_npk_lv1": 117,
+        "temp_sns_lv1": 2114,
+        "hum_sns_lv1": 8054,
+        "co2_sns_lv1": 33661,
+        "fecha": "25\/10\/19,13:51:06-24",
+        "voltaje": 4072,
+        "contador_mnsj": 54,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760882097",
+    "fecha": "2025-10-19 07:55:04",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760882097",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1397,
+        "hum_sns_lv1": 8448,
+        "co2_sns_lv1": 47769,
+        "fecha": "25\/10\/19,13:54:57-24",
+        "voltaje": 4099,
+        "contador_mnsj": 202,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760882097",
+    "fecha": "2025-10-19 07:56:05",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760882097",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1397,
+        "hum_sns_lv1": 8448,
+        "co2_sns_lv1": 47769,
+        "fecha": "25\/10\/19,13:54:57-24",
+        "voltaje": 4099,
+        "contador_mnsj": 202,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760882097",
+    "fecha": "2025-10-19 07:58:04",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760882097",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1397,
+        "hum_sns_lv1": 8448,
+        "co2_sns_lv1": 47769,
+        "fecha": "25\/10\/19,13:54:57-24",
+        "voltaje": 4099,
+        "contador_mnsj": 202,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760882663",
+    "fecha": "2025-10-19 08:04:40",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760882663",
+        "temp_npk_lv1": 433,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1167,
+        "nit_npk_lv1": 83,
+        "pot_npk_lv1": 233,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 2260,
+        "hum_sns_lv1": 7841,
+        "co2_sns_lv1": 33554,
+        "fecha": "25\/10\/19,14:04:23-24",
+        "voltaje": 4072,
+        "contador_mnsj": 55,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760882663",
+    "fecha": "2025-10-19 08:05:48",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760882663",
+        "temp_npk_lv1": 433,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1167,
+        "nit_npk_lv1": 83,
+        "pot_npk_lv1": 233,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 2260,
+        "hum_sns_lv1": 7841,
+        "co2_sns_lv1": 33554,
+        "fecha": "25\/10\/19,14:04:23-24",
+        "voltaje": 4072,
+        "contador_mnsj": 55,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760882663",
+    "fecha": "2025-10-19 08:07:40",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760882663",
+        "temp_npk_lv1": 433,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1167,
+        "nit_npk_lv1": 83,
+        "pot_npk_lv1": 233,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 2260,
+        "hum_sns_lv1": 7841,
+        "co2_sns_lv1": 33554,
+        "fecha": "25\/10\/19,14:04:23-24",
+        "voltaje": 4072,
+        "contador_mnsj": 55,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760882895",
+    "fecha": "2025-10-19 08:08:21",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760882895",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1439,
+        "hum_sns_lv1": 8400,
+        "co2_sns_lv1": 47143,
+        "fecha": "25\/10\/19,14:08:15-24",
+        "voltaje": 4090,
+        "contador_mnsj": 203,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760882895",
+    "fecha": "2025-10-19 08:09:19",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760882895",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1439,
+        "hum_sns_lv1": 8400,
+        "co2_sns_lv1": 47143,
+        "fecha": "25\/10\/19,14:08:15-24",
+        "voltaje": 4090,
+        "contador_mnsj": 203,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760882895",
+    "fecha": "2025-10-19 08:11:20",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760882895",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1439,
+        "hum_sns_lv1": 8400,
+        "co2_sns_lv1": 47143,
+        "fecha": "25\/10\/19,14:08:15-24",
+        "voltaje": 4090,
+        "contador_mnsj": 203,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760883472",
+    "fecha": "2025-10-19 08:17:58",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760883472",
+        "temp_npk_lv1": 435,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1157,
+        "nit_npk_lv1": 84,
+        "pot_npk_lv1": 235,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 2383,
+        "hum_sns_lv1": 7575,
+        "co2_sns_lv1": 33624,
+        "fecha": "25\/10\/19,14:17:52-24",
+        "voltaje": 4081,
+        "contador_mnsj": 56,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760883472",
+    "fecha": "2025-10-19 08:19:09",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760883472",
+        "temp_npk_lv1": 435,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1157,
+        "nit_npk_lv1": 84,
+        "pot_npk_lv1": 235,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 2383,
+        "hum_sns_lv1": 7575,
+        "co2_sns_lv1": 33624,
+        "fecha": "25\/10\/19,14:17:52-24",
+        "voltaje": 4081,
+        "contador_mnsj": 56,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760883472",
+    "fecha": "2025-10-19 08:21:11",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760883472",
+        "temp_npk_lv1": 435,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 593,
+        "cond_npk_lv1": 1157,
+        "nit_npk_lv1": 84,
+        "pot_npk_lv1": 235,
+        "phos_npk_lv1": 118,
+        "temp_sns_lv1": 2383,
+        "hum_sns_lv1": 7575,
+        "co2_sns_lv1": 33624,
+        "fecha": "25\/10\/19,14:17:52-24",
+        "voltaje": 4081,
+        "contador_mnsj": 56,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760883692",
+    "fecha": "2025-10-19 08:21:39",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760883692",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1449,
+        "hum_sns_lv1": 8404,
+        "co2_sns_lv1": 46709,
+        "fecha": "25\/10\/19,14:21:32-24",
+        "voltaje": 4100,
+        "contador_mnsj": 204,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760883692",
+    "fecha": "2025-10-19 08:22:49",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760883692",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1449,
+        "hum_sns_lv1": 8404,
+        "co2_sns_lv1": 46709,
+        "fecha": "25\/10\/19,14:21:32-24",
+        "voltaje": 4100,
+        "contador_mnsj": 204,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760883692",
+    "fecha": "2025-10-19 08:24:52",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760883692",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1449,
+        "hum_sns_lv1": 8404,
+        "co2_sns_lv1": 46709,
+        "fecha": "25\/10\/19,14:21:32-24",
+        "voltaje": 4100,
+        "contador_mnsj": 204,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760884269",
+    "fecha": "2025-10-19 08:31:16",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760884269",
+        "temp_npk_lv1": 438,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 85,
+        "pot_npk_lv1": 239,
+        "phos_npk_lv1": 120,
+        "temp_sns_lv1": 2488,
+        "hum_sns_lv1": 7391,
+        "co2_sns_lv1": 34947,
+        "fecha": "25\/10\/19,14:31:09-24",
+        "voltaje": 4083,
+        "contador_mnsj": 57,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760884269",
+    "fecha": "2025-10-19 08:32:18",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760884269",
+        "temp_npk_lv1": 438,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 85,
+        "pot_npk_lv1": 239,
+        "phos_npk_lv1": 120,
+        "temp_sns_lv1": 2488,
+        "hum_sns_lv1": 7391,
+        "co2_sns_lv1": 34947,
+        "fecha": "25\/10\/19,14:31:09-24",
+        "voltaje": 4083,
+        "contador_mnsj": 57,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760884269",
+    "fecha": "2025-10-19 08:34:09",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760884269",
+        "temp_npk_lv1": 438,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1187,
+        "nit_npk_lv1": 85,
+        "pot_npk_lv1": 239,
+        "phos_npk_lv1": 120,
+        "temp_sns_lv1": 2488,
+        "hum_sns_lv1": 7391,
+        "co2_sns_lv1": 34947,
+        "fecha": "25\/10\/19,14:31:09-24",
+        "voltaje": 4083,
+        "contador_mnsj": 57,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760884490",
+    "fecha": "2025-10-19 08:34:56",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760884490",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1513,
+        "hum_sns_lv1": 8415,
+        "co2_sns_lv1": 46522,
+        "fecha": "25\/10\/19,14:34:50-24",
+        "voltaje": 4100,
+        "contador_mnsj": 205,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760884490",
+    "fecha": "2025-10-19 08:36:05",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760884490",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1513,
+        "hum_sns_lv1": 8415,
+        "co2_sns_lv1": 46522,
+        "fecha": "25\/10\/19,14:34:50-24",
+        "voltaje": 4100,
+        "contador_mnsj": 205,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760884490",
+    "fecha": "2025-10-19 08:37:55",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760884490",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1513,
+        "hum_sns_lv1": 8415,
+        "co2_sns_lv1": 46522,
+        "fecha": "25\/10\/19,14:34:50-24",
+        "voltaje": 4100,
+        "contador_mnsj": 205,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760885067",
+    "fecha": "2025-10-19 08:44:34",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760885067",
+        "temp_npk_lv1": 440,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1197,
+        "nit_npk_lv1": 86,
+        "pot_npk_lv1": 239,
+        "phos_npk_lv1": 124,
+        "temp_sns_lv1": 2583,
+        "hum_sns_lv1": 7215,
+        "co2_sns_lv1": 36056,
+        "fecha": "25\/10\/19,14:44:27-24",
+        "voltaje": 4083,
+        "contador_mnsj": 58,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760885067",
+    "fecha": "2025-10-19 08:45:39",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760885067",
+        "temp_npk_lv1": 440,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1197,
+        "nit_npk_lv1": 86,
+        "pot_npk_lv1": 239,
+        "phos_npk_lv1": 124,
+        "temp_sns_lv1": 2583,
+        "hum_sns_lv1": 7215,
+        "co2_sns_lv1": 36056,
+        "fecha": "25\/10\/19,14:44:27-24",
+        "voltaje": 4083,
+        "contador_mnsj": 58,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760885067",
+    "fecha": "2025-10-19 08:47:44",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760885067",
+        "temp_npk_lv1": 440,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1197,
+        "nit_npk_lv1": 86,
+        "pot_npk_lv1": 239,
+        "phos_npk_lv1": 124,
+        "temp_sns_lv1": 2583,
+        "hum_sns_lv1": 7215,
+        "co2_sns_lv1": 36056,
+        "fecha": "25\/10\/19,14:44:27-24",
+        "voltaje": 4083,
+        "contador_mnsj": 58,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760885287",
+    "fecha": "2025-10-19 08:48:14",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760885287",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1666,
+        "hum_sns_lv1": 8497,
+        "co2_sns_lv1": 44359,
+        "fecha": "25\/10\/19,14:48:07-24",
+        "voltaje": 4101,
+        "contador_mnsj": 206,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760885287",
+    "fecha": "2025-10-19 08:49:15",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760885287",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1666,
+        "hum_sns_lv1": 8497,
+        "co2_sns_lv1": 44359,
+        "fecha": "25\/10\/19,14:48:07-24",
+        "voltaje": 4101,
+        "contador_mnsj": 206,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760885287",
+    "fecha": "2025-10-19 08:51:25",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760885287",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1666,
+        "hum_sns_lv1": 8497,
+        "co2_sns_lv1": 44359,
+        "fecha": "25\/10\/19,14:48:07-24",
+        "voltaje": 4101,
+        "contador_mnsj": 206,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760885866",
+    "fecha": "2025-10-19 08:57:52",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760885866",
+        "temp_npk_lv1": 444,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1217,
+        "nit_npk_lv1": 90,
+        "pot_npk_lv1": 252,
+        "phos_npk_lv1": 127,
+        "temp_sns_lv1": 2756,
+        "hum_sns_lv1": 6919,
+        "co2_sns_lv1": 36032,
+        "fecha": "25\/10\/19,14:57:46-24",
+        "voltaje": 4084,
+        "contador_mnsj": 59,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760885866",
+    "fecha": "2025-10-19 08:58:50",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760885866",
+        "temp_npk_lv1": 444,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1217,
+        "nit_npk_lv1": 90,
+        "pot_npk_lv1": 252,
+        "phos_npk_lv1": 127,
+        "temp_sns_lv1": 2756,
+        "hum_sns_lv1": 6919,
+        "co2_sns_lv1": 36032,
+        "fecha": "25\/10\/19,14:57:46-24",
+        "voltaje": 4084,
+        "contador_mnsj": 59,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760885866",
+    "fecha": "2025-10-19 09:00:47",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760885866",
+        "temp_npk_lv1": 444,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1217,
+        "nit_npk_lv1": 90,
+        "pot_npk_lv1": 252,
+        "phos_npk_lv1": 127,
+        "temp_sns_lv1": 2756,
+        "hum_sns_lv1": 6919,
+        "co2_sns_lv1": 36032,
+        "fecha": "25\/10\/19,14:57:46-24",
+        "voltaje": 4084,
+        "contador_mnsj": 59,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760886085",
+    "fecha": "2025-10-19 09:01:32",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760886085",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1941,
+        "hum_sns_lv1": 8388,
+        "co2_sns_lv1": 42420,
+        "fecha": "25\/10\/19,15:01:25-24",
+        "voltaje": 4084,
+        "contador_mnsj": 207,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760886085",
+    "fecha": "2025-10-19 09:02:32",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760886085",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1941,
+        "hum_sns_lv1": 8388,
+        "co2_sns_lv1": 42420,
+        "fecha": "25\/10\/19,15:01:25-24",
+        "voltaje": 4084,
+        "contador_mnsj": 207,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760886085",
+    "fecha": "2025-10-19 09:04:34",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760886085",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 1941,
+        "hum_sns_lv1": 8388,
+        "co2_sns_lv1": 42420,
+        "fecha": "25\/10\/19,15:01:25-24",
+        "voltaje": 4084,
+        "contador_mnsj": 207,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760886663",
+    "fecha": "2025-10-19 09:11:10",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760886663",
+        "temp_npk_lv1": 446,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1239,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 241,
+        "phos_npk_lv1": 123,
+        "temp_sns_lv1": 2657,
+        "hum_sns_lv1": 6813,
+        "co2_sns_lv1": 37302,
+        "fecha": "25\/10\/19,15:11:03-24",
+        "voltaje": 4086,
+        "contador_mnsj": 60,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760886663",
+    "fecha": "2025-10-19 09:12:13",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760886663",
+        "temp_npk_lv1": 446,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1239,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 241,
+        "phos_npk_lv1": 123,
+        "temp_sns_lv1": 2657,
+        "hum_sns_lv1": 6813,
+        "co2_sns_lv1": 37302,
+        "fecha": "25\/10\/19,15:11:03-24",
+        "voltaje": 4086,
+        "contador_mnsj": 60,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760886663",
+    "fecha": "2025-10-19 09:14:05",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760886663",
+        "temp_npk_lv1": 446,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1239,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 241,
+        "phos_npk_lv1": 123,
+        "temp_sns_lv1": 2657,
+        "hum_sns_lv1": 6813,
+        "co2_sns_lv1": 37302,
+        "fecha": "25\/10\/19,15:11:03-24",
+        "voltaje": 4086,
+        "contador_mnsj": 60,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760886883",
+    "fecha": "2025-10-19 09:14:49",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760886883",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2108,
+        "hum_sns_lv1": 8257,
+        "co2_sns_lv1": 43592,
+        "fecha": "25\/10\/19,15:14:43-24",
+        "voltaje": 4094,
+        "contador_mnsj": 208,
+        "ber": 99,
+        "rssi": 17,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760886883",
+    "fecha": "2025-10-19 09:15:51",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760886883",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2108,
+        "hum_sns_lv1": 8257,
+        "co2_sns_lv1": 43592,
+        "fecha": "25\/10\/19,15:14:43-24",
+        "voltaje": 4094,
+        "contador_mnsj": 208,
+        "ber": 99,
+        "rssi": 17,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760886883",
+    "fecha": "2025-10-19 09:17:58",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760886883",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2108,
+        "hum_sns_lv1": 8257,
+        "co2_sns_lv1": 43592,
+        "fecha": "25\/10\/19,15:14:43-24",
+        "voltaje": 4094,
+        "contador_mnsj": 208,
+        "ber": 99,
+        "rssi": 17,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760887461",
+    "fecha": "2025-10-19 09:24:27",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760887461",
+        "temp_npk_lv1": 448,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1197,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 247,
+        "phos_npk_lv1": 123,
+        "temp_sns_lv1": 2796,
+        "hum_sns_lv1": 6657,
+        "co2_sns_lv1": 36366,
+        "fecha": "25\/10\/19,15:24:21-24",
+        "voltaje": 4091,
+        "contador_mnsj": 61,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760887461",
+    "fecha": "2025-10-19 09:25:33",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760887461",
+        "temp_npk_lv1": 448,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1197,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 247,
+        "phos_npk_lv1": 123,
+        "temp_sns_lv1": 2796,
+        "hum_sns_lv1": 6657,
+        "co2_sns_lv1": 36366,
+        "fecha": "25\/10\/19,15:24:21-24",
+        "voltaje": 4091,
+        "contador_mnsj": 61,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760887461",
+    "fecha": "2025-10-19 09:27:43",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760887461",
+        "temp_npk_lv1": 448,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1197,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 247,
+        "phos_npk_lv1": 123,
+        "temp_sns_lv1": 2796,
+        "hum_sns_lv1": 6657,
+        "co2_sns_lv1": 36366,
+        "fecha": "25\/10\/19,15:24:21-24",
+        "voltaje": 4091,
+        "contador_mnsj": 61,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760887680",
+    "fecha": "2025-10-19 09:28:07",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760887680",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2304,
+        "hum_sns_lv1": 8111,
+        "co2_sns_lv1": 41851,
+        "fecha": "25\/10\/19,15:28:00-24",
+        "voltaje": 4092,
+        "contador_mnsj": 209,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760887680",
+    "fecha": "2025-10-19 09:29:06",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760887680",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2304,
+        "hum_sns_lv1": 8111,
+        "co2_sns_lv1": 41851,
+        "fecha": "25\/10\/19,15:28:00-24",
+        "voltaje": 4092,
+        "contador_mnsj": 209,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760887680",
+    "fecha": "2025-10-19 09:31:16",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760887680",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2304,
+        "hum_sns_lv1": 8111,
+        "co2_sns_lv1": 41851,
+        "fecha": "25\/10\/19,15:28:00-24",
+        "voltaje": 4092,
+        "contador_mnsj": 209,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760888258",
+    "fecha": "2025-10-19 09:37:44",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760888258",
+        "temp_npk_lv1": 454,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1217,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 254,
+        "phos_npk_lv1": 127,
+        "temp_sns_lv1": 2967,
+        "hum_sns_lv1": 6407,
+        "co2_sns_lv1": 37193,
+        "fecha": "25\/10\/19,15:37:38-24",
+        "voltaje": 4089,
+        "contador_mnsj": 62,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760888258",
+    "fecha": "2025-10-19 09:38:45",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760888258",
+        "temp_npk_lv1": 454,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1217,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 254,
+        "phos_npk_lv1": 127,
+        "temp_sns_lv1": 2967,
+        "hum_sns_lv1": 6407,
+        "co2_sns_lv1": 37193,
+        "fecha": "25\/10\/19,15:37:38-24",
+        "voltaje": 4089,
+        "contador_mnsj": 62,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760888258",
+    "fecha": "2025-10-19 09:40:46",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760888258",
+        "temp_npk_lv1": 454,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1217,
+        "nit_npk_lv1": 88,
+        "pot_npk_lv1": 254,
+        "phos_npk_lv1": 127,
+        "temp_sns_lv1": 2967,
+        "hum_sns_lv1": 6407,
+        "co2_sns_lv1": 37193,
+        "fecha": "25\/10\/19,15:37:38-24",
+        "voltaje": 4089,
+        "contador_mnsj": 62,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760888478",
+    "fecha": "2025-10-19 09:41:24",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760888478",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 254,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2476,
+        "hum_sns_lv1": 7839,
+        "co2_sns_lv1": 41835,
+        "fecha": "25\/10\/19,15:41:18-24",
+        "voltaje": 4091,
+        "contador_mnsj": 210,
+        "ber": 99,
+        "rssi": 17,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760888478",
+    "fecha": "2025-10-19 09:42:20",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760888478",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 254,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2476,
+        "hum_sns_lv1": 7839,
+        "co2_sns_lv1": 41835,
+        "fecha": "25\/10\/19,15:41:18-24",
+        "voltaje": 4091,
+        "contador_mnsj": 210,
+        "ber": 99,
+        "rssi": 17,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760888478",
+    "fecha": "2025-10-19 09:44:13",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760888478",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 254,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2476,
+        "hum_sns_lv1": 7839,
+        "co2_sns_lv1": 41835,
+        "fecha": "25\/10\/19,15:41:18-24",
+        "voltaje": 4091,
+        "contador_mnsj": 210,
+        "ber": 99,
+        "rssi": 17,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760889055",
+    "fecha": "2025-10-19 09:51:02",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760889055",
+        "temp_npk_lv1": 458,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1260,
+        "nit_npk_lv1": 90,
+        "pot_npk_lv1": 254,
+        "phos_npk_lv1": 128,
+        "temp_sns_lv1": 3080,
+        "hum_sns_lv1": 6120,
+        "co2_sns_lv1": 36160,
+        "fecha": "25\/10\/19,15:50:55-24",
+        "voltaje": 4085,
+        "contador_mnsj": 63,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760889055",
+    "fecha": "2025-10-19 09:52:00",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760889055",
+        "temp_npk_lv1": 458,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1260,
+        "nit_npk_lv1": 90,
+        "pot_npk_lv1": 254,
+        "phos_npk_lv1": 128,
+        "temp_sns_lv1": 3080,
+        "hum_sns_lv1": 6120,
+        "co2_sns_lv1": 36160,
+        "fecha": "25\/10\/19,15:50:55-24",
+        "voltaje": 4085,
+        "contador_mnsj": 63,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760889055",
+    "fecha": "2025-10-19 09:54:17",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760889055",
+        "temp_npk_lv1": 458,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 592,
+        "cond_npk_lv1": 1260,
+        "nit_npk_lv1": 90,
+        "pot_npk_lv1": 254,
+        "phos_npk_lv1": 128,
+        "temp_sns_lv1": 3080,
+        "hum_sns_lv1": 6120,
+        "co2_sns_lv1": 36160,
+        "fecha": "25\/10\/19,15:50:55-24",
+        "voltaje": 4085,
+        "contador_mnsj": 63,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760889275",
+    "fecha": "2025-10-19 09:54:42",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760889275",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2650,
+        "hum_sns_lv1": 7711,
+        "co2_sns_lv1": 41992,
+        "fecha": "25\/10\/19,15:54:35-24",
+        "voltaje": 4092,
+        "contador_mnsj": 211,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760889275",
+    "fecha": "2025-10-19 09:55:47",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760889275",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2650,
+        "hum_sns_lv1": 7711,
+        "co2_sns_lv1": 41992,
+        "fecha": "25\/10\/19,15:54:35-24",
+        "voltaje": 4092,
+        "contador_mnsj": 211,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760889275",
+    "fecha": "2025-10-19 09:57:55",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760889275",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 68,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2650,
+        "hum_sns_lv1": 7711,
+        "co2_sns_lv1": 41992,
+        "fecha": "25\/10\/19,15:54:35-24",
+        "voltaje": 4092,
+        "contador_mnsj": 211,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760889853",
+    "fecha": "2025-10-19 10:04:19",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760889853",
+        "temp_npk_lv1": 458,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1260,
+        "nit_npk_lv1": 92,
+        "pot_npk_lv1": 263,
+        "phos_npk_lv1": 128,
+        "temp_sns_lv1": 3093,
+        "hum_sns_lv1": 6051,
+        "co2_sns_lv1": 35902,
+        "fecha": "25\/10\/19,16:04:13-24",
+        "voltaje": 4082,
+        "contador_mnsj": 64,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760889853",
+    "fecha": "2025-10-19 10:05:21",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760889853",
+        "temp_npk_lv1": 458,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1260,
+        "nit_npk_lv1": 92,
+        "pot_npk_lv1": 263,
+        "phos_npk_lv1": 128,
+        "temp_sns_lv1": 3093,
+        "hum_sns_lv1": 6051,
+        "co2_sns_lv1": 35902,
+        "fecha": "25\/10\/19,16:04:13-24",
+        "voltaje": 4082,
+        "contador_mnsj": 64,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760889853",
+    "fecha": "2025-10-19 10:07:14",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760889853",
+        "temp_npk_lv1": 458,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1260,
+        "nit_npk_lv1": 92,
+        "pot_npk_lv1": 263,
+        "phos_npk_lv1": 128,
+        "temp_sns_lv1": 3093,
+        "hum_sns_lv1": 6051,
+        "co2_sns_lv1": 35902,
+        "fecha": "25\/10\/19,16:04:13-24",
+        "voltaje": 4082,
+        "contador_mnsj": 64,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760890073",
+    "fecha": "2025-10-19 10:07:59",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760890073",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2781,
+        "hum_sns_lv1": 7571,
+        "co2_sns_lv1": 41214,
+        "fecha": "25\/10\/19,16:07:53-24",
+        "voltaje": 4079,
+        "contador_mnsj": 212,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760890073",
+    "fecha": "2025-10-19 10:09:07",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760890073",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2781,
+        "hum_sns_lv1": 7571,
+        "co2_sns_lv1": 41214,
+        "fecha": "25\/10\/19,16:07:53-24",
+        "voltaje": 4079,
+        "contador_mnsj": 212,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760890073",
+    "fecha": "2025-10-19 10:11:11",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760890073",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 256,
+        "ph_npk_lv1": 628,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 4,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2781,
+        "hum_sns_lv1": 7571,
+        "co2_sns_lv1": 41214,
+        "fecha": "25\/10\/19,16:07:53-24",
+        "voltaje": 4079,
+        "contador_mnsj": 212,
+        "ber": 99,
+        "rssi": 16,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760890651",
+    "fecha": "2025-10-19 10:17:37",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760890651",
+        "temp_npk_lv1": 460,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1282,
+        "nit_npk_lv1": 93,
+        "pot_npk_lv1": 258,
+        "phos_npk_lv1": 130,
+        "temp_sns_lv1": 3162,
+        "hum_sns_lv1": 5937,
+        "co2_sns_lv1": 36695,
+        "fecha": "25\/10\/19,16:17:31-24",
+        "voltaje": 4073,
+        "contador_mnsj": 65,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760890651",
+    "fecha": "2025-10-19 10:18:48",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760890651",
+        "temp_npk_lv1": 460,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1282,
+        "nit_npk_lv1": 93,
+        "pot_npk_lv1": 258,
+        "phos_npk_lv1": 130,
+        "temp_sns_lv1": 3162,
+        "hum_sns_lv1": 5937,
+        "co2_sns_lv1": 36695,
+        "fecha": "25\/10\/19,16:17:31-24",
+        "voltaje": 4073,
+        "contador_mnsj": 65,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760890651",
+    "fecha": "2025-10-19 10:20:50",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760890651",
+        "temp_npk_lv1": 460,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1282,
+        "nit_npk_lv1": 93,
+        "pot_npk_lv1": 258,
+        "phos_npk_lv1": 130,
+        "temp_sns_lv1": 3162,
+        "hum_sns_lv1": 5937,
+        "co2_sns_lv1": 36695,
+        "fecha": "25\/10\/19,16:17:31-24",
+        "voltaje": 4073,
+        "contador_mnsj": 65,
+        "ber": 99,
+        "rssi": 30,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760890870",
+    "fecha": "2025-10-19 10:21:17",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760890870",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2902,
+        "hum_sns_lv1": 7378,
+        "co2_sns_lv1": 40812,
+        "fecha": "25\/10\/19,16:21:10-24",
+        "voltaje": 4077,
+        "contador_mnsj": 213,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760890870",
+    "fecha": "2025-10-19 10:22:21",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760890870",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2902,
+        "hum_sns_lv1": 7378,
+        "co2_sns_lv1": 40812,
+        "fecha": "25\/10\/19,16:21:10-24",
+        "voltaje": 4077,
+        "contador_mnsj": 213,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032603377,
+    "transaccion_id": "1760890870",
+    "fecha": "2025-10-19 10:24:23",
+    "datos_completos": {
+        "estacion_id": 866425032603377,
+        "transaccion_id": "1760890870",
+        "temp_npk_lv1": 788,
+        "hum_npk_lv1": 255,
+        "ph_npk_lv1": 627,
+        "cond_npk_lv1": 69,
+        "nit_npk_lv1": 5,
+        "pot_npk_lv1": 6,
+        "phos_npk_lv1": 13,
+        "temp_sns_lv1": 2902,
+        "hum_sns_lv1": 7378,
+        "co2_sns_lv1": 40812,
+        "fecha": "25\/10\/19,16:21:10-24",
+        "voltaje": 4077,
+        "contador_mnsj": 213,
+        "ber": 99,
+        "rssi": 15,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760891448",
+    "fecha": "2025-10-19 10:30:56",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760891448",
+        "temp_npk_lv1": 459,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1282,
+        "nit_npk_lv1": 93,
+        "pot_npk_lv1": 258,
+        "phos_npk_lv1": 130,
+        "temp_sns_lv1": 3342,
+        "hum_sns_lv1": 5646,
+        "co2_sns_lv1": 37079,
+        "fecha": "25\/10\/19,16:30:48-24",
+        "voltaje": 4075,
+        "contador_mnsj": 66,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760891448",
+    "fecha": "2025-10-19 10:31:56",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760891448",
+        "temp_npk_lv1": 459,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1282,
+        "nit_npk_lv1": 93,
+        "pot_npk_lv1": 258,
+        "phos_npk_lv1": 130,
+        "temp_sns_lv1": 3342,
+        "hum_sns_lv1": 5646,
+        "co2_sns_lv1": 37079,
+        "fecha": "25\/10\/19,16:30:48-24",
+        "voltaje": 4075,
+        "contador_mnsj": 66,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}
+{
+    "estacion_id": 866425032834667,
+    "transaccion_id": "1760891448",
+    "fecha": "2025-10-19 10:34:11",
+    "datos_completos": {
+        "estacion_id": 866425032834667,
+        "transaccion_id": "1760891448",
+        "temp_npk_lv1": 459,
+        "hum_npk_lv1": 0,
+        "ph_npk_lv1": 591,
+        "cond_npk_lv1": 1282,
+        "nit_npk_lv1": 93,
+        "pot_npk_lv1": 258,
+        "phos_npk_lv1": 130,
+        "temp_sns_lv1": 3342,
+        "hum_sns_lv1": 5646,
+        "co2_sns_lv1": 37079,
+        "fecha": "25\/10\/19,16:30:48-24",
+        "voltaje": 4075,
+        "contador_mnsj": 66,
+        "ber": 99,
+        "rssi": 29,
+        "tec": 0
+    }
+}

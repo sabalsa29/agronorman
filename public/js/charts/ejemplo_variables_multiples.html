@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo - Gráfica Variables Múltiples</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .chart-container {
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ejemplo - Gráfica de Variables Múltiples</h1>
+        
+        <div class="info">
+            <h3>Instrucciones:</h3>
+            <p>Esta función permite analizar múltiples variables con diferentes tipos de agrupación (MAX, MIN, AVG) de manera simultánea.</p>
+            <p><strong>Parámetros:</strong></p>
+            <ul>
+                <li><strong>Variables:</strong> Selecciona las variables que quieres analizar (temperatura, humedad, etc.)</li>
+                <li><strong>Agrupaciones:</strong> Selecciona los tipos de datos (Máximo, Mínimo, Promedio)</li>
+                <li><strong>Zona de Manejo:</strong> ID de la zona de manejo</li>
+                <li><strong>Período:</strong> Período de tiempo para el análisis</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <div class="form-group">
+                <label for="variables">Variables (selecciona múltiples):</label>
+                <select id="variables" multiple>
+                    <option value="temperatura">Temperatura</option>
+                    <option value="humedad_relativa">Humedad Relativa</option>
+                    <option value="radiacion_solar">Radiación Solar</option>
+                    <option value="precipitacion_acumulada">Precipitación Acumulada</option>
+                    <option value="velocidad_viento">Velocidad del Viento</option>
+                    <option value="direccion_viento">Dirección del Viento</option>
+                    <option value="co2">CO2</option>
+                    <option value="ph">pH</option>
+                    <option value="phos">Fósforo</option>
+                    <option value="nit">Nitrógeno</option>
+                    <option value="pot">Potasio</option>
+                    <option value="temperatura_suelo">Temperatura del Suelo</option>
+                    <option value="conductividad_electrica">Conductividad Eléctrica</option>
+                    <option value="potencial_de_hidrogeno">Potencial de Hidrógeno</option>
+                    <option value="viento">Viento</option>
+                    <option value="humedad_15">Humedad 15</option>
+                    <option value="temperatura_lvl1">Temperatura Nivel 1</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="agrupaciones">Agrupaciones (selecciona múltiples):</label>
+                <select id="agrupaciones" multiple>
+                    <option value="max|Máximo">Máximo</option>
+                    <option value="min|Mínimo">Mínimo</option>
+                    <option value="avg|Promedio">Promedio</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="estacion_id">Zona de Manejo ID:</label>
+                <input type="number" id="estacion_id" value="59" placeholder="Ej: 59">
+            </div>
+
+            <div class="form-group">
+                <label for="periodo">Período:</label>
+                <select id="periodo">
+                    <option value="1">Hoy</option>
+                    <option value="2">Ayer</option>
+                    <option value="3" selected>Última semana</option>
+                    <option value="4">Último mes</option>
+                    <option value="5">Último trimestre</option>
+                    <option value="6">Último semestre</option>
+                    <option value="7">Último año</option>
+                    <option value="8">Últimos 2 años</option>
+                    <option value="9">Personalizado</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="fechas_personalizadas" style="display: none;">
+                <label for="startDate">Fecha de inicio:</label>
+                <input type="date" id="startDate">
+                
+                <label for="endDate">Fecha de fin:</label>
+                <input type="date" id="endDate">
+            </div>
+
+            <button onclick="cargarGrafica()">Cargar Gráfica</button>
+            <button onclick="limpiarGrafica()">Limpiar</button>
+        </div>
+
+        <div id="grafica" class="chart-container"></div>
+    </div>
+
+    <script src="variables_multiples.js"></script>
+    <script>
+        let grafica = null;
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            grafica = new GraficaVariablesMultiples('grafica');
+            
+            // Manejar cambio de período
+            document.getElementById('periodo').addEventListener('change', function() {
+                const fechasDiv = document.getElementById('fechas_personalizadas');
+                if (this.value === '9') {
+                    fechasDiv.style.display = 'block';
+                } else {
+                    fechasDiv.style.display = 'none';
+                }
+            });
+        });
+
+        function cargarGrafica() {
+            if (!grafica) {
+                alert('Gráfica no inicializada');
+                return;
+            }
+
+            // Obtener valores seleccionados
+            const variables = Array.from(document.getElementById('variables').selectedOptions).map(opt => opt.value);
+            const agrupaciones = Array.from(document.getElementById('agrupaciones').selectedOptions).map(opt => opt.value);
+            const estacionId = document.getElementById('estacion_id').value;
+            const periodo = document.getElementById('periodo').value;
+
+            // Validaciones
+            if (variables.length === 0) {
+                alert('Por favor selecciona al menos una variable');
+                return;
+            }
+
+            if (agrupaciones.length === 0) {
+                alert('Por favor selecciona al menos una agrupación');
+                return;
+            }
+
+            if (!estacionId) {
+                alert('Por favor ingresa un ID de zona de manejo');
+                return;
+            }
+
+            // Preparar parámetros
+            const params = {
+                variables: variables,
+                agrupaciones: agrupaciones,
+                estacion_id: parseInt(estacionId),
+                periodo: parseInt(periodo)
+            };
+
+            // Agregar fechas si es período personalizado
+            if (periodo === '9') {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                
+                if (!startDate || !endDate) {
+                    alert('Por favor ingresa las fechas de inicio y fin');
+                    return;
+                }
+                
+                params.startDate = startDate;
+                params.endDate = endDate;
+            }
+
+            // Cargar datos
+            grafica.cargarDatos(params);
+        }
+
+        function limpiarGrafica() {
+            if (grafica) {
+                grafica.limpiar();
+            }
+        }
+
+        // Ejemplo de uso programático
+        function ejemploUso() {
+            const params = {
+                variables: ['temperatura', 'humedad_relativa'],
+                agrupaciones: ['max|Máximo', 'min|Mínimo', 'avg|Promedio'],
+                estacion_id: 59,
+                periodo: 3
+            };
+            
+            grafica.cargarDatos(params);
+        }
+    </script>
+</body>
+</html> 

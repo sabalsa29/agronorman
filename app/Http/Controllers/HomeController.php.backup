@@ -1,0 +1,3699 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Cliente;
+use App\Models\EstacionDato;
+use App\Models\Estaciones;
+use App\Models\EtapaFenologica;
+use App\Models\EtapaFenologicaTipoCultivo;
+use App\Models\ZonaManejos;
+use App\Models\NutricionEtapaFenologicaTipoCultivo;
+use App\Models\Parcelas;
+use App\Models\ResumenTemperaturas;
+use App\Models\TipoCultivos;
+use App\Models\TipoCultivosEnfermedad;
+use App\Models\UnidadesFrio;
+use App\Models\VariablesMedicion;
+use App\Models\ZonaManejosTipoCultivos;
+use App\View\Components\Plagas;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+
+class HomeController extends Controller
+{
+    public function index(Request $request)
+    {
+        $clientes = Cliente::where('status', 1)->orderBy('nombre')->get();
+
+        // Obtener zonaManejo y tipoCultivo si están en la request
+        $zonaManejo = null;
+        $tipoCultivo = null;
+        $parcelas = collect();
+        $zonaManejoList = collect();
+        $tipoCultivoList = collect();
+        $etapaFenologicaList = collect();
+        $bloqueUno = null;
+        $periodo = $request->filled('periodo') ? $request->periodo : null;
+        $fechaInicial = $request->filled('startDate') ? $request->startDate : Carbon::now('America/Mexico_City')->format('Y-m-d');
+        $fechaFinal = $request->filled('endDate') ? $request->endDate : null;
+
+        if ($request->filled('cliente_id')) {
+            $parcelas = Parcelas::where('cliente_id', $request->cliente_id)->orderBy('nombre')->get();
+        }
+
+        if ($request->filled('parcela_id')) {
+            $zonaManejoList = ZonaManejos::where('parcela_id', $request->parcela_id)->get();
+        }
+
+        if ($request->filled('zona_manejo_id')) {
+            $zonaManejo = ZonaManejos::find($request->zona_manejo_id);
+            if ($zonaManejo) {
+                // Obtener tipos de cultivo asociados a esta zona de manejo
+                $tipoCultivoIds = ZonaManejosTipoCultivos::where('zona_manejo_id', $zonaManejo->id)->pluck('tipo_cultivo_id');
+                $tipoCultivoList = TipoCultivos::whereIn('id', $tipoCultivoIds)->get();
+            }
+        }
+
+        if ($request->filled('tipo_cultivo_id')) {
+            $etapaFenologicaIds = EtapaFenologicaTipoCultivo::where('tipo_cultivo_id', $request->tipo_cultivo_id)->pluck('etapa_fenologica_id');
+            $etapaFenologicaList = EtapaFenologica::whereIn('id', $etapaFenologicaIds)->get();
+        }
+
+        // Solo cargar datos si tenemos todos los parámetros necesarios
+        if ($zonaManejo && $request->filled('tipo_cultivo_id') && $request->filled('etapa_fenologica_id')) {
+            $bloqueUno = $this->cargaDatosEtapafenologica($zonaManejo->id, $request->tipo_cultivo_id, $request->etapa_fenologica_id);
+        }
+
+        // Solo cargar datos de unidades si tenemos zona de manejo
+        $unidadesChart = null;
+        if ($zonaManejo) {
+            $unidadesChart = $this->unidadesChart($zonaManejo->id, $periodo, $fechaInicial, $fechaFinal);
+        }
+
+
+        return view('home.motor', [
+            'section_name' => 'Plataforma de inteligencia agronómica',
+            'clientes' => $clientes,
+            'zonaManejo' => $zonaManejoList,
+            'tipoCultivo' => $tipoCultivoList,
+            'parcelas' => $parcelas,
+            'zonaManejoModel' => $zonaManejo,
+            'tipoCultivoModel' => $tipoCultivo,
+            'etapaFenologica' => $etapaFenologicaList,
+            'bloqueUno' => $bloqueUno,
+            'unidadesChart' => $unidadesChart,
+        ]);
+    }
+
+    // Carga datos de etapas fenológicas
+    public function cargaDatosEtapafenologica($zonaId, $tipoCultivoId, $IDsEtapaFenologica)
+    {
+        $zona_manejo = ZonaManejos::find($zonaId);
+        $tipoCultivos = TipoCultivos::find($tipoCultivoId);
+
+        if (!$zona_manejo || !$tipoCultivos) {
+            return null;
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $period = EstacionDato::whereIn('estacion_id', $ids)
+            ->where('created_at', '>', '1981-01-01 00:00:00')
+            ->selectRaw('MIN(created_at) as minDate, MAX(created_at) as maxDate')
+            ->first();
+
+        $estadoActual = new ZonaManejos();
+        $resultado = $estadoActual->obtenerEstadoActual($zonaId);
+
+        $semaforo = [];
+        $variablesMedicion = VariablesMedicion::all();
+        foreach ($variablesMedicion as $variable) {
+            $valor = $resultado['data']->{$variable->slug} ?? null;
+            if ($variable->slug === 'temperatura') {
+                $semaforo[$variable->slug] = NutricionEtapaFenologicaTipoCultivo::semaforoNutricionTemperatura(
+                    $tipoCultivoId,
+                    $IDsEtapaFenologica,
+                    $variable->slug,
+                    $valor
+                );
+            } else {
+                $semaforo[$variable->slug] = NutricionEtapaFenologicaTipoCultivo::semaforoNutricion(
+                    $tipoCultivoId,
+                    $IDsEtapaFenologica,
+                    $variable->slug,
+                    $valor
+                );
+            }
+        }
+
+        $start = strtotime($resultado['data']->created_at);
+        $end = strtotime(date('Y-m-d H:i:s'));
+        $diasUltimaTransmision = ceil(abs($start - $end) /  (60 * 60 * 24));
+
+        $result = [
+            'zona_manejo' => [
+                'tipo_suelo'    => $zona_manejo->tipo_suelo->tipo_suelo ?? 'N/A',
+                'cultivo'       => $tipoCultivos->cultivo->nombre ?? 'N/A',
+                'tipo_cultivo'  => $tipoCultivos->nombre ?? 'N/A',
+                'edad_cultivo' => $zona_manejo->edad_cultivo ?? 'S/E',
+            ],
+            'estacion' => [
+                'ultimaTransmision' => (array) $resultado['data'],
+                'minDate'           => $period->minDate ?? null,
+                'maxDate'           => $period->maxDate ?? null,
+                'semaforo'          => $semaforo,
+            ],
+            'ultima_transmision' => $diasUltimaTransmision
+        ];
+
+        return $result; // Retorna array en lugar de JSON
+    }
+
+    public function unidadesChart($zonaId, $periodo, $fechaInicial, $fechaFinal)
+    {
+        $fechas = $this->calcularPeriodoFechas($periodo, $fechaInicial, $fechaFinal);
+
+        // Obtener zona de manejo
+        $zonaManejo = ZonaManejos::find($zonaId);
+        if (!$zonaManejo) {
+            return null;
+        }
+
+        // Calcular desglose SIEMPRE por día, usando el rango de fechas determinado
+        $desde = $fechas[1] ?: $fechaInicial;
+        $hasta = $fechas[0] ?: $fechaFinal;
+
+        // Asegura que desde <= hasta
+        if (strtotime($desde) > strtotime($hasta)) {
+            $tmp = $desde;
+            $desde = $hasta;
+            $hasta = $tmp;
+        }
+
+        $desglose = $this->calcularDesgloseTemperaturas($zonaManejo, $desde, $hasta);
+
+        // Calcular resumen de temperaturas del período completo
+        $resumenTemperaturas = ResumenTemperaturas::where('zona_manejo_id', $zonaId)
+            ->whereBetween('fecha', [$desde, $hasta])
+            ->selectRaw('
+                MAX(`max`) as temp_max, 
+                MIN(`min`) as temp_min, 
+                MAX(`max`) - MIN(`min`) as amplitud, 
+                SUM(uc) as uc, 
+                SUM(uf) as uf
+            ')
+            ->first();
+
+        // Si no hay datos en ResumenTemperaturas, calcular desde EstacionDato
+        if (!$resumenTemperaturas || !$resumenTemperaturas->temp_max) {
+            $estacionIds = $zonaManejo->estaciones->pluck('id')->toArray();
+
+            if (!empty($estacionIds)) {
+                $datosTemperatura = EstacionDato::whereIn('estacion_id', $estacionIds)
+                    ->whereBetween('created_at', [$desde, $hasta])
+                    ->selectRaw('
+                        MAX(temperatura) as temp_max, 
+                        MIN(temperatura) as temp_min, 
+                        MAX(temperatura) - MIN(temperatura) as amplitud
+                    ')
+                    ->first();
+
+                if ($datosTemperatura) {
+                    $resumenTemperaturas = (object) [
+                        'temp_max' => $datosTemperatura->temp_max,
+                        'temp_min' => $datosTemperatura->temp_min,
+                        'amplitud' => $datosTemperatura->amplitud,
+                        'uc' => 0,
+                        'uf' => 0
+                    ];
+                }
+            }
+        }
+
+        // Calcular unidades de calor acumuladas del período
+        $unidadesCalor = ResumenTemperaturas::where('zona_manejo_id', $zonaId)
+            ->where('uc', '>', 0)
+            ->whereBetween('fecha', [$desde, $hasta])
+            ->sum('uc');
+
+        // Calcular unidades de frío acumuladas del período
+        $unidadesFrio = UnidadesFrio::where('zona_manejo_id', $zonaId)
+            ->whereBetween('fecha', [$desde, $hasta])
+            ->sum('unidades');
+
+        // Si no hay unidades de frío calculadas, usar las del resumen
+        if ($unidadesFrio == 0 && $resumenTemperaturas) {
+            $unidadesFrio = $resumenTemperaturas->uf ?? 0;
+        }
+
+        // Si no hay unidades de calor calculadas, usar las del resumen
+        if ($unidadesCalor == 0 && $resumenTemperaturas) {
+            $unidadesCalor = $resumenTemperaturas->uc ?? 0;
+        }
+
+        // Crear objeto resumen con todos los datos requeridos
+        $resumen = (object) [
+            'temp_max' => $resumenTemperaturas->temp_max ?? 0,
+            'temp_min' => $resumenTemperaturas->temp_min ?? 0,
+            'amplitud' => $resumenTemperaturas->amplitud ?? 0,
+            'uc' => $unidadesCalor,
+            'uf' => $unidadesFrio
+        ];
+
+        return [
+            'unidadesFrio'  => $unidadesFrio,
+            'unidadesCalor' => $unidadesCalor,
+            'desglose'      => $desglose,
+            'resumen'       => $resumen,
+            'desde'         => $desde,
+            'hasta'         => $hasta,
+            'fechas'        => $fechas,
+        ];
+    }
+
+    /**
+     * Calcula el desglose de temperaturas usando horarios fijos
+     * Diurna: 7am a 7pm, Nocturna: 7pm a 7am
+     */
+    private function calcularDesgloseTemperaturas($zonaManejo, $fechaInicial, $fechaFinal)
+    {
+        $desglose = [];
+
+        // Obtener IDs de estaciones asociadas a esta zona de manejo
+        $estacionIds = $zonaManejo->estaciones->pluck('id')->toArray();
+
+        if (empty($estacionIds)) {
+            return $desglose;
+        }
+
+        // Convertir fechas a Carbon - limpiar formato si viene con tiempo duplicado
+        $fechaInicialLimpia = preg_replace('/\s+\d{2}:\d{2}:\d{2}$/', '', $fechaInicial);
+        $fechaFinalLimpia = preg_replace('/\s+\d{2}:\d{2}:\d{2}$/', '', $fechaFinal);
+
+        $fechaInicio = Carbon::parse($fechaInicialLimpia)->setTimezone('America/Mexico_City')->startOfDay();
+        $fechaFin = Carbon::parse($fechaFinalLimpia)->setTimezone('America/Mexico_City')->endOfDay();
+
+        // Generar array de fechas
+        $fechas = [];
+        $fechaActual = $fechaInicio->copy();
+        while ($fechaActual->lte($fechaFin)) {
+            $fechas[] = $fechaActual->format('Y-m-d');
+            $fechaActual->addDay();
+        }
+
+        foreach ($fechas as $fecha) {
+            $fechaCarbon = Carbon::parse($fecha)->setTimezone('America/Mexico_City');
+
+            // Horarios fijos: Diurna 7am-7pm, Nocturna 7pm-7am
+            $diurnaInicio = $fechaCarbon->copy()->setTime(7, 0, 0);
+            $diurnaFin = $fechaCarbon->copy()->setTime(19, 0, 0);
+            $nocturnaInicio1 = $fechaCarbon->copy()->setTime(19, 0, 0);
+            $nocturnaFin1 = $fechaCarbon->copy()->addDay()->setTime(7, 0, 0);
+            $nocturnaInicio2 = $fechaCarbon->copy()->subDay()->setTime(19, 0, 0);
+            $nocturnaFin2 = $fechaCarbon->copy()->setTime(7, 0, 0);
+
+            // Temperaturas diurnas (7am-7pm)
+            $diurnas = EstacionDato::whereIn('estacion_id', $estacionIds)
+                ->whereBetween('created_at', [$diurnaInicio, $diurnaFin])
+                ->selectRaw('MAX(temperatura) as max, MIN(temperatura) as min, MAX(temperatura) - MIN(temperatura) as amplitud')
+                ->first();
+
+            // Temperaturas nocturnas (7pm-7am del día siguiente)
+            $nocturnas = EstacionDato::whereIn('estacion_id', $estacionIds)
+                ->where(function ($query) use ($nocturnaInicio1, $nocturnaFin1, $nocturnaInicio2, $nocturnaFin2) {
+                    $query->whereBetween('created_at', [$nocturnaInicio1, $nocturnaFin1])
+                        ->orWhereBetween('created_at', [$nocturnaInicio2, $nocturnaFin2]);
+                })
+                ->selectRaw('MAX(temperatura) as max, MIN(temperatura) as min, MAX(temperatura) - MIN(temperatura) as amplitud')
+                ->first();
+
+            // Temperaturas del día completo
+            $dia = EstacionDato::whereIn('estacion_id', $estacionIds)
+                ->whereBetween('created_at', [$fechaCarbon->startOfDay(), $fechaCarbon->endOfDay()])
+                ->selectRaw('MAX(temperatura) as max, MIN(temperatura) as min, MAX(temperatura) - MIN(temperatura) as amplitud')
+                ->first();
+
+            // Si no hay datos del día completo, usar los datos de diurnas y nocturnas
+            if (!$dia || !$dia->max || !$dia->min) {
+                $maxDiurna = $diurnas ? $diurnas->max : 0;
+                $minDiurna = $diurnas ? $diurnas->min : 0;
+                $maxNocturna = $nocturnas ? $nocturnas->max : 0;
+                $minNocturna = $nocturnas ? $nocturnas->min : 0;
+
+                $dia = (object) [
+                    'max' => max($maxDiurna, $maxNocturna),
+                    'min' => min($minDiurna, $minNocturna) ?: min($maxDiurna, $maxNocturna),
+                    'amplitud' => max($maxDiurna, $maxNocturna) - min($minDiurna, $minNocturna)
+                ];
+            }
+
+            // Calcular unidades de calor
+            $tipoCultivo = $zonaManejo->tipoCultivos->first();
+            $tempBaseCalor = $zonaManejo->temp_base_calor ??
+                ($tipoCultivo && $tipoCultivo->cultivo ? $tipoCultivo->cultivo->temp_base_calor : 10);
+
+            $uc = 0;
+            if ($dia && $dia->max && $dia->min) {
+                $uc = (($dia->max + $dia->min) / 2) - $tempBaseCalor;
+                $uc = max(0, $uc); // No puede ser negativo
+            }
+
+            $desglose[] = [
+                'fecha' => $fecha,
+                'max_nocturna' => $nocturnas ? $nocturnas->max : 0,
+                'min_nocturna' => $nocturnas ? $nocturnas->min : 0,
+                'amp_nocturna' => $nocturnas ? $nocturnas->amplitud : 0,
+                'max_diurna' => $diurnas ? $diurnas->max : 0,
+                'min_diurna' => $diurnas ? $diurnas->min : 0,
+                'amp_diurna' => $diurnas ? $diurnas->amplitud : 0,
+                'max' => $dia ? $dia->max : 0,
+                'min' => $dia ? $dia->min : 0,
+                'amp' => $dia ? $dia->amplitud : 0,
+                'uc' => $uc,
+                'uf' => 0, // Se calcula por separado en unidades_frio
+            ];
+        }
+
+        return $desglose;
+    }
+
+    // Función para rutas AJAX que necesitan JSON
+    public function unidadesChartAjax(Request $request)
+    {
+        $zonaId = $request->estacion_id;
+        $periodo = $request->periodo;
+        $fechaInicial = $request->startDate;
+        $fechaFinal = $request->endDate;
+
+        $datos = $this->unidadesChart($zonaId, $periodo, $fechaInicial, $fechaFinal);
+
+        if ($datos === null) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        return response()->json($datos);
+    }
+
+    public function plagasParcial($zonaManejoId, $tipoCultivoId)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+        $tipoCultivo = TipoCultivos::find($tipoCultivoId);
+
+        if (!$zonaManejo || !$tipoCultivo) {
+            return response()->json(['error' => 'Zona de manejo o tipo de cultivo no encontrado'], 404);
+        }
+
+        // Crear una instancia del componente y obtener su HTML
+        $component = new Plagas($zonaManejo, $tipoCultivo);
+        $html = $component->render();
+
+        return response($html);
+    }
+
+    // ========================================
+    // SECCIÓN: ENFERMEDADES
+    // ========================================
+
+    /**
+     * Componente principal para el análisis de enfermedades
+     * Obtiene enfermedades asociadas al tipo de cultivo y calcula períodos de riesgo
+     */
+    public function componentEnfermedades(Request $request)
+    {
+        $tipoCultivoId = $request->get('tipo_cultivo_id');
+        $zonaId = $request->get('zona_manejo_id');
+        $periodo = $request->get('periodo');
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
+
+        // return $this->generarPronosticoOpenWeatherEnfermedades($fechas, $periodo, $enfermedadId);
+        // $enfermedad->semaforo_historicos = $this->calcularSemaforoRiesgo($horasHistoricas, $enfermedad);
+
+        if ($tipoCultivoId) {
+            $enfermedades = TipoCultivosEnfermedad::with('enfermedad')
+                ->where('tipo_cultivo_id', $tipoCultivoId)
+                ->whereHas('enfermedad', function ($query) {
+                    $query->where('status', 1);
+                })
+                ->get();
+        }
+
+        return view('components.enfermedades', [
+            'enfermedades' => $enfermedades,
+            'tipoCultivoId' => $tipoCultivoId,
+            'zonaId' => $zonaId,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ]);
+    }
+
+
+
+    /**
+     * Genera datos reales desde estacion_dato procesando por horas completas
+     * Muestra períodos de condiciones por horas completas
+     */
+    private function generarDatosRealesDesdeEstacionDato($enfermedadId, $tipoCultivoId, $estacionId, $fechas)
+    {
+        // Obtener datos históricos de enfermedad_horas_acumuladas_condiciones
+        $periodosHistoricos = DB::table('enfermedad_horas_acumuladas_condiciones')
+            ->where('tipo_cultivo_id', $tipoCultivoId)
+            ->where('enfermedad_id', $enfermedadId)
+            ->where('estacion_id', $estacionId)
+            ->whereBetween('fecha', [$fechas[0], $fechas[1]])
+            ->orderBy('fecha', 'desc')
+            ->get();
+
+        // Obtener período actual en progreso de enfermedad_horas_condiciones
+        $periodoActual = DB::table('enfermedad_horas_condiciones')
+            ->where('tipo_cultivo_id', $tipoCultivoId)
+            ->where('enfermedad_id', $enfermedadId)
+            ->where('estacion_id', $estacionId)
+            ->first();
+
+        $periodos = collect();
+
+        // Agregar períodos históricos (solo los que tienen minutos > 0)
+        foreach ($periodosHistoricos as $periodo) {
+            if ($periodo->minutos > 0) {
+                $periodos->push((object)[
+                    'fecha' => $periodo->fecha,
+                    'minutos' => $periodo->minutos,
+                    'estatus' => $this->determinarEstatus($periodo->minutos)
+                ]);
+            }
+        }
+
+        // Agregar período actual si existe y tiene minutos acumulados
+        if ($periodoActual && $periodoActual->minutos > 0) {
+            $periodos->push((object)[
+                'fecha' => $periodoActual->fecha_ultima_transmision,
+                'minutos' => $periodoActual->minutos,
+                'estatus' => $this->determinarEstatus($periodoActual->minutos)
+            ]);
+        }
+
+        // Procesar períodos para mostrar acumulaciones continuas y reinicios
+        $periodosProcesados = collect();
+        $periodosOrdenados = $periodos->sortBy('fecha');
+
+        if ($periodosOrdenados->count() > 0) {
+            $inicioAcumulacion = null;
+            $finAcumulacion = null;
+            $minutosAcumulados = 0;
+
+            foreach ($periodosOrdenados as $index => $periodo) {
+                $fechaPeriodo = Carbon::parse($periodo->fecha);
+
+                if ($inicioAcumulacion === null) {
+                    // Iniciar nueva acumulación
+                    $inicioAcumulacion = $fechaPeriodo;
+                    $finAcumulacion = $fechaPeriodo->copy()->addMinutes($periodo->minutos);
+                    $minutosAcumulados = $periodo->minutos;
+                } else {
+                    // Verificar si es consecutivo (gap menor a 30 minutos)
+                    $gapMinutos = $fechaPeriodo->diffInMinutes($finAcumulacion);
+
+                    if ($gapMinutos <= 30 && $gapMinutos >= 0) {
+                        // Es consecutivo - extender la acumulación
+                        $finAcumulacion = $fechaPeriodo->copy()->addMinutes($periodo->minutos);
+                        $minutosAcumulados += $periodo->minutos;
+                    } else {
+                        // Hay un gap - guardar acumulación anterior y agregar reinicio
+                        $periodosProcesados->push((object) [
+                            'fecha' => $inicioAcumulacion->format('Y-m-d H:i:s'),
+                            'minutos' => $minutosAcumulados,
+                            'estatus' => $this->determinarEstatus($minutosAcumulados)
+                        ]);
+
+                        // Agregar reinicio
+                        if ($finAcumulacion !== null) {
+                            $periodosProcesados->push((object) [
+                                'fecha' => $finAcumulacion->format('Y-m-d H:i:s'),
+                                'minutos' => 0,
+                                'estatus' => 'Reinicio'
+                            ]);
+                        }
+
+                        // Iniciar nueva acumulación
+                        $inicioAcumulacion = $fechaPeriodo;
+                        $finAcumulacion = $fechaPeriodo->copy()->addMinutes($periodo->minutos);
+                        $minutosAcumulados = $periodo->minutos;
+                    }
+                }
+            }
+
+            // Guardar la última acumulación
+            if ($inicioAcumulacion !== null && $minutosAcumulados > 0) {
+                $periodosProcesados->push((object) [
+                    'fecha' => $inicioAcumulacion->format('Y-m-d H:i:s'),
+                    'minutos' => $minutosAcumulados,
+                    'estatus' => $this->determinarEstatus($minutosAcumulados)
+                ]);
+            }
+        }
+
+        return $periodosProcesados->sortBy('fecha');
+    }
+
+    /**
+     * Verifica si las condiciones ambientales cumplen los parámetros de riesgo de una enfermedad
+     * Valida humedad y temperatura contra los umbrales configurados
+     */
+    private function verificarCondicionesRiesgo($humedad, $temperatura, $riesgoHumedad, $riesgoHumedadMax, $riesgoTemperatura, $riesgoTemperaturaMax)
+    {
+        // Verificar humedad
+        $humedadCumple = $humedad >= $riesgoHumedad && $humedad <= $riesgoHumedadMax;
+
+        // Verificar temperatura
+        $temperaturaCumple = $temperatura >= $riesgoTemperatura && $temperatura <= $riesgoTemperaturaMax;
+
+        // Ambas condiciones deben cumplirse
+        return $humedadCumple && $temperaturaCumple;
+    }
+
+
+
+    /**
+     * Determina el estatus de riesgo basado en los minutos acumulados
+     * Bajo: < 2 horas, Alerta: 2-8 horas, Riesgo: > 8 horas
+     */
+    private function determinarEstatus($minutos)
+    {
+        if ($minutos >= 480) { // 8 horas o más
+            return 'Riesgo';
+        } elseif ($minutos >= 120) { // 2 horas o más
+            return 'Alerta';
+        } else {
+            return 'Bajo';
+        }
+    }
+
+    /**
+     * Procesa datos reales aplicando la lógica de reinicio cuando hay períodos de 0 horas
+     * Aplica la lógica de "reset on zero" para acumulaciones de enfermedades
+     */
+    private function procesarDatosRealesConReinicio($datosReales)
+    {
+        $datosProcesados = collect();
+        $acumulacionActual = 0;
+        $inicioAcumulacion = null;
+
+        foreach ($datosReales as $dato) {
+            $minutos = $dato->minutos;
+
+            if ($minutos > 0) {
+                // Si hay minutos acumulados, sumarlos al contador
+                if ($inicioAcumulacion === null) {
+                    $inicioAcumulacion = $dato->fecha;
+                }
+                $acumulacionActual += $minutos;
+            } else {
+                // Si marca 0, reiniciar el contador y guardar el período anterior si existe
+                if ($acumulacionActual > 0) {
+                    $datosProcesados->push((object)[
+                        'fecha' => $inicioAcumulacion,
+                        'minutos' => $acumulacionActual,
+                        'estatus' => $this->determinarEstatus($acumulacionActual)
+                    ]);
+                }
+
+                // Reiniciar acumulación
+                $acumulacionActual = 0;
+                $inicioAcumulacion = null;
+            }
+        }
+
+        // Si queda acumulación al final, guardarla
+        if ($acumulacionActual > 0) {
+            $datosProcesados->push((object)[
+                'fecha' => $inicioAcumulacion,
+                'minutos' => $acumulacionActual,
+                'estatus' => $this->determinarEstatus($acumulacionActual)
+            ]);
+        }
+
+        return $datosProcesados;
+    }
+
+
+    /**
+     * Genera pronósticos reales de OpenWeather para enfermedades
+     */
+    private function generarPronosticoOpenWeatherEnfermedades($fechas, $periodo, $enfermedadId)
+    {
+        try {
+            // Obtener los parámetros de la enfermedad desde la base de datos
+            $enfermedad = DB::table('enfermedades')->where('id', $enfermedadId)->first();
+            if (!$enfermedad) {
+                return collect();
+            }
+
+            // Obtener la estación para las coordenadas
+            $estacion = DB::table('estaciones')->where('id', 65)->first(); // Por defecto estación 65
+            if (!$estacion) {
+                return collect();
+            }
+
+            // Obtener la primera parcela del cliente de la estación
+            $parcela = DB::table('parcelas')->where('cliente_id', $estacion->cliente_id)->first();
+            if (!$parcela || !$parcela->lat || !$parcela->lon) {
+                return collect();
+            }
+
+            // Llamada a la API de OpenWeatherMap
+            $response = Http::get('https://api.openweathermap.org/data/3.0/onecall', [
+                'lat' => $parcela->lat,
+                'lon' => $parcela->lon,
+                'appid' => config('services.openweathermap.key'),
+                'units' => 'metric',
+                'tz' => '+06:00',
+                'exclude' => 'current,minutely,alerts'
+            ]);
+
+            if (!$response->successful()) {
+                return collect();
+            }
+
+            $openWeatherData = $response->json();
+            $datos = collect();
+
+            // Usar la fecha actual para calcular los próximos 2 días
+            $fechaActual = Carbon::now('America/Mexico_City')->startOfDay();
+            $fechaInicioPronostico = $fechaActual->copy()->addDay(); // Mañana
+
+            // Procesar pronósticos por horas para los próximos 2 días (mañana y pasado mañana)
+            for ($i = 0; $i < 2; $i++) {
+                $fecha = $fechaInicioPronostico->copy()->addDays($i);
+
+                for ($h = 0; $h < 24; $h++) {
+                    $hora = $fecha->copy()->addHours($h);
+                    $timestamp = $hora->timestamp;
+
+                    // Buscar datos de OpenWeather para esta hora
+                    $datoHora = collect($openWeatherData['hourly'])->first(function ($hData) use ($timestamp) {
+                        return $hData['dt'] == $timestamp;
+                    });
+
+                    if ($datoHora) {
+                        $temperatura = $datoHora['temp'] ?? 0;
+                        $humedad = $datoHora['humidity'] ?? 0;
+
+                        // Debug: Log algunos datos para verificar
+                        if ($h == 0) { // Solo para la primera hora de cada día
+                            \Illuminate\Support\Facades\Log::info("OpenWeather - Fecha: {$hora->format('Y-m-d H:i:s')}, Temp: {$temperatura}°C, Humedad: {$humedad}%");
+                        }
+
+                        // Verificar si las condiciones son favorables para enfermedades
+                        // usando los parámetros específicos de la enfermedad desde la base de datos
+                        $condicionesFavorables = $this->verificarCondicionesRiesgo(
+                            $humedad,
+                            $temperatura,
+                            $enfermedad->riesgo_humedad ?? 75,
+                            $enfermedad->riesgo_humedad_max ?? 100,
+                            $enfermedad->riesgo_temperatura ?? 20,
+                            $enfermedad->riesgo_temperatura_max ?? 30
+                        );
+
+                        if ($condicionesFavorables) {
+                            // Agrupar períodos consecutivos de condiciones favorables
+                            $datos->push((object)[
+                                'fecha' => $hora->format('Y-m-d H:i:s'),
+                                'minutos' => 60, // 1 hora
+                                'estatus' => 'Alerta'
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            // Agrupar períodos consecutivos
+            return $this->agruparPeriodosConsecutivos($datos);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error obteniendo pronósticos de OpenWeather para enfermedades: ' . $e->getMessage());
+            return collect();
+        }
+    }
+
+    /**
+     * Agrupa períodos consecutivos de condiciones favorables
+     */
+    private function agruparPeriodosConsecutivos($datos)
+    {
+        if ($datos->count() == 0) {
+            return collect();
+        }
+
+        $periodosAgrupados = collect();
+        $datosOrdenados = $datos->sortBy('fecha');
+        $inicioPeriodo = null;
+        $finPeriodo = null;
+        $minutosAcumulados = 0;
+
+        foreach ($datosOrdenados as $dato) {
+            $fechaActual = Carbon::parse($dato->fecha);
+
+            if ($inicioPeriodo === null) {
+                // Iniciar nuevo período
+                $inicioPeriodo = $fechaActual;
+                $finPeriodo = $fechaActual->copy()->addMinutes($dato->minutos);
+                $minutosAcumulados = $dato->minutos;
+            } else {
+                // Verificar si es consecutivo (gap menor a 2 horas)
+                $gapMinutos = $fechaActual->diffInMinutes($finPeriodo);
+
+                if ($gapMinutos <= 120 && $gapMinutos >= 0) {
+                    // Es consecutivo - extender el período
+                    $finPeriodo = $fechaActual->copy()->addMinutes($dato->minutos);
+                    $minutosAcumulados += $dato->minutos;
+                } else {
+                    // No es consecutivo - guardar período anterior y iniciar nuevo
+                    if ($minutosAcumulados > 0) {
+                        $periodosAgrupados->push((object)[
+                            'fecha' => $inicioPeriodo->format('Y-m-d H:i:s'),
+                            'minutos' => $minutosAcumulados,
+                            'estatus' => $this->determinarEstatus($minutosAcumulados)
+                        ]);
+                    }
+
+                    // Iniciar nuevo período
+                    $inicioPeriodo = $fechaActual;
+                    $finPeriodo = $fechaActual->copy()->addMinutes($dato->minutos);
+                    $minutosAcumulados = $dato->minutos;
+                }
+            }
+        }
+
+        // Agregar el último período si existe
+        if ($minutosAcumulados > 0) {
+            $periodosAgrupados->push((object)[
+                'fecha' => $inicioPeriodo->format('Y-m-d H:i:s'),
+                'minutos' => $minutosAcumulados,
+                'estatus' => $this->determinarEstatus($minutosAcumulados)
+            ]);
+        }
+
+        return $periodosAgrupados;
+    }
+
+
+    /**
+     * Calcula las horas acumuladas respetando la lógica de reset on zero
+     * Retorna solo las horas del último período acumulado después del último reinicio
+     */
+    private function calcularHorasAcumuladasConReinicioCorrecto($periodos)
+    {
+        if (!$periodos || $periodos->count() == 0) {
+            return 0;
+        }
+
+        $horasAcumuladas = 0;
+        $periodosOrdenados = $periodos->sortBy('fecha');
+
+        foreach ($periodosOrdenados as $periodo) {
+            $horasPeriodo = $periodo->minutos / 60;
+
+            // Si las horas del período son 0, reiniciar el contador
+            if ($horasPeriodo == 0) {
+                $horasAcumuladas = 0;
+            } else {
+                // Sumar las horas del período actual
+                $horasAcumuladas += $horasPeriodo;
+            }
+        }
+
+        // Retornar solo las horas del último período acumulado (después del último reinicio)
+        // Si no hay reinicio, retornar el total acumulado
+        return round($horasAcumuladas, 1);
+    }
+
+    /**
+     * Procesa datos por horas completas y muestra períodos de condiciones
+     * Muestra períodos continuos de acumulación por horas completas
+     */
+    private function agregarPeriodosDeReinicio($periodos, $fechas)
+    {
+        if ($periodos->isEmpty()) {
+            return $periodos;
+        }
+
+        // Procesar datos por horas completas
+        $periodosPorHoras = collect();
+        $periodosOrdenados = $periodos->sortBy('fecha');
+
+        $inicioPeriodoActual = null;
+        $finPeriodoActual = null;
+        $acumuladoPeriodoActual = 0;
+
+        foreach ($periodosOrdenados as $index => $periodo) {
+            $finPeriodo = Carbon::parse($periodo->fecha)->addMinutes($periodo->minutos);
+
+            if ($inicioPeriodoActual === null) {
+                // Primer período - iniciar nuevo grupo
+                $inicioPeriodoActual = Carbon::parse($periodo->fecha);
+                $finPeriodoActual = $finPeriodo;
+                $acumuladoPeriodoActual = $periodo->minutos;
+            } else {
+                // Verificar si es consecutivo (sin gap significativo)
+                $gap = Carbon::parse($periodo->fecha)->diffInMinutes($finPeriodoActual);
+
+                if ($gap <= 10) { // Tolerancia de 10 minutos para considerar consecutivo
+                    // Es consecutivo - agregar al período actual y extender el fin
+                    $finPeriodoActual = $finPeriodo;
+                    $acumuladoPeriodoActual += $periodo->minutos;
+                } else {
+                    // Hay un gap - guardar período actual, agregar reinicio y empezar uno nuevo
+                    $periodosPorHoras->push((object) [
+                        'fecha' => $inicioPeriodoActual->format('Y-m-d H:i:s'),
+                        'minutos' => $acumuladoPeriodoActual,
+                        'estatus' => $this->determinarEstatus($acumuladoPeriodoActual)
+                    ]);
+
+                    // Agregar período de reinicio
+                    if ($finPeriodoActual !== null) {
+                        $periodosPorHoras->push((object) [
+                            'fecha' => $finPeriodoActual->format('Y-m-d H:i:s'),
+                            'minutos' => 0,
+                            'estatus' => 'Reinicio'
+                        ]);
+                    }
+
+                    // Iniciar nuevo período
+                    $inicioPeriodoActual = Carbon::parse($periodo->fecha);
+                    $finPeriodoActual = $finPeriodo;
+                    $acumuladoPeriodoActual = $periodo->minutos;
+                }
+            }
+        }
+
+        // Guardar el último período
+        if ($inicioPeriodoActual !== null && $acumuladoPeriodoActual > 0) {
+            $periodosPorHoras->push((object) [
+                'fecha' => $inicioPeriodoActual->format('Y-m-d H:i:s'),
+                'minutos' => $acumuladoPeriodoActual,
+                'estatus' => $this->determinarEstatus($acumuladoPeriodoActual)
+            ]);
+        }
+
+        return $periodosPorHoras->sortBy('fecha');
+    }
+
+    /**
+     * Agrega períodos de reinicio individuales sin agrupar períodos consecutivos
+     * Mantiene cada período individual y agrega reinicios entre ellos
+     */
+    private function agregarPeriodosDeReinicioIndividuales($periodos, $fechas)
+    {
+        if ($periodos->isEmpty()) {
+            return $periodos;
+        }
+
+        $periodosConReinicios = collect();
+        $periodosOrdenados = $periodos->sortBy('fecha');
+
+        foreach ($periodosOrdenados as $index => $periodo) {
+            // Agregar el período actual
+            $periodosConReinicios->push($periodo);
+
+            // Si no es el último período, verificar si hay gap para agregar reinicio
+            if ($index < $periodosOrdenados->count() - 1) {
+                $finPeriodoActual = Carbon::parse($periodo->fecha)->addMinutes($periodo->minutos);
+                $inicioSiguientePeriodo = Carbon::parse($periodosOrdenados[$index + 1]->fecha);
+
+                $gap = $inicioSiguientePeriodo->diffInMinutes($finPeriodoActual);
+
+                // Si hay gap mayor a 10 minutos, agregar reinicio
+                if ($gap > 10) {
+                    $periodosConReinicios->push((object) [
+                        'fecha' => $finPeriodoActual->format('Y-m-d H:i:s'),
+                        'minutos' => 0,
+                        'estatus' => 'Reinicio'
+                    ]);
+                }
+            }
+        }
+
+        return $periodosConReinicios->sortBy('fecha');
+    }
+
+
+    // ========================================
+    // FIN SECCIÓN: ENFERMEDADES
+    // ========================================
+
+    /**
+     * Método temporal para probar la lógica de agrupación
+     */
+    public function testAgrupacion(Request $request)
+    {
+        $tipoCultivoId = $request->get('tipo_cultivo_id', 9);
+        $fechas = ['2025-08-03 00:00:00', '2025-08-03 23:59:59'];
+
+        $datosHistoricos = $this->generarDatosRealesDesdeEstacionDato(2, $tipoCultivoId, 66, $fechas);
+        $datosAgrupados = $this->agregarPeriodosDeReinicio($datosHistoricos, $fechas);
+
+        return response()->json([
+            'periodos_individuales' => $datosHistoricos->count(),
+            'periodos_agrupados' => $datosAgrupados->count(),
+            'datos_individuales' => $datosHistoricos->take(10),
+            'datos_agrupados' => $datosAgrupados->take(10)
+        ]);
+    }
+
+    public function graficaTemperaturaAtmosferica($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_temperatura_admosferica', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaCO2($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_co2', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaPH($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_ph', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaNitrogeno($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_nitrogeno', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaFosforo($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_fosforo', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaPotasio($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_potasio', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaConductividadElectrica($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        // Renderizar la vista del componente con las variables
+        return view('components.grafica_conductividad_electrica', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaHumedadRelativaComponente($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', null);
+        $endDate = $request->get('endDate', null);
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        return view('components.grafica_humedad_relativa', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function graficaHumedadSueloComponente($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', null);
+        $endDate = $request->get('endDate', null);
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        return view('components.grafica_humedad_suelo', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function parcelasPorCliente(Request $request)
+    {
+        $clienteId = $request->cliente_id;
+
+        $parcelas = Cache::remember('parcelas_cliente_' . $clienteId, 3600, function () use ($clienteId) {
+            return Parcelas::where('cliente_id', $clienteId)->orderBy('nombre')->get(['id', 'nombre']);
+        });
+
+        return response()->json($parcelas);
+    }
+
+    public function zonasPorParcela(Request $request)
+    {
+        $parcelaId = $request->parcela_id;
+        $zonas = ZonaManejos::where('parcela_id', $parcelaId)->orderBy('nombre')->get();
+        return response()->json($zonas);
+    }
+
+    public function ZonaManejosGet(Request $request)
+    {
+        $zonaId = $request->input('zona');
+        $tipoCultivoIds = ZonaManejosTipoCultivos::where('zona_manejo_id', $zonaId)->pluck('tipo_cultivo_id');
+        $tiposCultivo = TipoCultivos::whereIn('id', $tipoCultivoIds)->get();
+
+        return response()->json($tiposCultivo);
+    }
+
+    public function etapasFenologicasPorTipoDeCultivo(Request $request)
+    {
+        $tipoCultivoIds = $request->input('tipo_cultivo_id');
+        $IDsEtapaFenologica = EtapaFenologicaTipoCultivo::where('tipo_cultivo_id', $tipoCultivoIds)->pluck('etapa_fenologica_id');
+        $etapasFenologicas = EtapaFenologica::whereIn('id', $IDsEtapaFenologica)->get();
+        return response()->json($etapasFenologicas);
+    }
+
+    public function view_grafica_temperatura_admosferica(Request $request)
+    {
+        $zona_manejo = ZonaManejos::find($request->zona_manejo);
+        $periodo = $request->periodo;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $tipo_cultivo_id = $request->tipo_cultivo_id;
+        $etapa_fenologica_id = $request->etapa_fenologica_id;
+
+        return view('components.grafica_temperatura_admosferica', [
+            'zonaManejo' => $zona_manejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function grafica_temperatura(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+
+        // Función auxiliar para calcular bloques dinámicos de 4 horas
+        $calcularBloques4Horas = function () {
+            $horaActual = Carbon::now('America/Mexico_City')->hour;
+            $horaInicio = floor($horaActual / 4) * 4; // Redondear hacia abajo a la hora múltiplo de 4
+
+            return [
+                'horaInicio' => $horaInicio,
+                'bloques' => [
+                    $horaInicio,
+                    $horaInicio - 4,
+                    $horaInicio - 8,
+                    $horaInicio - 12,
+                    $horaInicio - 16,
+                    $horaInicio - 20
+                ]
+            ];
+        };
+
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(temperatura) as max_temperatura,
+                MIN(temperatura) as min_temperatura,
+                AVG(temperatura) as avg_temperatura
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosTemperatura   = array_column($rows, 'max_temperatura');
+        $minimosTemperatura   = array_column($rows, 'min_temperatura');
+        $promediosTemperatura = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_temperatura'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosTemperatura'   => $maximosTemperatura,
+            'minimosTemperatura'   => $minimosTemperatura,
+            'promediosTemperatura' => $promediosTemperatura,
+            'desde' => $fechas[1],
+            'hasta' => $fechas[0],
+            'tipo' => $fechas[2],
+        ]);
+    }
+
+    public function grafica_co2(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(co2) as max_co2,
+                MIN(co2) as min_co2,
+                AVG(co2) as avg_co2
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosCo2   = array_column($rows, 'max_co2');
+        $minimosCo2   = array_column($rows, 'min_co2');
+        $promediosCo2 = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_co2'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosCo2'   => $maximosCo2,
+            'minimosCo2'   => $minimosCo2,
+            'promediosCo2' => $promediosCo2,
+        ]);
+    }
+
+    public function grafica_ph(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(ph) as max_ph,
+                MIN(ph) as min_ph,
+                AVG(ph) as avg_ph
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosPh   = array_column($rows, 'max_ph');
+        $minimosPh   = array_column($rows, 'min_ph');
+        $promediosPh = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_ph'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosPh'   => $maximosPh,
+            'minimosPh'   => $minimosPh,
+            'promediosPh' => $promediosPh,
+        ]);
+    }
+
+    public function grafica_nitrogeno(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . ' 
+                MAX(nit) as max_nit,  
+                MIN(nit) as min_nit,
+                AVG(nit) as avg_nit
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosNitrogeno   = array_column($rows, 'max_nit');
+        $minimosNitrogeno   = array_column($rows, 'min_nit');
+        $promediosNitrogeno = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_nit'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosNitrogeno'   => $maximosNitrogeno,
+            'minimosNitrogeno'   => $minimosNitrogeno,
+            'promediosNitrogeno' => $promediosNitrogeno,
+        ]);
+    }
+
+    public function grafica_fosforo(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . ' 
+                MAX(phos) as max_phos,  
+                MIN(phos) as min_phos,
+                AVG(phos) as avg_phos
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosFosforo   = array_column($rows, 'max_phos');
+        $minimosFosforo   = array_column($rows, 'min_phos');
+        $promediosFosforo = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_phos'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosFosforo'   => $maximosFosforo,
+            'minimosFosforo'   => $minimosFosforo,
+            'promediosFosforo' => $promediosFosforo,
+        ]);
+    }
+
+    public function grafica_potasio(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . ' 
+                MAX(pot) as max_pot,  
+                MIN(pot) as min_pot,
+                AVG(pot) as avg_pot
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosPotasio   = array_column($rows, 'max_pot');
+        $minimosPotasio   = array_column($rows, 'min_pot');
+        $promediosPotasio = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_pot'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosPotasio'   => $maximosPotasio,
+            'minimosPotasio'   => $minimosPotasio,
+            'promediosPotasio' => $promediosPotasio,
+        ]);
+    }
+
+    public function grafica_conductividad_electrica(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . ' 
+                MAX(conductividad_electrica) as max_conductividad_electrica,  
+                MIN(conductividad_electrica) as min_conductividad_electrica,
+                AVG(conductividad_electrica) as avg_conductividad_electrica
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosConductividadElectrica   = array_column($rows, 'max_conductividad_electrica');
+        $minimosConductividadElectrica   = array_column($rows, 'min_conductividad_electrica');
+        $promediosConductividadElectrica = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_conductividad_electrica'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosConductividadElectrica'   => $maximosConductividadElectrica,
+            'minimosConductividadElectrica'   => $minimosConductividadElectrica,
+            'promediosConductividadElectrica' => $promediosConductividadElectrica,
+        ]);
+    }
+
+    public function grafica_humedad_relativa(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(humedad_relativa) as max_humedad_relativa,
+                MIN(humedad_relativa) as min_humedad_relativa,
+                AVG(humedad_relativa) as avg_humedad_relativa
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosHumedad   = array_column($rows, 'max_humedad_relativa');
+        $minimosHumedad   = array_column($rows, 'min_humedad_relativa');
+        $promediosHumedad = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_humedad_relativa'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosHumedad'   => $maximosHumedad,
+            'minimosHumedad'   => $minimosHumedad,
+            'promediosHumedad' => $promediosHumedad,
+        ]);
+    }
+
+    public function grafica_humedad_suelo(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(humedad_15) as max_humedad_suelo,
+                MIN(humedad_15) as min_humedad_suelo,
+                AVG(humedad_15) as avg_humedad_suelo
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosHumedadSuelo   = array_column($rows, 'max_humedad_suelo');
+        $minimosHumedadSuelo   = array_column($rows, 'min_humedad_suelo');
+        $promediosHumedadSuelo = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_humedad_suelo'));
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosHumedadSuelo'   => $maximosHumedadSuelo,
+            'minimosHumedadSuelo'   => $minimosHumedadSuelo,
+            'promediosHumedadSuelo' => $promediosHumedadSuelo,
+        ]);
+    }
+
+    public function grafica_temperatura_suelo(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'estacion_dato.created_at as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(temperatura_suelo) as max_temperatura_suelo,
+                MIN(temperatura_suelo) as min_temperatura_suelo,
+                AVG(temperatura_suelo) as avg_temperatura_suelo
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Transform rows into separate arrays
+        $labels               = array_column($rows, 'fecha');
+        $maximosTemperaturaSuelo   = array_column($rows, 'max_temperatura_suelo');
+        $minimosTemperaturaSuelo   = array_column($rows, 'min_temperatura_suelo');
+        $promediosTemperaturaSuelo = array_map(fn($v) => round($v, 2), array_column($rows, 'avg_temperatura_suelo'));
+
+        // Transformar las fechas al formato deseado
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels'               => $labels,
+            'maximosTemperaturaSuelo'   => $maximosTemperaturaSuelo,
+            'minimosTemperaturaSuelo'   => $minimosTemperaturaSuelo,
+            'promediosTemperaturaSuelo' => $promediosTemperaturaSuelo,
+        ]);
+    }
+
+    public function calcularPeriodoFechas($periodo, $desdeR = null, $hastaR = null)
+    {
+        // Forzar zona horaria de México
+        $now = Carbon::now('America/Mexico_City');
+
+        // Por defecto: últimas 24 horas exactas
+        $desde = $now->copy()->subHours(24)->format('Y-m-d H:i:s');
+        $hasta = $now->format('Y-m-d H:i:s');
+
+        switch ($periodo) {
+            case 1: // 24 horas exactas
+                $desde = $now->copy()->subHours(24)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 2: // 48 horas exactas
+                $desde = $now->copy()->subHours(48)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 3: // 7 días
+                $desde = $now->copy()->subDays(7)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 4: // 14 días
+                $desde = $now->copy()->subDays(14)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 5: // 30 días
+                $desde = $now->copy()->subDays(30)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 6: // 60 días
+                $desde = $now->copy()->subDays(60)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 7: // 180 días
+                $desde = $now->copy()->subDays(180)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 8: // 365 días
+                $desde = $now->copy()->subDays(365)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+            case 9: // Fechas personalizadas
+                // Limpiar fechas si vienen con tiempo duplicado
+                $desdeRLimpia = preg_replace('/\s+\d{2}:\d{2}:\d{2}$/', '', $desdeR);
+                $hastaRLimpia = preg_replace('/\s+\d{2}:\d{2}:\d{2}$/', '', $hastaR);
+                $desde = $desdeRLimpia . " 00:00:00";
+                $hasta = $hastaRLimpia . " 23:59:59";
+                break;
+            case 10: // Próximas 24 horas
+                $desde = $now->format('Y-m-d H:i:s');
+                $hasta = $now->copy()->addHours(24)->format('Y-m-d H:i:s');
+                break;
+            case 11: // Próximas 48 horas
+                $desde = $now->format('Y-m-d H:i:s');
+                $hasta = $now->copy()->addHours(48)->format('Y-m-d H:i:s');
+                break;
+            case 12: // 24h antes + 48h después
+                $desde = $now->copy()->subHours(24)->format('Y-m-d H:i:s');
+                $hasta = $now->copy()->addHours(48)->format('Y-m-d H:i:s');
+                break;
+            case 13: // 48h antes + 48h después
+                $desde = $now->copy()->subHours(48)->format('Y-m-d H:i:s');
+                $hasta = $now->copy()->addHours(48)->format('Y-m-d H:i:s');
+                break;
+            case 14: // 7 días antes + 48h después
+                $desde = $now->copy()->subDays(7)->format('Y-m-d H:i:s');
+                $hasta = $now->copy()->addHours(48)->format('Y-m-d H:i:s');
+                break;
+            default:
+                // Caso por defecto: últimas 24 horas exactas
+                $desde = $now->copy()->subHours(24)->format('Y-m-d H:i:s');
+                $hasta = $now->format('Y-m-d H:i:s');
+                break;
+        }
+
+        return array($hasta, $desde); // Retorna [hasta, desde] para mantener compatibilidad
+    }
+
+    public function calcularPeriodo($periodo, $desdeR = null, $hastaR = null)
+    {
+        // Forzar zona horaria de México
+        $desde = Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s');
+        $hasta = Carbon::now('America/Mexico_City')->subHours(24)->format('Y-m-d H:i:s'); // Valor por defecto
+        $grupo = '4_horas';
+
+        switch ($periodo) {
+            case 1:
+                $hasta = Carbon::now('America/Mexico_City')->subHours(24)->format('Y-m-d H:i:s');
+                $grupo = '4_horas';
+                break;
+            case 2:
+                $hasta = Carbon::now('America/Mexico_City')->subHours(48)->format('Y-m-d H:i:s');
+                $grupo = '4_horas';
+                break;
+            case 3:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d H:i:s');
+                $grupo = 'd';
+                break;
+            case 4:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(14)->format('Y-m-d H:i:s');
+                $grupo = 'd';
+                break;
+            case 5:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(30)->format('Y-m-d H:i:s');
+                $grupo = 'd';
+                break;
+            case 6:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(60)->format('Y-m-d H:i:s');
+                $grupo = 's';
+                break;
+            case 7:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(180)->format('Y-m-d H:i:s');
+                $grupo = 's';
+                break;
+            case 8:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(365)->format('Y-m-d H:i:s');
+                $grupo = 'm';
+                break;
+            case 9:
+                if ($desdeR && $hastaR) {
+                    $desde = $hastaR . " 23:59:59";
+                    $hasta = $desdeR . " 00:00:00";
+                } else {
+                    $desde = Carbon::now('America/Mexico_City')->format('Y-m-d H:i:s');
+                    $hasta = Carbon::now('America/Mexico_City')->subHours(24)->format('Y-m-d H:i:s');
+                }
+                $grupo = '4_horas';
+                break;
+            case 10:
+                $hasta = Carbon::now('America/Mexico_City')->subHours(24)->format('Y-m-d H:i:s');
+                $grupo = '4_horas';
+                break;
+            case 11:
+                $hasta = Carbon::now('America/Mexico_City')->subHours(48)->format('Y-m-d H:i:s');
+                $grupo = '4_horas';
+                break;
+            case 12:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d H:i:s');
+                $grupo = 'd';
+                break;
+            case 13:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d H:i:s');
+                $grupo = 'd';
+                break;
+            case 14:
+                $hasta = Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d H:i:s');
+                $grupo = 'd';
+                break;
+            default:
+                // Caso por defecto: últimas 24 horas
+                $hasta = Carbon::now('America/Mexico_City')->subHours(24)->format('Y-m-d H:i:s');
+                $grupo = '4_horas';
+                break;
+        }
+
+        return array($desde, $hasta, $grupo);
+    }
+
+    // -------------------------------------------------------------------------------------------- PLAGAS ----------------------------------------------------------------------------------------------------
+    public function getPlagasGraficas(Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($request->zona_manejo_id);
+        $tipoCultivo = TipoCultivos::find($request->tipo_cultivo_id);
+
+        return view('charts.plagas', [
+            'zona_manejo' => $zonaManejo,
+            'tipo_cultivo' => $tipoCultivo,
+        ]);
+    }
+
+    // -------------------------------------------------------------------------------------------- GRAFICAS DE NUTRICION ----------------------------------------------------------------------------------------------------
+
+    public function grafica_estres(Request $request)
+    {
+        // Usar la nueva función para periodos exactos
+        list($fechaInicio, $fechaFin) = $this->calcularPeriodoExacto($request->periodo);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+        // Usar la variable solicitada (por defecto temperatura)
+        $variable = $request->variable ?? 'temperatura';
+
+        $rows = EstacionDato::whereIn('estacion_id', $ids)
+            ->whereBetween('created_at', [$fechaInicio, $fechaFin])
+            ->select('created_at', $variable)
+            ->orderBy('created_at')
+            ->get()
+            ->toArray();
+
+        // Agrupar registros por hora real y calcular el promedio por hora
+        $agrupadosPorHora = [];
+        foreach ($rows as $row) {
+            if (!isset($row['created_at'])) continue;
+            $fechaHora = date('Y-m-d H:00:00', strtotime($row['created_at']));
+            if (!isset($agrupadosPorHora[$fechaHora])) {
+                $agrupadosPorHora[$fechaHora] = [];
+            }
+            $agrupadosPorHora[$fechaHora][] = $row[$variable];
+        }
+        $valoresPorHora = [];
+        foreach ($agrupadosPorHora as $hora => $valores) {
+            $valoresPorHora[] = round(array_sum($valores) / count($valores), 1); // promedio por hora
+        }
+
+        // Calcular el total de horas reales (sin restar 1)
+        $total_horas = count($valoresPorHora);
+
+        // Log temporal para depuración
+        Log::info('grafica_estres valoresPorHora', [
+            'variable' => $variable,
+            'valoresPorHora' => $valoresPorHora
+        ]);
+
+        // Calcular datos agrupados acumulados para todo el período
+        $datosAgrupados = [];
+        if (!empty($valoresPorHora) && $request->tipo_cultivo_id && $request->etapa_fenologica_id) {
+            $datosAcumulados = NutricionEtapaFenologicaTipoCultivo::semaforoNutricionAgrupado(
+                $request->tipo_cultivo_id,
+                $request->etapa_fenologica_id,
+                $variable,
+                $valoresPorHora
+            );
+            // Log temporal para depuración
+            Log::info('grafica_estres datosAcumulados', [
+                'datosAcumulados' => $datosAcumulados
+            ]);
+            // Guardar el total real de horas por rango, sin dividir entre días
+            $datosAgrupados[] = [
+                'muy_bajo' => $datosAcumulados['muy_bajo'],
+                'bajo' => $datosAcumulados['bajo'],
+                'optimo' => $datosAcumulados['optimo'],
+                'alto' => $datosAcumulados['alto'],
+                'muy_alto' => $datosAcumulados['muy_alto']
+            ];
+        }
+
+        // Elimina la normalización y el promedio diario, solo muestra los datos reales
+
+        // Calcular porcentaje y horas reales por rango
+        $cumulo_real = [];
+        foreach ($datosAcumulados as $k => $v) {
+            $cumulo_real[$k] = [
+                'h' => $v, // número de horas reales en ese rango
+                'p' => $total_horas > 0 ? min(100, round(($v / $total_horas) * 100)) : 0 // porcentaje
+            ];
+        }
+
+        $total_horas_periodo = $total_horas;
+
+        // Normalización y redondeo a horas completas
+        if (!empty($datosAgrupados)) {
+            $valores = $datosAgrupados[0];
+            $sumaOriginal = $valores['muy_bajo'] + $valores['bajo'] + $valores['optimo'] + $valores['alto'] + $valores['muy_alto'];
+            $normalizados = [];
+            if ($sumaOriginal > 0) {
+                // Normalizar a 24
+                foreach ($valores as $k => $v) {
+                    $normalizados[$k] = round($v * 24 / $sumaOriginal);
+                }
+                // Ajustar para que la suma sea exactamente 24
+                $sumaNormalizada = array_sum($normalizados);
+                if ($sumaNormalizada !== 24) {
+                    // Diferencia a ajustar
+                    $diff = 24 - $sumaNormalizada;
+                    // Encuentra el índice del valor mayor
+                    $mayorKey = array_keys($normalizados, max($normalizados))[0];
+                    $normalizados[$mayorKey] += $diff;
+                }
+                $datosAgrupados[0] = $normalizados;
+            }
+        }
+
+        // Calcular porcentaje entero de cada color respecto al total original
+        $porcentajes = [];
+        if (!empty($valores) && $sumaOriginal > 0) {
+            foreach ($valores as $k => $v) {
+                $porcentajes[$k] = round(($v / $sumaOriginal) * 100);
+            }
+        }
+
+        // Crear etiqueta para el período
+        $fechaInicioObj = Carbon::parse($fechaInicio, 'America/Mexico_City');
+        $fechaFinObj = Carbon::parse($fechaFin, 'America/Mexico_City');
+        $diasEnPeriodo = $fechaInicioObj->diffInDays($fechaFinObj) + 1;
+        $labels = [
+            $fechaInicioObj->format('d-m-Y') . ' a ' . $fechaFinObj->format('d-m-Y')
+        ];
+
+        return response()->json([
+            'labels' => $labels,
+            'datos_agrupados' => $datosAgrupados,
+            'cumulo_real' => [$cumulo_real],
+            'total_horas_periodo' => $total_horas_periodo,
+            'fechas' => $labels,
+            'porcentajes' => $porcentajes,
+            'diasEnPeriodo' => $diasEnPeriodo,
+        ]);
+    }
+
+
+    public function grafica_estres_pronostico(Request $request)
+    {
+        $now = Carbon::now('America/Mexico_City');
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        // Llamada a la API de OpenWeatherMap
+        $response = Http::get('https://api.openweathermap.org/data/3.0/onecall', [
+            'lat' => $zona_manejo->parcela->lat,
+            'lon' => $zona_manejo->parcela->lon,
+            'appid' => config('services.openweathermap.key'),
+            'units' => 'metric',
+            'tz' => '+06:00',
+            'exclude' => 'current,minutely,alerts'
+        ]);
+
+        $labels = [];
+        $datosAgrupados = [];
+        $cumulo_real = [];
+        $porcentajes = [];
+        $total_horas_periodo = 24; // Por día de pronóstico
+        $diasEnPeriodo = 1;
+        $valores = [];
+        $sumaOriginal = 0;
+
+        // Procesar 2 días de pronóstico
+        for ($i = 0; $i <= 1; $i++) {
+            $fecha = $now->copy()->addDays($i + 1)->format('Y-m-d');
+            $labels[] = $fecha;
+            $promediosPorHora = [];
+            if ($response->successful()) {
+                $openWeatherData = $response->json();
+                for ($h = 0; $h < 24; $h++) {
+                    $hora = str_pad($h, 2, '0', STR_PAD_LEFT) . ':00:00';
+                    $datoHora = collect($openWeatherData['hourly'])->first(function ($hData) use ($fecha, $hora) {
+                        return date('Y-m-d H:i:s', $hData['dt']) === $fecha . ' ' . $hora;
+                    });
+                    if ($datoHora && isset($datoHora['temp'])) {
+                        $promediosPorHora[] = round($datoHora['temp'], 2);
+                    } else {
+                        // Fallback: promedio diario min/max
+                        $daily = collect($openWeatherData['daily'])->first(function ($d) use ($fecha) {
+                            return date('Y-m-d', $d['dt']) === $fecha;
+                        });
+                        if ($daily && isset($daily['temp']['min']) && isset($daily['temp']['max'])) {
+                            $promediosPorHora[] = round((($daily['temp']['min'] + $daily['temp']['max']) / 2), 2);
+                        } else {
+                            $promediosPorHora[] = null;
+                        }
+                    }
+                }
+            } else {
+                $promediosPorHora = array_fill(0, 24, null);
+            }
+
+            // Calcular datos agrupados para cada día de pronóstico
+            $agrupado = [
+                'muy_bajo' => 0,
+                'bajo' => 0,
+                'optimo' => 0,
+                'alto' => 0,
+                'muy_alto' => 0
+            ];
+            if (!empty($promediosPorHora) && $request->tipo_cultivo_id && $request->etapa_fenologica_id) {
+                $agrupado = NutricionEtapaFenologicaTipoCultivo::semaforoNutricionAgrupado(
+                    $request->tipo_cultivo_id,
+                    $request->etapa_fenologica_id,
+                    $request->variable,
+                    $promediosPorHora
+                );
+            } else {
+                $agrupado['optimo'] = count($promediosPorHora);
+            }
+
+            // Guardar el total real de horas por rango
+            $datosAgrupados[] = [
+                'muy_bajo' => $agrupado['muy_bajo'],
+                'bajo' => $agrupado['bajo'],
+                'optimo' => $agrupado['optimo'],
+                'alto' => $agrupado['alto'],
+                'muy_alto' => $agrupado['muy_alto']
+            ];
+
+            // Calcular porcentaje y horas reales por rango
+            $cumulo = [];
+            $total_horas = array_sum($agrupado);
+            foreach ($agrupado as $k => $v) {
+                $cumulo[$k] = [
+                    'h' => $v,
+                    'p' => $total_horas > 0 ? min(100, round(($v / $total_horas) * 100)) : 0
+                ];
+            }
+            $cumulo_real[] = $cumulo;
+
+            // Para porcentajes y normalización
+            $valores = $agrupado;
+            $sumaOriginal = array_sum($valores);
+            $normalizados = [];
+            if ($sumaOriginal > 0) {
+                foreach ($valores as $k => $v) {
+                    $normalizados[$k] = round($v * 24 / $sumaOriginal);
+                }
+                $sumaNormalizada = array_sum($normalizados);
+                if ($sumaNormalizada !== 24) {
+                    $diff = 24 - $sumaNormalizada;
+                    $mayorKey = array_keys($normalizados, max($normalizados))[0];
+                    $normalizados[$mayorKey] += $diff;
+                }
+                $datosAgrupados[$i] = $normalizados;
+            }
+
+            // Porcentajes por rango respecto al total
+            $porcentajes_dia = [];
+            if (!empty($valores) && $sumaOriginal > 0) {
+                foreach ($valores as $k => $v) {
+                    $porcentajes_dia[$k] = round(($v / $sumaOriginal) * 100);
+                }
+            }
+            $porcentajes[] = $porcentajes_dia;
+        }
+
+        $fechas = $labels;
+
+        return response()->json([
+            'labels' => $labels,
+            'datos_agrupados' => $datosAgrupados,
+            'cumulo_real' => $cumulo_real,
+            'total_horas_periodo' => $total_horas_periodo,
+            'fechas' => $fechas,
+            'porcentajes' => $porcentajes,
+            'diasEnPeriodo' => $diasEnPeriodo,
+        ]);
+    }
+
+    public function grafica_estres_pronostico_humedad_relativa(Request $request)
+    {
+        $now = Carbon::now('America/Mexico_City');
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        // Llamada a la API de OpenWeatherMap
+        $response = Http::get('https://api.openweathermap.org/data/3.0/onecall', [
+            'lat' => $zona_manejo->parcela->lat,
+            'lon' => $zona_manejo->parcela->lon,
+            'appid' => config('services.openweathermap.key'),
+            'units' => 'metric',
+            'tz' => '+06:00',
+            'exclude' => 'current,minutely,alerts'
+        ]);
+
+        $labels = [];
+        $datosAgrupados = [];
+        $cumulo_real = [];
+        $porcentajes = [];
+        $total_horas_periodo = 24; // Por día de pronóstico
+        $diasEnPeriodo = 1;
+        $valores = [];
+        $sumaOriginal = 0;
+
+        // Procesar 2 días de pronóstico
+        for ($i = 0; $i <= 1; $i++) {
+            $fecha = $now->copy()->addDays($i + 1)->format('Y-m-d');
+            $labels[] = $fecha;
+            $promediosPorHora = [];
+            if ($response->successful()) {
+                $openWeatherData = $response->json();
+                for ($h = 0; $h < 24; $h++) {
+                    $hora = str_pad($h, 2, '0', STR_PAD_LEFT) . ':00:00';
+                    $datoHora = collect($openWeatherData['hourly'])->first(function ($hData) use ($fecha, $hora) {
+                        return date('Y-m-d H:i:s', $hData['dt']) === $fecha . ' ' . $hora;
+                    });
+                    if ($datoHora && isset($datoHora['humidity'])) {
+                        // OpenWeather devuelve humedad en porcentaje (0-100)
+                        $promediosPorHora[] = round($datoHora['humidity'], 2);
+                    } else {
+                        // Fallback: promedio diario min/max de humedad
+                        $daily = collect($openWeatherData['daily'])->first(function ($d) use ($fecha) {
+                            return date('Y-m-d', $d['dt']) === $fecha;
+                        });
+                        if ($daily && isset($daily['humidity'])) {
+                            $promediosPorHora[] = round($daily['humidity'], 2);
+                        } else {
+                            $promediosPorHora[] = null;
+                        }
+                    }
+                }
+            } else {
+                $promediosPorHora = array_fill(0, 24, null);
+            }
+
+            // Calcular datos agrupados para cada día de pronóstico
+            $agrupado = [
+                'muy_bajo' => 0,
+                'bajo' => 0,
+                'optimo' => 0,
+                'alto' => 0,
+                'muy_alto' => 0
+            ];
+            if (!empty($promediosPorHora) && $request->tipo_cultivo_id && $request->etapa_fenologica_id) {
+                $agrupado = NutricionEtapaFenologicaTipoCultivo::semaforoNutricionAgrupado(
+                    $request->tipo_cultivo_id,
+                    $request->etapa_fenologica_id,
+                    'humedad_relativa', // Variable fija para humedad relativa
+                    $promediosPorHora
+                );
+            } else {
+                $agrupado['optimo'] = count($promediosPorHora);
+            }
+
+            // Guardar el total real de horas por rango
+            $datosAgrupados[] = [
+                'muy_bajo' => $agrupado['muy_bajo'],
+                'bajo' => $agrupado['bajo'],
+                'optimo' => $agrupado['optimo'],
+                'alto' => $agrupado['alto'],
+                'muy_alto' => $agrupado['muy_alto']
+            ];
+
+            // Calcular porcentaje y horas reales por rango
+            $cumulo = [];
+            $total_horas = array_sum($agrupado);
+            foreach ($agrupado as $k => $v) {
+                $cumulo[$k] = [
+                    'h' => $v,
+                    'p' => $total_horas > 0 ? min(100, round(($v / $total_horas) * 100)) : 0
+                ];
+            }
+            $cumulo_real[] = $cumulo;
+
+            // Para porcentajes y normalización
+            $valores = $agrupado;
+            $sumaOriginal = array_sum($valores);
+            $normalizados = [];
+            if ($sumaOriginal > 0) {
+                foreach ($valores as $k => $v) {
+                    $normalizados[$k] = round($v * 24 / $sumaOriginal);
+                }
+                $sumaNormalizada = array_sum($normalizados);
+                if ($sumaNormalizada !== 24) {
+                    $diff = 24 - $sumaNormalizada;
+                    $mayorKey = array_keys($normalizados, max($normalizados))[0];
+                    $normalizados[$mayorKey] += $diff;
+                }
+                $datosAgrupados[$i] = $normalizados;
+            }
+
+            // Porcentajes por rango respecto al total
+            $porcentajes_dia = [];
+            if (!empty($valores) && $sumaOriginal > 0) {
+                foreach ($valores as $k => $v) {
+                    $porcentajes_dia[$k] = round(($v / $sumaOriginal) * 100);
+                }
+            }
+            $porcentajes[] = $porcentajes_dia;
+        }
+
+        $fechas = $labels;
+
+        return response()->json([
+            'labels' => $labels,
+            'datos_agrupados' => $datosAgrupados,
+            'cumulo_real' => $cumulo_real,
+            'total_horas_periodo' => $total_horas_periodo,
+            'fechas' => $fechas,
+            'porcentajes' => $porcentajes,
+            'diasEnPeriodo' => $diasEnPeriodo,
+        ]);
+    }
+
+    public function graficaTemperaturaSuelo($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', Carbon::now('America/Mexico_City')->subDays(7)->format('Y-m-d'));
+        $endDate = $request->get('endDate', Carbon::now('America/Mexico_City')->format('Y-m-d'));
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        return view('components.grafica_temperatura_suelo', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    // ============================================================================================
+    // GRÁFICAS DE PRECIPITACIÓN PLUVIAL
+    // ============================================================================================
+
+    public function graficaPrecipitacionPluvialComponente($zonaManejoId, Request $request)
+    {
+        $zonaManejo = ZonaManejos::find($zonaManejoId);
+
+        if (!$zonaManejo) {
+            return response()->json(['error' => 'Zona de manejo no encontrada'], 404);
+        }
+
+        $periodo = $request->get('periodo', 1);
+        $startDate = $request->get('startDate', null);
+        $endDate = $request->get('endDate', null);
+        $tipo_cultivo_id = $request->get('tipo_cultivo_id');
+        $etapa_fenologica_id = $request->get('etapa_fenologica_id');
+
+        return view('components.grafica_precipitacion_pluvial', [
+            'zonaManejo' => $zonaManejo,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tipoCultivoId' => $tipo_cultivo_id,
+            'etapaFenologicaId' => $etapa_fenologica_id,
+        ]);
+    }
+
+    public function grafica_precipitacion_pluvial(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $parcelaId = $zona_manejo->parcela_id;
+
+        $select = '';
+        switch ($fechas[2]) {
+            case 'd':
+                $tipo = 'Día';
+                $select = 'DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y") as fecha, ';
+                break;
+            case 's':
+                $tipo = 'Semana';
+                $select = 'DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%V") as fecha, ';
+                break;
+            case 'm':
+                $tipo = 'Mes';
+                $select = 'DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%m-%Y") as fecha, ';
+                break;
+            case '4_horas':
+                $tipo = 'Cada 4 horas';
+                $select = "CASE
+                    WHEN HOUR(precipitacion_pluvial.fecha_hora_dato) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, '%d-%m-%Y'), ' 04:00')
+                    WHEN HOUR(precipitacion_pluvial.fecha_hora_dato) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, '%d-%m-%Y'), ' 08:00')
+                    WHEN HOUR(precipitacion_pluvial.fecha_hora_dato) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, '%d-%m-%Y'), ' 12:00')
+                    WHEN HOUR(precipitacion_pluvial.fecha_hora_dato) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, '%d-%m-%Y'), ' 16:00')
+                    WHEN HOUR(precipitacion_pluvial.fecha_hora_dato) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, '%d-%m-%Y'), ' 20:00')
+                    ELSE CONCAT(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                break;
+            case '8_horas':
+                $tipo = 'Cada 8 horas';
+                $select = '
+                case
+                when DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%H") between 0 and 7 then concat(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y")," 08:00")
+                when DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%H") between 8 and 15 then concat(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y")," 16:00")
+                when DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%H") between 16 and 23 then concat(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case '12_horas':
+                $tipo = 'Cada 12 horas';
+                $select = '
+                case
+                when DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%H") between 0 and 11 then concat(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y")," 12:00")
+                when DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%H") between 12 and 23 then concat(DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y")," 00:00")
+                end as fecha,';
+                break;
+            case 'crudos':
+                $tipo = 'Crudos';
+                $select = 'precipitacion_pluvial.fecha_hora_dato as fecha, ';
+                break;
+            default:
+                break;
+        }
+
+        // Primero intentar con datos históricos
+        $rows = DB::table('precipitacion_pluvial')
+            ->where('parcela_id', $parcelaId)
+            ->where('tipo_dato', 'historico')
+            ->whereBetween('fecha_hora_dato', [$fechas[1], $fechas[0]])
+            ->selectRaw($select . '
+                MAX(precipitacion_mm) as max_precipitacion
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get()
+            ->toArray();
+
+        // Si no hay datos históricos suficientes (menos de 1 registro), usar datos de pronóstico
+        if (count($rows) < 1) {
+            // Para datos de pronóstico, mostrar todos los datos sin agrupar tanto
+            $rows = DB::table('precipitacion_pluvial')
+                ->where('parcela_id', $parcelaId)
+                ->where('tipo_dato', 'pronostico')
+                ->whereBetween('fecha_hora_dato', [$fechas[1], $fechas[0]])
+                ->selectRaw('
+                    DATE_FORMAT(precipitacion_pluvial.fecha_hora_dato, "%d-%m-%Y %H:00") as fecha,
+                    precipitacion_mm as max_precipitacion
+                ')
+                ->orderBy('fecha_hora_dato')
+                ->get()
+                ->toArray();
+        }
+
+        // Transform rows into separate arrays
+        $labels = array_column($rows, 'fecha');
+        $maximosPrecipitacion = array_column($rows, 'max_precipitacion');
+
+        $labels = array_map(function ($fecha) {
+            // Si ya es un string tipo ISO, conviértelo
+            if ($fecha instanceof \DateTimeInterface) {
+                return $fecha->format('Y-m-d H:i:s');
+            }
+            if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                return date('Y-m-d H:i:s', strtotime($fecha));
+            }
+            return $fecha;
+        }, array_column($rows, 'fecha'));
+
+        return response()->json([
+            'labels' => $labels,
+            'maximosPrecipitacion' => $maximosPrecipitacion,
+        ]);
+    }
+
+    public function grafica_precipitacion_pluvial_acumulada(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $parcelaId = $zona_manejo->parcela_id;
+
+        // Obtener datos históricos
+        $datosHistoricos = DB::table('precipitacion_pluvial')
+            ->where('parcela_id', $parcelaId)
+            ->where('tipo_dato', 'historico')
+            ->whereBetween('fecha_hora_dato', [$fechas[1], $fechas[0]])
+            ->selectRaw('
+                DATE_FORMAT(fecha_hora_dato, "%d-%m-%Y") as fecha,
+                SUM(precipitacion_mm) as precipitacion
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get();
+
+        // Obtener datos de pronóstico para los próximos 2 días
+        $fechaFin = \Carbon\Carbon::parse($fechas[0]);
+        $fechaInicioPronostico = $fechaFin->copy()->addDay()->startOfDay();
+        $fechaFinPronostico = $fechaInicioPronostico->copy()->addDays(1)->endOfDay();
+
+        $datosPronostico = DB::table('precipitacion_pluvial')
+            ->where('parcela_id', $parcelaId)
+            ->where('tipo_dato', 'pronostico')
+            ->whereBetween('fecha_hora_dato', [$fechaInicioPronostico, $fechaFinPronostico])
+            ->selectRaw('
+                DATE_FORMAT(fecha_hora_dato, "%d-%m-%Y") as fecha,
+                SUM(precipitacion_mm) as precipitacion
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get();
+
+        // Combinar datos históricos y de pronóstico
+        $datosCompletos = [];
+        $acumulado = 0.0;
+        $indicesPronostico = []; // Para marcar qué índices son de pronóstico
+
+        // Agregar datos históricos
+        foreach ($datosHistoricos as $dato) {
+            $valorPrecipitacion = (float)$dato->precipitacion;
+            $acumulado += $valorPrecipitacion;
+
+            $datosCompletos[] = [
+                'fecha' => $dato->fecha,
+                'precipitacion' => round($valorPrecipitacion, 2),
+                'acumulado' => round($acumulado, 2),
+                'es_pronostico' => false
+            ];
+        }
+
+        // Agregar datos de pronóstico
+        foreach ($datosPronostico as $dato) {
+            $acumulado += (float)$dato->precipitacion;
+            $indicesPronostico[] = count($datosCompletos); // Marcar el índice como pronóstico
+
+            $datosCompletos[] = [
+                'fecha' => $dato->fecha,
+                'precipitacion' => round((float)$dato->precipitacion, 2),
+                'acumulado' => round($acumulado, 2),
+                'es_pronostico' => true
+            ];
+        }
+
+        // Extraer arrays para la gráfica
+        $labels = array_column($datosCompletos, 'fecha');
+        $acumuladoPrecipitacion = array_column($datosCompletos, 'acumulado');
+
+        return response()->json([
+            'labels' => $labels,
+            'acumuladoPrecipitacion' => $acumuladoPrecipitacion,
+            'indicesPronostico' => $indicesPronostico, // Para que el frontend sepa qué puntos colorear
+        ]);
+    }
+
+    public function tabla_precipitacion_pluvial(Request $request)
+    {
+        $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $parcelaId = $zona_manejo->parcela_id;
+
+        // Obtener datos históricos
+        $datosHistoricos = DB::table('precipitacion_pluvial')
+            ->where('parcela_id', $parcelaId)
+            ->where('tipo_dato', 'historico')
+            ->whereBetween('fecha_hora_dato', [$fechas[1], $fechas[0]])
+            ->selectRaw('
+                DATE_FORMAT(fecha_hora_dato, "%d/%m/%Y") as fecha,
+                SUM(precipitacion_mm) as precipitacion
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get();
+
+        // Obtener datos de pronóstico para los próximos 2 días
+        $fechaFin = \Carbon\Carbon::parse($fechas[0]);
+        $fechaInicioPronostico = $fechaFin->copy()->addDay()->startOfDay(); // Inicio del día siguiente
+        $fechaFinPronostico = $fechaInicioPronostico->copy()->addDays(1)->endOfDay(); // Fin del día siguiente al inicio
+
+
+
+        $datosPronostico = DB::table('precipitacion_pluvial')
+            ->where('parcela_id', $parcelaId)
+            ->where('tipo_dato', 'pronostico')
+            ->whereBetween('fecha_hora_dato', [$fechaInicioPronostico, $fechaFinPronostico])
+            ->selectRaw('
+                DATE_FORMAT(fecha_hora_dato, "%d/%m/%Y") as fecha,
+                SUM(precipitacion_mm) as precipitacion
+            ')
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get();
+
+        // Combinar datos históricos y de pronóstico
+        $datosCompletos = [];
+        $acumulado = 0.0; // Usar float para mayor precisión
+
+        // Agregar datos históricos
+        foreach ($datosHistoricos as $dato) {
+            $valorPrecipitacion = (float)$dato->precipitacion;
+            $acumulado += $valorPrecipitacion;
+
+            $datosCompletos[] = [
+                'fecha' => $dato->fecha,
+                'precipitacion' => round($valorPrecipitacion, 2),
+                'acumulado' => round($acumulado, 2),
+                'es_pronostico' => false
+            ];
+        }
+
+        // Agregar datos de pronóstico
+        foreach ($datosPronostico as $dato) {
+            $acumulado += (float)$dato->precipitacion;
+            $datosCompletos[] = [
+                'fecha' => 'P ' . $dato->fecha,
+                'precipitacion' => round((float)$dato->precipitacion, 2),
+                'acumulado' => round($acumulado, 2),
+                'es_pronostico' => true
+            ];
+        }
+
+        return response()->json([
+            'datos' => $datosCompletos
+        ]);
+    }
+
+    public function grafica_estres_precipitacion_pluvial(Request $request)
+    {
+        // Usar la nueva función para periodos exactos
+        list($fechaInicio, $fechaFin) = $this->calcularPeriodoExacto($request->periodo);
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $parcelaId = $zona_manejo->parcela_id;
+
+        // Obtener datos de precipitación por hora (solo históricos)
+        $rows = DB::table('precipitacion_pluvial')
+            ->where('parcela_id', $parcelaId)
+            ->where('tipo_dato', 'historico')
+            ->whereBetween('fecha_hora_dato', [$fechaInicio, $fechaFin])
+            ->select('fecha_hora_dato', 'precipitacion_mm')
+            ->orderBy('fecha_hora_dato')
+            ->get();
+
+        // Si no hay suficientes datos históricos, usar datos de pronóstico
+        if ($rows->count() < 5) {
+            $rows = DB::table('precipitacion_pluvial')
+                ->where('parcela_id', $parcelaId)
+                ->where('tipo_dato', 'pronostico')
+                ->whereBetween('fecha_hora_dato', [$fechaInicio, $fechaFin])
+                ->select('fecha_hora_dato', 'precipitacion_mm')
+                ->orderBy('fecha_hora_dato')
+                ->get();
+        }
+
+        // Agrupar registros por hora y calcular el promedio por hora
+        $agrupadosPorHora = [];
+        foreach ($rows as $row) {
+            if (!isset($row->fecha_hora_dato)) continue;
+            $fechaHora = date('Y-m-d H:00:00', strtotime($row->fecha_hora_dato));
+            if (!isset($agrupadosPorHora[$fechaHora])) {
+                $agrupadosPorHora[$fechaHora] = [];
+            }
+            $agrupadosPorHora[$fechaHora][] = $row->precipitacion_mm;
+        }
+        $valoresPorHora = [];
+        foreach ($agrupadosPorHora as $hora => $valores) {
+            $valoresPorHora[] = round(array_sum($valores) / count($valores), 2); // promedio por hora
+        }
+
+        $total_horas = count($valoresPorHora);
+
+        // Calcular datos agrupados acumulados para todo el período
+        $datosAgrupados = [];
+        $datosAcumulados = [
+            'muy_bajo' => 0,
+            'bajo' => 0,
+            'optimo' => 0,
+            'alto' => 0,
+            'muy_alto' => 0
+        ];
+        if (!empty($valoresPorHora) && $request->tipo_cultivo_id && $request->etapa_fenologica_id) {
+            $datosAcumulados = NutricionEtapaFenologicaTipoCultivo::semaforoNutricionAgrupado(
+                $request->tipo_cultivo_id,
+                $request->etapa_fenologica_id,
+                'precipitacion_pluvial',
+                $valoresPorHora
+            );
+            $datosAgrupados[] = [
+                'muy_bajo' => $datosAcumulados['muy_bajo'],
+                'bajo' => $datosAcumulados['bajo'],
+                'optimo' => $datosAcumulados['optimo'],
+                'alto' => $datosAcumulados['alto'],
+                'muy_alto' => $datosAcumulados['muy_alto']
+            ];
+        }
+
+        // Calcular porcentaje y horas reales por rango
+        $cumulo_real = [];
+        foreach ($datosAcumulados as $k => $v) {
+            $cumulo_real[$k] = [
+                'h' => $v,
+                'p' => $total_horas > 0 ? min(100, round(($v / $total_horas) * 100)) : 0
+            ];
+        }
+
+        $total_horas_periodo = $total_horas;
+
+        // Calcular porcentajes para cada color respecto al total original
+        $porcentajes = [];
+        $sumaOriginal = array_sum($datosAcumulados);
+        if ($sumaOriginal > 0) {
+            foreach ($datosAcumulados as $k => $v) {
+                $porcentajes[$k] = round(($v / $sumaOriginal) * 100);
+            }
+        }
+
+        // Crear etiqueta para el período
+        $fechaInicioObj = Carbon::parse($fechaInicio, 'America/Mexico_City');
+        $fechaFinObj = Carbon::parse($fechaFin, 'America/Mexico_City');
+        $diasEnPeriodo = $fechaInicioObj->diffInDays($fechaFinObj) + 1;
+        $labels = [
+            $fechaInicioObj->format('d-m-Y') . ' a ' . $fechaFinObj->format('d-m-Y')
+        ];
+
+        return response()->json([
+            'labels' => $labels,
+            'datos_agrupados' => $datosAgrupados,
+            'cumulo_real' => [$cumulo_real],
+            'total_horas_periodo' => $total_horas_periodo,
+            'fechas' => $labels,
+            'porcentajes' => $porcentajes,
+            'diasEnPeriodo' => $diasEnPeriodo,
+        ]);
+    }
+
+    public function grafica_estres_pronostico_precipitacion_pluvial(Request $request)
+    {
+        $now = Carbon::now('America/Mexico_City');
+        $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+        // Check if zona_manejo exists
+        if (!$zona_manejo) {
+            return response()->json([
+                'error' => 'Zona de manejo no encontrada',
+                'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+            ], 404);
+        }
+
+        $parcelaId = $zona_manejo->parcela_id;
+
+        // Llamada a la API de OpenWeatherMap
+        $response = Http::get('https://api.openweathermap.org/data/3.0/onecall', [
+            'lat' => $zona_manejo->parcela->lat,
+            'lon' => $zona_manejo->parcela->lon,
+            'appid' => config('services.openweathermap.key'),
+            'units' => 'metric',
+            'tz' => '+06:00',
+            'exclude' => 'current,minutely,alerts'
+        ]);
+
+        $labels = [];
+        $datosAgrupados = [];
+        $cumulo_real = [];
+        $porcentajes = [];
+        $total_horas_periodo = 24; // Por día de pronóstico
+        $diasEnPeriodo = 1;
+        $valores = [];
+        $sumaOriginal = 0;
+
+        // Procesar 2 días de pronóstico
+        for ($i = 0; $i <= 1; $i++) {
+            $fecha = $now->copy()->addDays($i + 1)->format('Y-m-d');
+            $labels[] = $fecha;
+            $promediosPorHora = [];
+            if ($response->successful()) {
+                $openWeatherData = $response->json();
+                for ($h = 0; $h < 24; $h++) {
+                    $hora = str_pad($h, 2, '0', STR_PAD_LEFT) . ':00:00';
+                    $datoHora = collect($openWeatherData['hourly'])->first(function ($hData) use ($fecha, $hora) {
+                        return date('Y-m-d H:i:s', $hData['dt']) === $fecha . ' ' . $hora;
+                    });
+                    if ($datoHora && isset($datoHora['rain']['1h'])) {
+                        // OpenWeather devuelve precipitación en mm
+                        $promediosPorHora[] = round($datoHora['rain']['1h'], 2);
+                    } else {
+                        // Fallback: promedio diario
+                        $daily = collect($openWeatherData['daily'])->first(function ($d) use ($fecha) {
+                            return date('Y-m-d', $d['dt']) === $fecha;
+                        });
+                        if ($daily && isset($daily['rain'])) {
+                            $promediosPorHora[] = round($daily['rain'] / 24, 2); // Distribuir precipitación diaria en 24 horas
+                        } else {
+                            $promediosPorHora[] = null;
+                        }
+                    }
+                }
+            } else {
+                $promediosPorHora = array_fill(0, 24, null);
+            }
+
+            // Calcular datos agrupados para cada día de pronóstico
+            $agrupado = [
+                'muy_bajo' => 0,
+                'bajo' => 0,
+                'optimo' => 0,
+                'alto' => 0,
+                'muy_alto' => 0
+            ];
+            if (!empty($promediosPorHora) && $request->tipo_cultivo_id && $request->etapa_fenologica_id) {
+                $agrupado = NutricionEtapaFenologicaTipoCultivo::semaforoNutricionAgrupado(
+                    $request->tipo_cultivo_id,
+                    $request->etapa_fenologica_id,
+                    'precipitacion_pluvial',
+                    $promediosPorHora
+                );
+            } else {
+                $agrupado['optimo'] = count($promediosPorHora);
+            }
+
+            // Guardar el total real de horas por rango
+            $datosAgrupados[] = [
+                'muy_bajo' => $agrupado['muy_bajo'],
+                'bajo' => $agrupado['bajo'],
+                'optimo' => $agrupado['optimo'],
+                'alto' => $agrupado['alto'],
+                'muy_alto' => $agrupado['muy_alto']
+            ];
+
+            // Calcular porcentaje y horas reales por rango
+            $cumulo = [];
+            $total_horas = array_sum($agrupado);
+            foreach ($agrupado as $k => $v) {
+                $cumulo[$k] = [
+                    'h' => $v,
+                    'p' => $total_horas > 0 ? min(100, round(($v / $total_horas) * 100)) : 0
+                ];
+            }
+            $cumulo_real[] = $cumulo;
+
+            // Para porcentajes y normalización
+            $valores = $agrupado;
+            $sumaOriginal = array_sum($valores);
+            $normalizados = [];
+            if ($sumaOriginal > 0) {
+                foreach ($valores as $k => $v) {
+                    $normalizados[$k] = round($v * 24 / $sumaOriginal);
+                }
+                $sumaNormalizada = array_sum($normalizados);
+                if ($sumaNormalizada !== 24) {
+                    $diff = 24 - $sumaNormalizada;
+                    $mayorKey = array_keys($normalizados, max($normalizados))[0];
+                    $normalizados[$mayorKey] += $diff;
+                }
+                $datosAgrupados[$i] = $normalizados;
+            }
+
+            // Porcentajes por rango respecto al total
+            $porcentajes_dia = [];
+            if (!empty($valores) && $sumaOriginal > 0) {
+                foreach ($valores as $k => $v) {
+                    $porcentajes_dia[$k] = round(($v / $sumaOriginal) * 100);
+                }
+            }
+            $porcentajes[] = $porcentajes_dia;
+        }
+
+        $fechas = $labels;
+
+        return response()->json([
+            'labels' => $labels,
+            'datos_agrupados' => $datosAgrupados,
+            'cumulo_real' => $cumulo_real,
+            'total_horas_periodo' => $total_horas_periodo,
+            'fechas' => $fechas,
+            'porcentajes' => $porcentajes,
+            'diasEnPeriodo' => $diasEnPeriodo,
+        ]);
+    }
+
+    // Nueva función para periodos exactos de horas
+    public function calcularPeriodoExacto($periodo)
+    {
+        $fin = Carbon::now('America/Mexico_City')->startOfHour();
+        switch ($periodo) {
+            case 1: // Últimas 24 horas
+                $inicio = $fin->copy()->subHours(24);
+                break;
+            case 2: // Últimas 48 horas
+                $inicio = $fin->copy()->subHours(48);
+                break;
+            case 3: // Última semana (168 horas)
+                $inicio = $fin->copy()->subHours(168);
+                break;
+            case 4: // Últimas 2 semanas (336 horas)
+                $inicio = $fin->copy()->subHours(336);
+                break;
+            case 5: // Último mes (720 horas - 30 días)
+                $inicio = $fin->copy()->subHours(720);
+                break;
+            case 6: // Último bimestre (1440 horas - 60 días)
+                $inicio = $fin->copy()->subHours(1440);
+                break;
+            case 7: // Último semestre (4320 horas - 180 días)
+                $inicio = $fin->copy()->subHours(4320);
+                break;
+            default:
+                // Por defecto, últimas 24 horas
+                $inicio = $fin->copy()->subHours(24);
+                break;
+        }
+        return [$inicio->format('Y-m-d H:00:00'), $fin->format('Y-m-d H:00:00')];
+    }
+
+    public function grafica_variables_multiples(Request $request)
+    {
+        try {
+            // Validaciones básicas
+            if (!$request->estacion_id) {
+                return response()->json(['error' => 'estacion_id requerido'], 400);
+            }
+
+            if (!$request->periodo) {
+                return response()->json(['error' => 'periodo requerido'], 400);
+            }
+
+            $fechas = $this->calcularPeriodo($request->periodo, $request->startDate, $request->endDate);
+
+            $zona_manejo = ZonaManejos::find($request->estacion_id);
+
+            // Check if zona_manejo exists
+            if (!$zona_manejo) {
+                return response()->json([
+                    'error' => 'Zona de manejo no encontrada',
+                    'message' => 'La zona de manejo con ID ' . $request->estacion_id . ' no existe'
+                ], 404);
+            }
+
+            $ids = $zona_manejo->estaciones->pluck('id')->map(fn($id) => (int) $id)->toArray();
+
+            // Validar variables
+            $variables = $request->variables ?? [];
+            $agrupaciones = $request->agrupaciones ?? [];
+
+            if (empty($variables) || empty($agrupaciones)) {
+                return response()->json([
+                    'error' => 'Variables y agrupaciones requeridas',
+                    'message' => 'Debe especificar al menos una variable y una agrupación'
+                ], 400);
+            }
+
+            // Definir las columnas válidas en la tabla estacion_dato
+            $columnasValidas = [
+                'temperatura',
+                'humedad_relativa',
+                'radiacion_solar',
+                'precipitacion_acumulada',
+                'velocidad_viento',
+                'direccion_viento',
+                'co2',
+                'ph',
+                'phos',
+                'nit',
+                'pot',
+                'temperatura_suelo',
+                'conductividad_electrica',
+                'potencial_de_hidrogeno',
+                'viento',
+                'humedad_15',
+                'temperatura_lvl1'
+            ];
+
+            // Validar que todas las variables solicitadas existan
+            $variablesInvalidas = array_diff($variables, $columnasValidas);
+            if (!empty($variablesInvalidas)) {
+                return response()->json([
+                    'error' => 'Variables no válidas',
+                    'message' => 'Las siguientes variables no existen en la tabla: ' . implode(', ', $variablesInvalidas),
+                    'variables_validas' => $columnasValidas
+                ], 400);
+            }
+
+            // Usar el mismo formato de agrupación que grafica_temperatura
+            $select = '';
+            switch ($fechas[2]) {
+                case 'd':
+                    $tipo = 'Día';
+                    $select = 'DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y") as fecha, ';
+                    break;
+                case 's':
+                    $tipo = 'Semana';
+                    $select = 'DATE_FORMAT(estacion_dato.created_at, "%V") as fecha, ';
+                    break;
+                case 'm':
+                    $tipo = 'Mes';
+                    $select = 'DATE_FORMAT(estacion_dato.created_at, "%m-%Y") as fecha, ';
+                    break;
+                case '4_horas':
+                    $tipo = 'Cada 4 horas';
+                    $select = "CASE
+                        WHEN HOUR(estacion_dato.created_at) BETWEEN 0 AND 3  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 04:00')
+                        WHEN HOUR(estacion_dato.created_at) BETWEEN 4 AND 7  THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 08:00')
+                        WHEN HOUR(estacion_dato.created_at) BETWEEN 8 AND 11 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 12:00')
+                        WHEN HOUR(estacion_dato.created_at) BETWEEN 12 AND 15 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 16:00')
+                        WHEN HOUR(estacion_dato.created_at) BETWEEN 16 AND 19 THEN CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 20:00')
+                        ELSE CONCAT(DATE_FORMAT(estacion_dato.created_at, '%d-%m-%Y'), ' 00:00') END as fecha,";
+                    break;
+                case '8_horas':
+                    $tipo = 'Cada 8 horas';
+                    $select = '
+                    case
+                    when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 7 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 08:00")
+                    when DATE_FORMAT(estacion_dato.created_at, "%H") between 8 and 15 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 16:00")
+                    when DATE_FORMAT(estacion_dato.created_at, "%H") between 16 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                    end as fecha,';
+                    break;
+                case '12_horas':
+                    $tipo = 'Cada 12 horas';
+                    $select = '
+                    case
+                    when DATE_FORMAT(estacion_dato.created_at, "%H") between 0 and 11 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 12:00")
+                    when DATE_FORMAT(estacion_dato.created_at, "%H") between 12 and 23 then concat(DATE_FORMAT(estacion_dato.created_at, "%d-%m-%Y")," 00:00")
+                    end as fecha,';
+                    break;
+                case 'crudos':
+                    $tipo = 'Crudos';
+                    $select = 'estacion_dato.created_at as fecha, ';
+                    break;
+                default:
+                    break;
+            }
+
+            // Construir el SELECT dinámicamente para cada variable y agrupación
+            foreach ($variables as $variable) {
+                foreach ($agrupaciones as $agrupacion) {
+                    $tipo_agrupacion = explode('|', $agrupacion)[0]; // max, min, avg
+                    $select .= "{$tipo_agrupacion}({$variable}) as {$tipo_agrupacion}s" . ucfirst($variable) . ", ";
+                }
+            }
+
+            // Remover la última coma y espacio
+            $select = rtrim($select, ', ');
+
+            // Ejecutar consulta
+            $rows = EstacionDato::whereIn('estacion_id', $ids)
+                ->whereBetween('created_at', [$fechas[1], $fechas[0]])
+                ->selectRaw($select)
+                ->groupBy('fecha')
+                ->orderBy('fecha')
+                ->get()
+                ->toArray();
+
+            // Transform rows into separate arrays
+            $labels = array_column($rows, 'fecha');
+
+            // Procesar cada variable y agrupación
+            $resultados = [];
+            foreach ($variables as $variable) {
+                foreach ($agrupaciones as $agrupacion) {
+                    $tipo_agrupacion = explode('|', $agrupacion)[0];
+                    $nombre_columna = "{$tipo_agrupacion}s" . ucfirst($variable);
+
+                    $valores = array_column($rows, $nombre_columna);
+
+                    // Redondear promedios a 2 decimales
+                    if ($tipo_agrupacion === 'avg') {
+                        $valores = array_map(fn($v) => round($v, 2), $valores);
+                    }
+
+                    $resultados[$nombre_columna] = $valores;
+                }
+            }
+
+            $labels = array_map(function ($fecha) {
+                // Si ya es un string tipo ISO, conviértelo
+                if ($fecha instanceof \DateTimeInterface) {
+                    return $fecha->format('Y-m-d H:i:s');
+                }
+                if (is_string($fecha) && strpos($fecha, 'T') !== false) {
+                    return date('Y-m-d H:i:s', strtotime($fecha));
+                }
+                return $fecha;
+            }, $labels);
+
+            $response = array_merge([
+                'labels' => $labels
+            ], $resultados);
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            Log::error('Error en grafica_variables_multiples:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Error interno del servidor',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function view_grafica_variables_multiples(Request $request)
+    {
+        $zona_manejo = ZonaManejos::find($request->zona_manejo);
+        $periodo = $request->periodo;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+
+        return view('components.grafica_variables_multiples', [
+            'zonaManejoId' => $zona_manejo ? $zona_manejo->id : null,
+            'periodo' => $periodo,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+    }
+
+    public function test_grafica_variables_multiples(Request $request)
+    {
+        return response()->json([
+            'message' => 'Función de prueba funcionando',
+            'request' => $request->all(),
+            'timestamp' => now()
+        ]);
+    }
+}
+
+
+
+// Precipitacion pluvial
+// Enfermedades
