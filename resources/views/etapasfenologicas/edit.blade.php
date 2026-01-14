@@ -25,10 +25,11 @@
         </div>
 
         <div class="card-body">
-            <p class="mb-4">{{ $section_description }}</p>
+            <p class="mb-4">{{ $section_description }}</p> 
 
             <form action="{{ route('etapasfenologicas.update', $etapa) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <fieldset class="mb-3">
 
                     <div class="form-group row">
