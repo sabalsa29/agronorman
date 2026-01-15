@@ -319,7 +319,7 @@ class GruposController extends Controller
         $todasLasZonas = \App\Models\ZonaManejos::with('grupo')
             ->forUser($user)
             ->get();
-
+       
         // Determinar el grupo del usuario y todos sus ancestros
         $grupoUsuario = null;
         $gruposAncestros = collect(); // Todos los grupos hacia arriba (fijos)
@@ -349,6 +349,8 @@ class GruposController extends Controller
             if (!$grupoUsuario) {
                 // Si el grupo no existe, no hay nada que mostrar
                 $zonasManejo = collect();
+
+                
                 return view('grupos.zonas-manejo', [
                     "section_name" => "Mis Zonas de Manejo",
                     "section_description" => "Seleccione una zona de manejo para ver su información completa",
@@ -396,6 +398,7 @@ class GruposController extends Controller
         // Si no hay grupo usuario, no hay nada que mostrar
         if (!$grupoUsuario) {
             $zonasManejo = collect();
+            dd($zonasManejo);
             return view('grupos.zonas-manejo', [
                 "section_name" => "Mis Zonas de Manejo",
                 "section_description" => "Seleccione una zona de manejo para ver su información completa",
@@ -526,7 +529,10 @@ class GruposController extends Controller
             $query->where('grupo_id', $grupoUsuario->id);
         }
 
+        //dd($query->toSql(), $query->getBindings());
+
         $zonasManejo = $query->get()
+        
             ->map(function ($zona) use ($user) {
                 // Obtener el primer tipo de cultivo disponible
                 $tipoCultivo = $zona->tipoCultivos()->first();
@@ -577,7 +583,7 @@ class GruposController extends Controller
                 );
             })
             ->values();
-
+        dd($zonasManejo);
         return view('grupos.zonas-manejo', [
             "section_name" => "Mis Zonas de Manejo",
             "section_description" => "Seleccione una zona de manejo para ver su información completa",
