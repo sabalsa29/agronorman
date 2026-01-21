@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GrupoParcela extends Model
+class GrupoZonaManejo extends Model
 {
-    protected $table = 'grupo_parcela';
+    protected $table = 'grupo_zona_manejo';
 
     public $timestamps = true; 
 
     protected $fillable = [
         'grupo_id',
-        'parcela_id',
+        'zona_manejo_id',
         'created_at',
     ];
 
@@ -21,8 +21,8 @@ class GrupoParcela extends Model
         return $this->belongsTo(Grupos::class, 'grupo_id');
     }
 
-    public function parcela()
+    public function zona_manejo ()
     {
-        return $this->belongsTo(Parcelas::class, 'parcela_id');
+        return $this->belongsTo(ZonaManejos::class, 'zona_manejo_id');
     }
 }

@@ -238,14 +238,14 @@
                                 </li>
                             @endif
 
-                            {{--  @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.usuarios'))
+                             @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.usuarios'))
                                 <li class="nav-item">
                                     <a href="{{ route('accesos.usuarios.index') }}"
                                         class="nav-link {{ Route::is('accesos.usuarios.index') || Route::is('accesos.usuarios.show') ? 'active' : '' }}">
                                         <i class="icon-user-lock"></i> Acceso por usuario
                                     </a>
                                 </li>
-                            @endif  --}}
+                            @endif 
 
                             {{--  @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.auditoria'))
                                 <li class="nav-item">

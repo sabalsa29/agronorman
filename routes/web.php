@@ -23,6 +23,7 @@ use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\ZonaManejosController;
 use App\Http\Controllers\ConfiguracionMqttController;
 use App\Http\Controllers\ConfiguracionMqttUsuarioController;
+use App\Http\Controllers\UserGrupoController;
 use App\Http\Controllers\ZonaGrupoController;
 use Illuminate\Support\Facades\Route;
 
@@ -187,15 +188,25 @@ Route::middleware('auth')->group(function () {
     });
 
     // Asignación de parcelas a grupos
-    Route::get('/zonas', [ZonaGrupoController::class, 'index'])->name('accesos.zonas.index');
-    Route::get('/zonas/asignar', [ParcelaGrupoController::class, 'assign'])->name('zonas.assign');
-    Route::post('/zonas/quitar', [ParcelaGrupoController::class, 'remove'])->name('zonas.remove');
+    Route::get('asignacion/zonas', [ZonaGrupoController::class, 'index'])->name('accesos.zonas.index');
+    Route::get('asignacion/zonas/asignar', [ZonaGrupoController::class, 'assign'])->name('zonas.assign');
+    Route::post('asignacion/zonas/quitar', [ZonaGrupoController::class, 'remove'])->name('zonas.remove');
+    Route::post('asignacion/zonas/guardar', [ZonaGrupoController::class, 'store'])->name('zonas.store');
+
+    Route::get('/predios/{predio}/zonas', [ZonaGrupoController::class, 'zonasByPredio']) ->name('predios.zonas');
+
     // Asignacion de zonas de manejo a grupos
     Route::get('asignacion/parcelas', [ParcelaGrupoController::class, 'index'])->name('accesos.parcelas.index');
     Route::get('asignacion/parcelas/asignar', [ParcelaGrupoController::class, 'assign'])->name('parcelas.assign');
     Route::post('asignacion/parcelas/guardar', [ParcelaGrupoController::class, 'store'])->name('parcelas.store');
 
     Route::post('asignacion/parcelas/quitar', [ParcelaGrupoController::class, 'remove'])->name('parcelas.remove');
+
+    // Configuración de usuario, asignacion de grupos a usuario
+    Route::get('asignacion/usuarios', [UserGrupoController::class, 'index'])->name('accesos.usuarios.index');
+    Route::get('asignacion/usuarios/asignar', [UserGrupoController::class, 'assign'])->name('asignacion.usuarios.assign');
+    Route::post('asignacion/usuarios/guardar', [UserGrupoController::class, 'store'])->name('asignacion.usuarios.store');
+    Route::post('asignacion/usuarios/quitar', [UserGrupoController::class, 'remove'])->name('asignacion.usuarios.remove');
 
     Route::get('/user-settings', [UserSettingsController::class, 'show'])->name('user-settings');
     Route::post('/user-settings', [UserSettingsController::class, 'store'])->name('user-settings.store');

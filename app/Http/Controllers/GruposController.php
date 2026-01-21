@@ -17,9 +17,6 @@ class GruposController extends Controller
         // Obtener grupos accesibles al usuario
         $grupos = Grupos::forUser($user)->get();
 
-        //dd($grupos);
-
-        // Construir estructura jerárquica completa empezando desde grupos raíz
         // Cargar solo los grupos donde su id_grupo sea igual al id del grupo donde is_root es true 
         // Esto para cargar desde el grupo raíz "norman"
         $gruposRaiz = Grupos::forUser($user)
@@ -56,7 +53,7 @@ class GruposController extends Controller
         // Carga todos los grupos a excepción del grupo raíz "norman" si el usuario no es superadmin 
         $gruposDisponibles = Grupos::with('grupoPadre')
             ->forUser($user)
-            ->where('grupo_id', Grupos::where('is_root', true)->first()->id)
+            ->where('is_root', false)
             ->get()
             ->map(function ($grupo) {
                 return [
@@ -67,6 +64,8 @@ class GruposController extends Controller
         //dd($gruposDisponibles);
         // Si viene grupo_padre_id, pre-seleccionarlo
         $grupoPadreId = $request->get('grupo_padre_id');
+
+        //dd($grupoPadreId, $gruposDisponibles);
 
         return view('grupos.create', [
             "section_name" => "Grupos",

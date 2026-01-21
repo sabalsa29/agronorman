@@ -25,11 +25,6 @@ class ParcelaGrupoController extends Controller
                 return ['id' => $item->grupo->id];
             });
 
-        //dd($asignaciones);
-
-        //dd($gruposRaiz);
-         //$gruposRaiz->load('parcelas');
-            
 
         $estructuraJerarquica = collect();
 
@@ -55,9 +50,6 @@ class ParcelaGrupoController extends Controller
             ];
         });
 
-    //dd($parcelas);
-
-        // Cargar grupos disponibles según el usuario (solo los que puede ver)
         // Carga todos los grupos a excepción del grupo raíz "norman" si el usuario no es superadmin 
         $gruposDisponibles = Grupos::with('grupoPadre')
             ->forUser($user)
@@ -69,8 +61,6 @@ class ParcelaGrupoController extends Controller
                     'nombre' => $grupo->ruta_completa,
                 ];
             });
-
-        //dd($gruposDisponibles);
 
         // Lógica para mostrar el formulario de asignación de parcelas a grupos
         return view('parcela_grupos.assign', [
