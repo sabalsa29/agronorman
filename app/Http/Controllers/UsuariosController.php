@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUsuariosRequest;
 use App\Http\Requests\UpdateUsuariosRequest;
+use App\Models\Grupos;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserMenuPermission;
@@ -52,15 +53,16 @@ class UsuariosController extends Controller
         // Si el usuario es super admin, puede ver todos los grupos
         // Si no, solo los grupos asignados al cliente
         if ($user->isSuperAdmin()) {
-            $gruposDisponibles = \App\Models\Grupos::with('grupoPadre')
-                ->forUser($user)
-                ->get()
-                ->map(function ($grupo) {
-                    return [
-                        'id' => $grupo->id,
-                        'nombre' => $grupo->ruta_completa,
-                    ];
-                });
+            $gruposDisponibles = Grupos::with('grupoPadre')
+            ->forUser($user)
+            ->where('is_root', false)
+            ->get()
+            ->map(function ($grupo) {
+                return [
+                    'id' => $grupo->id,
+                    'nombre' => $grupo->ruta_completa,
+                ];
+            });
         } else {
             // Obtener grupos asignados al cliente
             $cliente = \App\Models\Clientes::find($clienteId);

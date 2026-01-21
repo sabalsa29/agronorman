@@ -56,13 +56,18 @@
                                     @enderror
                                 </div>
                             </div>
-                            {{-- <div class="row mt-3">
+
+                           
+                            <div class="row mt-3">
                                 <div class="col-6">
                                     <label class="col-form-label col-lg-12">Grupo</label>
-                                    <select name="grupo_id" class="form-control">
+                                    <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
                                         <option value="">Sin grupo (solo zonas asignadas directamente)</option>
-                                        @foreach ($gruposDisponibles as $grupo)
-                                            <option value="{{ $grupo['id'] }}">{{ $grupo['nombre'] }}</option>
+                                         @foreach ($gruposDisponibles as $grupo)
+                                            <option value="{{ $grupo['id'] }}"
+                                                {{ old('grupo_id', $grupoPadreId ?? null) == $grupo['id'] ? 'selected' : '' }}>
+                                                {{ $grupo['nombre'] }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     <small class="form-text text-muted">
@@ -73,9 +78,31 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
+                     {{-- Grupo --}}
+                    {{--  <div class="form-group row">
+                        <label class="col-form-label col-lg-2">
+                            <i class="icon-collaboration mr-1"></i>
+                            Grupo <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-lg-10">
+                            <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
+                                <option value="">(Sin grupo)</option>
+                                @foreach ($gruposDisponibles as $grupo)
+                                    <option value="{{ $grupo['id'] }}"
+                                        {{ old('grupo_id', $grupoPadreId ?? null) == $grupo['id'] ? 'selected' : '' }}>
+                                        {{ $grupo['nombre'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <span class="form-text text-muted">
+                                <i class="icon-info22 mr-1"></i>
+                                Seleccione un grupo
+                            </span>
+                        </div>
+                    </div>  --}}
 
                 </fieldset>
 
@@ -85,7 +112,7 @@
             </form>
         </div>
     </div>
-    <!-- /form inputs -->
+    <!-- /form inputs --> 
 @endsection
 @section('scripts')
     <!-- Theme JS files -->
@@ -98,6 +125,12 @@
     <script>
         // Cargar table_elements.js solo si las dependencias están disponibles
         document.addEventListener('DOMContentLoaded', function() {
+
+            // Inicializar Select2
+            $('.select2').select2({
+                allowClear: true
+            });
+
             if (typeof $ !== 'undefined' && typeof Switchery !== 'undefined') {
                 var script = document.createElement('script');
                 script.src = "{{ url('global_assets/js/demo_pages/table_elements.js') }}";
