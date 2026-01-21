@@ -97,27 +97,21 @@
 @section('content')
     <!-- Basic responsive configuration -->
     <div class="card">
-        <div class="card-header header-elements-inline">
-            <h5 class="card-title">{{ $section_name }}</h5>
-            <div class="header-elements">
-                <a href="{{ route('grupos.dashboard', ['desde_grupos' => true]) }}" class="btn btn-primary btn-sm">
-                    <i class="icon-tree5 mr-2"></i> Ver Dashboard
-                </a>
-                <div class="list-icons">
-                    <a class="list-icons-item" data-action="collapse"></a>
-                    <a class="list-icons-item" data-action="reload"></a>
-                    <a class="list-icons-item" data-action="remove"></a>
-                </div>
+         <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
+        <div class="header-elements ml-auto">
+            <div class="list-icons">
+                <a class="list-icons-item" data-action="collapse"></a>
+                <a class="list-icons-item" data-action="reload"></a>
+                <a class="list-icons-item" data-action="remove"></a>
             </div>
         </div>
+    </div>
 
         <div class="card-body">
-            <p class="mb-4">{{ $section_description }}</p>
-
             @if (Auth::check() && (Auth::user()->canCreate('estaciones.grupos') || Auth::user()->canCreate('usuarios.grupos')))
                 <div class="mb-3">
-                    <a href="{{ route('grupos.create') }}" class="btn btn-primary">
-                        <i class="icon-plus-circle2 mr-2"></i> Crear Grupo
+                    <a href="{{ route('parcelas.assign') }}" class="btn btn-primary">
+                        <i class="icon-plus-circle2 mr-2"></i> Crear Asignación de Grupo
                     </a>
                 </div>
             @endif
@@ -127,7 +121,7 @@
         <div class="card-body border-top">
             <div class="d-flex justify-content-between align-items-center mb-3"> 
                 <h6 class="font-weight-semibold mb-0">
-                    <i class="icon-tree5 mr-2"></i> Estructura Jerárquica
+                    <i class="icon-list mr-2"></i> Listado de Asignaciones de Parcelas por Grupos
                 </h6>
                 @if ($estructuraJerarquica->count() > 0)
                     <div class="text-muted small">
@@ -137,7 +131,7 @@
                 @endif
             </div>
 
-            @if ($estructuraJerarquica->count() > 0)
+            @if ($asignaciones->count() > 0)
                 {{-- Barra de búsqueda --}}
                 <div class="mb-3">
                     <div class="input-group">
@@ -159,22 +153,50 @@
                 </div>
             @endif
 
-            @if ($estructuraJerarquica->count() > 0)
+            @if ($asignaciones->count() > 0)
                 <div class="grupos-jerarquia">
-                    @foreach ($estructuraJerarquica as $grupoRaiz)
-                        @include('grupos.partials.grupo-item', [
-                            'grupo' => $grupoRaiz,
-                            'nivel' => 0,
-                            'esUltimo' => $loop->last,
-                        ])
+                    @foreach ($asignaciones as $asignacion)
+                        <div class="grupo-item mb-3 p-3 border rounded shadow-sm" data-nivel="0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    <a href="#" class="toggle-subgrupos collapsed" data-target="#subgrupos-{{ $asignacion->first()->grupo->id }}">
+                                        <i class="toggle-icon icon-arrow-down8 mr-2"></i>
+                                        {{ $asignacion->first()->grupo->ruta_completa }}
+                                    </a>
+                                </h6>
+                                <span class="badge badge-primary">
+                                    <i class="icon-map5 mr-1"></i> {{ $asignacion->count() }} Parcela(s) Asignada(s)
+                                </span>
+                            </div>
+                            <div id="subgrupos-{{ $asignacion->first()->grupo->id }}" class="subgrupos-container mt-3" style="display: none;">
+                                <ul class="list-group">
+                                    @foreach ($asignacion as $asig)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <i class="icon-map mr-2"></i> {{ $asig->parcela->nombre }}
+                                            </span>
+                                            <form action="{{ route('parcelas.remove') }}" method="POST" class="mb-0">
+                                                @csrf
+                                                <input type="hidden" name="grupo_id" value="{{ $asig->grupo_id }}">
+                                                <input type="hidden" name="parcela_id" value="{{ $asig->parcela_id }}">
+                                                <button type="submit" class="btn btn-sm btn-danger delete-button"
+                                                    data-name="{{ $asig->parcela->nombre }}">
+                                                    <i class="icon-trash mr-1"></i> Quitar
+                                                </button>
+                                            </form>
+                                        </li>
+                                        @endforeach
+                                </ul>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             @else
                 <div class="alert alert-info">
                     <i class="icon-info22 mr-2"></i>
-                    No hay grupos disponibles.
+                    No hay asignaciones disponibles.
                     @if (Auth::check() && (Auth::user()->canCreate('estaciones.grupos') || Auth::user()->canCreate('usuarios.grupos')))
-                        <a href="{{ route('grupos.create') }}" class="alert-link">Crear el primer grupo</a>
+                        {{--  <a href="{{ route('grupos.create') }}" class="alert-link">Crear el primer grupo</a>  --}}
                     @endif
                 </div>
             @endif

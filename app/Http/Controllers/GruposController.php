@@ -17,11 +17,19 @@ class GruposController extends Controller
         // Obtener grupos accesibles al usuario
         $grupos = Grupos::forUser($user)->get();
 
+        //dd($grupos);
+
         // Construir estructura jerárquica completa empezando desde grupos raíz
+        // Cargar solo los grupos donde su id_grupo sea igual al id del grupo donde is_root es true 
+        // Esto para cargar desde el grupo raíz "norman"
         $gruposRaiz = Grupos::forUser($user)
-            ->whereNull('grupo_id')
+            ->where('grupo_id', Grupos::where('is_root', true)->first()->id)
+            ->where('is_root', false)
             ->with(['subgrupos', 'zonaManejos', 'usuarios'])
             ->get();
+
+        //dd($gruposRaiz);
+            
 
         $estructuraJerarquica = collect();
 
@@ -42,10 +50,13 @@ class GruposController extends Controller
      */
     public function create(Request $request)
     {
+      
         $user = auth()->user();
         // Cargar grupos disponibles según el usuario (solo los que puede ver)
+        // Carga todos los grupos a excepción del grupo raíz "norman" si el usuario no es superadmin 
         $gruposDisponibles = Grupos::with('grupoPadre')
             ->forUser($user)
+            ->where('grupo_id', Grupos::where('is_root', true)->first()->id)
             ->get()
             ->map(function ($grupo) {
                 return [
@@ -53,7 +64,7 @@ class GruposController extends Controller
                     'nombre' => $grupo->ruta_completa,
                 ];
             });
-
+        //dd($gruposDisponibles);
         // Si viene grupo_padre_id, pre-seleccionarlo
         $grupoPadreId = $request->get('grupo_padre_id');
 
@@ -70,16 +81,20 @@ class GruposController extends Controller
      */
     public function store(Request $request)
     {
+        //Validar si grupo_id es null, poner por default el id deel grupo raiz 'norman'
+        
+        //dd($request->all());
         $request->validate([
             'nombre' => 'required|string|max:255',
             'status' => 'nullable|boolean',
             'grupo_id' => 'nullable|exists:grupos,id',
         ]);
+        $id_norman = Grupos::where('is_root', true)->first()->id;
 
         $grupos = new Grupos();
         $grupos->nombre = $request->nombre;
         $grupos->status = $request->status ?? 1;
-        $grupos->grupo_id = $request->grupo_id ?: null;
+        $grupos->grupo_id = $request->grupo_id ?: $id_norman;
         $grupos->save();
 
         return redirect()->route('grupos.index')->with('success', 'Grupo creado correctamente.');
@@ -103,6 +118,7 @@ class GruposController extends Controller
         $gruposDisponibles = Grupos::with('grupoPadre')
             ->forUser($user)
             ->whereNotIn('id', $gruposExcluidos)
+            ->where('grupo_id', Grupos::where('is_root', true)->first()->id)
             ->get()
             ->map(function ($g) {
                 return [
@@ -184,9 +200,11 @@ class GruposController extends Controller
             ],
         ]);
 
+        $id_norman = Grupos::where('is_root', true)->first()->id;
+
         $grupo->nombre = $request->nombre;
         $grupo->status = $request->status ?? $grupo->status;
-        $grupo->grupo_id = $request->grupo_id ?: null;
+        $grupo->grupo_id = $request->grupo_id ?: $id_norman;
         $grupo->save();
 
         return redirect()->route('grupos.index')->with('success', 'Grupo actualizado correctamente.');
@@ -398,7 +416,7 @@ class GruposController extends Controller
         // Si no hay grupo usuario, no hay nada que mostrar
         if (!$grupoUsuario) {
             $zonasManejo = collect();
-            dd($zonasManejo);
+            //dd($zonasManejo);
             return view('grupos.zonas-manejo', [
                 "section_name" => "Mis Zonas de Manejo",
                 "section_description" => "Seleccione una zona de manejo para ver su información completa",
@@ -583,7 +601,7 @@ class GruposController extends Controller
                 );
             })
             ->values();
-        dd($zonasManejo);
+        //dd($zonasManejo);
         return view('grupos.zonas-manejo', [
             "section_name" => "Mis Zonas de Manejo",
             "section_description" => "Seleccione una zona de manejo para ver su información completa",

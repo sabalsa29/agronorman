@@ -210,6 +210,55 @@
                             @endif
                         </ul>
                     </li>
+                    <li
+                        class="nav-item nav-item-submenu {{ isActiveSection([
+                            'accesos.parcelas.index', 'accesos.zonas.index', 'accesos.usuarios.index', 'accesos.usuarios.show', 'accesos.auditoria.index'
+                        ]) ? 'nav-item-expanded nav-item-open' : '' }}">
+                        <a href="#" class="nav-link">
+                            <i class="icon-lock2"></i> <span>Accesos</span>
+                        </a>
+
+                        <ul class="nav nav-group-sub" data-submenu-title="Accesos">
+
+                            @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.parcelas'))
+                                <li class="nav-item">
+                                    <a href="{{ route('accesos.parcelas.index') }}"
+                                        class="nav-link {{ Route::is('accesos.parcelas.index') ? 'active' : '' }}">
+                                        <i class="icon-map5"></i> Asignar parcelas a grupos
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.zonas'))
+                                <li class="nav-item">
+                                    <a href="{{ route('accesos.zonas.index') }}"
+                                        class="nav-link {{ Route::is('accesos.zonas.index') ? 'active' : '' }}">
+                                        <i class="icon-grid6"></i> Asignar zonas a grupos
+                                    </a>
+                                </li>
+                            @endif
+
+                            {{--  @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.usuarios'))
+                                <li class="nav-item">
+                                    <a href="{{ route('accesos.usuarios.index') }}"
+                                        class="nav-link {{ Route::is('accesos.usuarios.index') || Route::is('accesos.usuarios.show') ? 'active' : '' }}">
+                                        <i class="icon-user-lock"></i> Acceso por usuario
+                                    </a>
+                                </li>
+                            @endif  --}}
+
+                            {{--  @if (Auth::check() && Auth::user()->hasSubMenuPermission('accesos', 'accesos.auditoria'))
+                                <li class="nav-item">
+                                    <a href="{{ route('accesos.auditoria.index') }}"
+                                        class="nav-link {{ Route::is('accesos.auditoria.index') ? 'active' : '' }}">
+                                        <i class="icon-clipboard3"></i> Auditoría de accesos
+                                    </a>
+                                </li>
+                            @endif  --}}
+
+                        </ul>
+                    </li>
+
                 @endif
                 <!-- /main -->
 

@@ -2360,6 +2360,8 @@
             // Función para actualizar URL con configuración cargada
             function actualizarURLConConfiguracion(zonaId, cultivoId, etapaId) {
                 // Activar bandera para evitar recursión
+                console.log('Actualizando URL con configuración: zonaId=' + zonaId + ', cultivoId=' + cultivoId + ', etapaId=' +
+                    etapaId);
                 cargandoDesdeURL = true;
 
                 // Obtener todos los parámetros actuales de la URL
@@ -2391,7 +2393,7 @@
                 }
 
                 const nuevaURL = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-
+                console.log('Nueva URL construida: ' + nuevaURL);
                 // Recargar la página con los parámetros actualizados
                 window.location.href = nuevaURL;
                 mostrarLoader('Recargando página con configuración aplicada...');

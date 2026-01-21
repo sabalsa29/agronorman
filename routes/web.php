@@ -12,6 +12,7 @@ use App\Http\Controllers\EtapaFenologicaTipoCultivoController;
 use App\Http\Controllers\FabricanteController;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ParcelaGrupoController;
 use App\Http\Controllers\ParcelasController;
 use App\Http\Controllers\PlagaController;
 use App\Http\Controllers\TipoCultivosController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\ZonaManejosController;
 use App\Http\Controllers\ConfiguracionMqttController;
 use App\Http\Controllers\ConfiguracionMqttUsuarioController;
+use App\Http\Controllers\ZonaGrupoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -183,6 +185,17 @@ Route::middleware('auth')->group(function () {
         Route::get('parcelas/{parcela_id}/zona_manejo/permissions/{zona_manejo}',   [ZonaManejosController::class, 'permissions'])->name('zona_manejo.permissions');
         Route::post('parcelas/{parcela_id}/zona_manejo/permissions/store',          [ZonaManejosController::class, 'StoreZonaManejosUser'])->name('store_zona_manejos_user.store');
     });
+
+    // Asignación de parcelas a grupos
+    Route::get('/zonas', [ZonaGrupoController::class, 'index'])->name('accesos.zonas.index');
+    Route::get('/zonas/asignar', [ParcelaGrupoController::class, 'assign'])->name('zonas.assign');
+    Route::post('/zonas/quitar', [ParcelaGrupoController::class, 'remove'])->name('zonas.remove');
+    // Asignacion de zonas de manejo a grupos
+    Route::get('asignacion/parcelas', [ParcelaGrupoController::class, 'index'])->name('accesos.parcelas.index');
+    Route::get('asignacion/parcelas/asignar', [ParcelaGrupoController::class, 'assign'])->name('parcelas.assign');
+    Route::post('asignacion/parcelas/guardar', [ParcelaGrupoController::class, 'store'])->name('parcelas.store');
+
+    Route::post('asignacion/parcelas/quitar', [ParcelaGrupoController::class, 'remove'])->name('parcelas.remove');
 
     Route::get('/user-settings', [UserSettingsController::class, 'show'])->name('user-settings');
     Route::post('/user-settings', [UserSettingsController::class, 'store'])->name('user-settings.store');

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->boolean('status')->default(true);
+            $table->boolean('is_root')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -39,10 +39,19 @@ class Grupos extends Model
      */
     public function getRutaCompletaAttribute()
     {
+        //Ignorar si es_root
+        //validar si $this->grupoPadre en is_root es true, si no es true, continuar
+        if ($this->is_root) {
+            return $this->nombre;
+        }
+
         $ruta = $this->nombre;
-        $padre = $this->grupoPadre;
+        $padre = ($this->grupoPadre && !$this->grupoPadre->is_root)? $this->grupoPadre : null;
 
         while ($padre) {
+            if($padre->nombre == 'Norman'){
+                break;
+            }
             $ruta = $padre->nombre . ' > ' . $ruta;
             $padre = $padre->grupoPadre;
         }

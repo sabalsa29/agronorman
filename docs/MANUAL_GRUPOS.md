@@ -88,7 +88,7 @@ Rancho Bello
           └── Zona 201-Limón
 ```
 
-### Caso 2: Entidad Gubernamental
+### Caso 2: Entidad Gubernamental   -- ' ´
 
 **Ejemplo: Estado de México**
 
