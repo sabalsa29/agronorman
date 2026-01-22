@@ -60,7 +60,7 @@
                            
                             <div class="row mt-3">
                                 <div class="col-6">
-                                    <label class="col-form-label col-lg-12">Grupo</label>
+                                    <label class="col-form-label col-lg-12">Grupo <span class="text-danger">*</span></label>
                                     <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
                                         <option value="">Sin grupo (solo zonas asignadas directamente)</option>
                                          @foreach ($gruposDisponibles as $grupo)
@@ -71,8 +71,7 @@
                                         @endforeach
                                     </select>
                                     <small class="form-text text-muted">
-                                        Asignar un grupo permite acceso jerárquico a todas las zonas del grupo y sus
-                                        descendientes
+                                        Asignar grupos para permite acceso jerárquico a todos los predios y zonas dentro de esos grupos.
                                     </small>
                                     @error('grupo_id')
                                         <span class="text-danger">{{ $message }}</span>
@@ -81,28 +80,65 @@
                             </div>
                         </div>
                     </div>
-                     {{-- Grupo --}}
-                    {{--  <div class="form-group row">
-                        <label class="col-form-label col-lg-2">
-                            <i class="icon-collaboration mr-1"></i>
-                            Grupo <span class="text-danger">*</span>
-                        </label>
-                        <div class="col-lg-10">
-                            <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
-                                <option value="">(Sin grupo)</option>
-                                @foreach ($gruposDisponibles as $grupo)
-                                    <option value="{{ $grupo['id'] }}"
-                                        {{ old('grupo_id', $grupoPadreId ?? null) == $grupo['id'] ? 'selected' : '' }}>
-                                        {{ $grupo['nombre'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span class="form-text text-muted">
-                                <i class="icon-info22 mr-1"></i>
-                                Seleccione un grupo
-                            </span>
+
+                   {{-- =========================
+                        Sección: Asignación manual (Grupo → Predios/Zonas)
+                        ========================= --}}
+                    <div class="card border-left-3 border-left-primary rounded-left-0 mb-3">
+                        <div class="card-header bg-light d-flex align-items-center">
+                            <h6 class="card-title mb-0">
+                                <i class="icon-link mr-2"></i> Asignación manual
+                            </h6>
+                            <span class="badge badge-primary ml-2">Accesos</span>
                         </div>
-                    </div>  --}}
+
+                        <div class="card-body">
+
+                            {{-- Grupo, seleccionar solo un grupo  --}}
+                            <div class="form-group row">
+                                <label class="col-form-label">
+                                    Grupo
+                                </label>
+
+                                <div class="col-lg-4">
+                                    <select onchange="cargarPredios()" name="grupo_manual_id" id="grupo_manual_id" class="form-control">
+                                        @foreach ($gruposDisponibles as $grupo)
+                                            <option value="{{ $grupo['id'] }}"
+                                                {{ old('grupo_manual_id', $grupoPadreId ?? null) == $grupo['id'] ? 'selected' : '' }}>
+                                                {{ $grupo['nombre'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    <span class="form-text text-muted">
+                                        <i class="icon-info22 mr-1"></i>
+                                        Seleccione un grupo para asignar predios o zonas de manejo.
+                                    </span>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <label class="col-form-label col-lg-12">Predios</label>
+                                        <select name="predio_ids[]" multiple class="form-control select2">
+                                            @foreach ($prediosDisponibles as $predio)
+                                                <option value="{{ $predio['id'] }}">{{ $predio['nombre'] }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="form-text text-muted">
+                                            <i class="icon-info22 mr-1"></i>
+                                            Seleccione los predios a asignar al usuario.
+                                        </span>
+
+                                    </div>
+                                    </div>
+                            </div>
+
+                            {{-- Aquí puedes agregar los selects/inputs de Predio y Zona de manejo --}}
+                            {{-- Ej: predio_id[], zona_manejo_id[] --}}
+
+                        </div>
+                    </div>
+
 
                 </fieldset>
 
@@ -131,12 +167,26 @@
                 allowClear: true
             });
 
+             $('#grupo_manual_id').select2({
+                width: '100%',
+                placeholder: 'Buscar grupo...',
+                allowClear: true
+            });
+
             if (typeof $ !== 'undefined' && typeof Switchery !== 'undefined') {
                 var script = document.createElement('script');
                 script.src = "{{ url('global_assets/js/demo_pages/table_elements.js') }}";
                 document.body.appendChild(script);
             }
+
+           
         });
+
+         function cargarPredios() {
+                var grupoId = document.getElementById('grupo_manual_id').value;
+                // Aquí puedes agregar la lógica para cargar los predios asociados al grupo seleccionado
+                console.log('Cargando predios para el grupo ID:', grupoId);
+            }
     </script>
     <!-- /theme JS files -->
 @endsection
