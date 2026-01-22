@@ -18,7 +18,7 @@ class GrupoGenesisSeeder extends Seeder
         //Siempre debe existir uno solo, con is_root = true.
 
         DB::table('grupos')->updateOrInsert(
-            ['nombre' => 'norman', 'grupo_id' => null],
+            ['nombre' => 'Norman', 'grupo_id' => null],
             ['status' => true, 'updated_at' => now(), 'created_at' => now(), 'deleted_at' => null, 'is_root' => true]
         );
     }

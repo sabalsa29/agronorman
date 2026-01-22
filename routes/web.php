@@ -193,7 +193,11 @@ Route::middleware('auth')->group(function () {
     Route::post('asignacion/zonas/quitar', [ZonaGrupoController::class, 'remove'])->name('zonas.remove');
     Route::post('asignacion/zonas/guardar', [ZonaGrupoController::class, 'store'])->name('zonas.store');
 
+    //Ruta para obtener las zonas por predio
     Route::get('/predios/{predio}/zonas', [ZonaGrupoController::class, 'zonasByPredio']) ->name('predios.zonas');
+    //Ruta para obtener predios por grupo
+    Route::get('/grupos/{grupo}/predios', [UserGrupoController::class, 'prediosByGrupo']) ->name('grupos.predios');
+    
 
     // Asignacion de zonas de manejo a grupos
     Route::get('asignacion/parcelas', [ParcelaGrupoController::class, 'index'])->name('accesos.parcelas.index');

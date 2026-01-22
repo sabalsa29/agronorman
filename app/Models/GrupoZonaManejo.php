@@ -11,6 +11,7 @@ class GrupoZonaManejo extends Model
     public $timestamps = true; 
 
     protected $fillable = [
+        'user_id',
         'grupo_id',
         'zona_manejo_id',
         'created_at',
@@ -24,5 +25,25 @@ class GrupoZonaManejo extends Model
     public function zona_manejo ()
     {
         return $this->belongsTo(ZonaManejos::class, 'zona_manejo_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function asignarZonasAUsuario($userId, $zonasIds)
+    {
+        foreach ($zonasIds as $zonaId) {
+
+            if ($zonaId) {
+                self::updateOrInsert([
+                    'user_id' => $userId,
+                    'grupo_id' => null,
+                    'zona_manejo_id' => $zonaId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
     }
 }

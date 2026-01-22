@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('grupo_parcela', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('grupo_id');
             $table->unsignedBigInteger('parcela_id');
 
             // Evita duplicados
-            $table->unique(['grupo_id', 'parcela_id'], 'uq_grupo_parcela');
+            //$table->unique(['grupo_id', 'parcela_id'], 'uq_grupo_parcela');
 
             // Índices
+            $table->index('user_id', 'idx_grupo_parcela_user');
             $table->index('grupo_id', 'idx_grupo_parcela_grupo');
             $table->index('parcela_id', 'idx_grupo_parcela_parcela');
             // FKs

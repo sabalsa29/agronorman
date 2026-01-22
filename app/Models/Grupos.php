@@ -67,6 +67,12 @@ class Grupos extends Model
         return $this->hasMany(ZonaManejos::class, 'grupo_id');
     }
 
+    // public function predios()
+    // {
+    //     return $this->belongsToMany(Parcelas::class, 'grupo_predio', 'grupo_id', 'predio_id')
+    //         ->withTimestamps();
+    // }
+
     /**
      * Relación: Un grupo puede tener múltiples usuarios asignados
      */

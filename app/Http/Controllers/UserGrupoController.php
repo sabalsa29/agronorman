@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GrupoParcela;
 use App\Models\Grupos;
 use App\Models\User;
 use App\Models\UserGrupo;
@@ -92,4 +93,20 @@ class UserGrupoController extends Controller
         return redirect()->route('accesos.usuarios.index')
             ->with('success', 'Asignaciones de usuario a grupos actualizadas correctamente.');
     }   
+
+    public function prediosByGrupo(GrupoParcela $grupo)
+    {
+        //Debemos regresar el id y el nombre del predio
+        $predios = GrupoParcela::where('grupo_id', $grupo->id)
+            ->pluck('parcela_id')
+            ->map(function ($parcelaId) {
+                return [
+                    'id' => $parcelaId,
+                    'nombre' => optional(\App\Models\Parcelas::find($parcelaId))->nombre,
+                ];  
+            })
+            ->toArray();
+
+        return response()->json($predios);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreParcelasRequest;
 use App\Http\Requests\UpdateParcelasRequest;
+use App\Models\Grupos;
 use App\Models\Parcelas;
 use Illuminate\Http\Request;
 
@@ -26,13 +27,27 @@ class ParcelasController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     */
+     */ 
     public function create(Request $request)
     {
+        $user = auth()->user();
+
+        $gruposDisponibles = Grupos::with('grupoPadre')
+        ->forUser($user)
+        ->where('is_root', false)
+        ->get()
+        ->map(function ($grupo) {
+            return [
+                'id' => $grupo->id,
+                'nombre' => $grupo->ruta_completa,
+            ];
+        });
+
         return view('clientes.parcelas.create', [
             "section_name" => "Crear parcela",
             "section_description" => "Crear parcela",
             'cliente_id' => $request->id,
+            'gruposDisponibles' => $gruposDisponibles,
         ]);
     }
 
@@ -41,6 +56,7 @@ class ParcelasController extends Controller
      */
     public function store(StoreParcelasRequest $request)
     {
+        dd( 'request recibido en store parcelas', $request->all() );
         $parcelas = new Parcelas();
         $parcelas->cliente_id = $request->cliente_id;
         $parcelas->nombre = $request->nombre;

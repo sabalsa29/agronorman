@@ -6,6 +6,8 @@ use App\Models\GrupoParcela;
 use App\Models\Grupos;
 use App\Models\Parcelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Builder\Param;
 
 class ParcelaGrupoController extends Controller
@@ -71,35 +73,51 @@ class ParcelaGrupoController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) 
+{
+    //dd( 'request recibido en store parcela grupo', $request->all() );
+    // Normaliza grupos (name="grupo_id[]")
+    $grupoIds = array_values(array_filter(Arr::wrap($request->input('grupo_id'))));
 
-        $request->validate([
-            'grupo_id' => 'required|exists:grupos,id',
-            'parcela_ids' => 'required|array|min:1',
-            'parcela_ids.*' => 'exists:parcelas,id',
+    $request->validate([
+        'nombre'      => 'required|string|max:255',
+        'cliente_id'  => 'required|exists:clientes,id',
+        'superficie'  => 'required',
+        // 'lat'         => 'required',
+        // 'lon'         => 'required',
+        'status'      => 'required|in:0,1',
+        'grupo_id'    => 'required|array|min:1',
+        'grupo_id.*'  => 'exists:grupos,id',
+    ]);
+
+    return DB::transaction(function () use ($request, $grupoIds) {
+
+        // 1) Crear parcela
+        $parcela = Parcelas::create([
+            'cliente_id'  => $request->input('cliente_id'),
+            'nombre'      => $request->input('nombre'),
+            'superficie'  => $request->input('superficie'),
+            'lat'         => $request->input('lat'),
+            'lon'         => $request->input('lon'),
+            'status'      => (int) $request->input('status'),
         ]);
 
-        $grupo = Grupos::findOrFail($request->input('grupo_id'));
-        $parcelaIds = $request->input('parcela_ids');
-
-        //Foreach para crear las relaciones 
-        foreach ($parcelaIds as $parcelaId) {
-            //Validar que no exista la relacion
-            $exists = GrupoParcela::where('grupo_id', $grupo->id)
-                ->where('parcela_id', $parcelaId)
-                ->exists();
-            if ($exists) {
-                continue; // Saltar si ya existe la relación
-            }
-
-            $grupoParcela = new GrupoParcela();
-            $grupoParcela->grupo_id = $grupo->id;
-            $grupoParcela->parcela_id = $parcelaId;
-            $grupoParcela->save();
+        // 2) Crear relaciones parcela ↔ grupo
+        foreach ($grupoIds as $grupoId) {
+            GrupoParcela::firstOrCreate(
+                [
+                    'grupo_id'   => (int) $grupoId,
+                    'parcela_id' => (int) $parcela->id,
+                ],
+                [
+                    'user_id' => 0, // si no lo necesitas, déjalo en 0
+                ]
+            );
         }
 
-        return redirect()->route('accesos.parcelas.index')
-            ->with('success', 'Parcelas asignadas al grupo correctamente.');
-    }
+        return redirect()
+            ->route('parcelas.index', ['id' => $parcela->cliente_id]) // ajusta a tu ruta real
+            ->with('success', 'Parcela creada y asignada a los grupos correctamente.');
+    });
+}
 }

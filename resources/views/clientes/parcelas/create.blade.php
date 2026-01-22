@@ -6,12 +6,13 @@
     <!-- Theme JS files -->
     <script src="{{ url('global_assets/js/plugins/forms/styling/uniform.min.js') }}"></script>
     <script src="{{ url('global_assets/js/plugins/forms/styling/switchery.min.js') }}"></script>
+    <script src="{{ url('global_assets/js/plugins/forms/selects/select2.min.js') }}"></script>
 
     <script src="{{ url('assets/js/app.js') }}"></script>
     <script src="{{ url('global_assets/js/demo_pages/form_inputs.js') }}"></script>
     <script src="{{ url('global_assets/js/demo_pages/table_elements.js') }}"></script>
     <!-- /theme JS files -->
-@endsection
+@endsection 
 @section('content')
     <!-- Form inputs -->
     <div class="card">
@@ -60,6 +61,26 @@
                                     <input type="text" name="lon" class="form-control" placeholder="Longitud">
                                 </div>
 
+                                  <div class="col-6">
+                                    <label class="col-form-label col-lg-12">
+                                        Grupo <span class="text-danger">*</span>
+                                    </label>
+                                    <div  class="form-control">
+                                        <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
+                                            @foreach ($gruposDisponibles as $grupo)
+                                                <option value="{{ $grupo['id'] }}"
+                                                    {{ old('grupo_id', $grupoPadreId ?? null) == $grupo['id'] ? 'selected' : '' }}>
+                                                    {{ $grupo['nombre'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <span class="form-text text-muted">
+                                            <i class="icon-info22 mr-1"></i>
+                                            Seleccione al menos un grupo
+                                        </span>
+                                    </div>
+                                </div>
+
                                 <div class="col-12 mt-2">
                                     <div class="form-check form-check-inline form-check-switchery">
                                         <label class="form-check-label">
@@ -85,4 +106,16 @@
         </div>
     </div>
     <!-- /form inputs -->
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+
+            // Inicializar Select2
+            $('.select2').select2({
+                allowClear: true
+            });
+        });
+    </script>
 @endsection

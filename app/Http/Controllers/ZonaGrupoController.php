@@ -83,10 +83,26 @@ class ZonaGrupoController extends Controller
 
     public function zonasByPredio($predioId)
     {
+        //predioId puede ser un array de ids separados por comas
+        //Agregar nombre del predio en la respuesta
+        $predioIds = explode(',', $predioId);
+        
         $zonas =  ZonaManejos::query()
-            ->where('parcela_id', $predioId)
+            ->whereIn('parcela_id', $predioIds)
             ->orderBy('nombre')
-            ->get(['id', 'nombre']);
+            ->get(['id', 'nombre','nombre as predio_nombre', 'parcela_id as predio_id'])
+            ->map(function ($zona) {
+                $predio = Parcelas::find($zona->predio_id);
+                return [
+                    'id' => $zona->id,
+                    'nombre' => $zona->nombre,
+                    'predio' => [
+                        'id' => $predio->id,
+                        'nombre' => $predio->nombre,
+                    ],
+                    'predio_id' => $zona->predio_id,
+                ];
+            });
 
         return response()->json($zonas);
     }

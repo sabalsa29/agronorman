@@ -13,19 +13,26 @@ return new class extends Migration
     {
         Schema::create('grupo_zona_manejo', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('grupo_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('grupo_id')->nullable();
             $table->unsignedBigInteger('zona_manejo_id');
 
             // Evita duplicados
-            $table->unique(['grupo_id', 'zona_manejo_id'], 'uq_grupo_zona_manejo');
+            //$table->unique(['grupo_id', 'zona_manejo_id'], 'uq_grupo_zona_manejo');
 
             // Índices
+            $table->index('user_id', 'idx_grupo_zona_manejo_user');
             $table->index('grupo_id', 'idx_grupo_zona_manejo_grupo');
             $table->index('zona_manejo_id', 'idx_grupo_zona_manejo_zona');
             // FKs
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+                
             $table->foreign('grupo_id')
                 ->references('id')->on('grupos')
-                ->onDelete('cascade');
+                ->nullOnDelete(); 
 
             $table->foreign('zona_manejo_id')
                 ->references('id')->on('zona_manejos')

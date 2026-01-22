@@ -107,6 +107,8 @@ class UsuariosController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        
+
         if (!$user) {
             return redirect()->back()
                 ->withInput()
@@ -161,8 +163,77 @@ class UsuariosController extends Controller
         $usuario->email = $request->email;
         $usuario->password = bcrypt($request->password);
         $usuario->role_id = $request->role_id;
-        $usuario->grupo_id = $request->grupo_id ?: null;
+        $usuario->grupo_id = null;
         $usuario->save();
+
+        // Asignar grupos al usuario 
+        if($request->grupo_id) {
+            foreach ($request->grupo_id as $grupoId) {
+                $nuevoUserGrupo = new \App\Models\UserGrupo();
+                $nuevoUserGrupo->user_id = $usuario->id;
+                $nuevoUserGrupo->grupo_id = $grupoId;
+                $nuevoUserGrupo->save();
+            }
+        }
+
+          //Asignaciones manuales
+        if ($request->filled('asignaciones_cache')) {
+
+            $asignacionesCache = json_decode($request->input('asignaciones_cache'), true);
+
+            if (!is_array($asignacionesCache)) {
+                dd('asignaciones_cache inválido');
+            }
+            //dd(collect($asignacionesCache)->pluck('predios'));
+            // Validar lo siguiente, si dentro de asignaciones_cache vienen predios y dentro de predios zonas vienen vacias
+            //quiere decir que se creara un asignarPrediosAUsuario, y si dentro de zonas vienen datos, se creara un asignarZonasAUsuario
+            // IDs de predios (grupo -> predios -> [id])
+
+            // dentro de prediosIds solo van a ir los ids de los predios que en zonas vengan vacias
+
+            $prediosIds = collect($asignacionesCache)
+                ->pluck('predios')
+                ->filter() // quita null
+                ->flatMap(function ($predios) {
+                    return collect($predios)
+                        ->filter(function ($predio) {
+                            return empty($predio['zonas']); // zonas vacío o no existe
+                        })
+                        ->pluck('id'); // o ->keys() si prefieres
+                })
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->toArray();
+
+            //dd($prediosIds);
+            // IDs de zonas (grupo -> predios -> zonas -> [id])
+            $zonasIds = collect($asignacionesCache)
+                ->pluck('predios')
+                ->filter()
+                ->flatMap(function ($predios) {
+                    return collect($predios)
+                        ->pluck('zonas')     // [ ['5'=>...,'19'=>...], ... ]
+                        ->filter()
+                        ->flatMap(fn ($zonas) => collect($zonas)->keys()); // ['5','19',...]
+                })
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->toArray();
+            
+            // Guardar las asignaciones en la base de datos
+            
+                if(!empty($prediosIds)) {
+                    \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
+                }
+            //dd('las zonas id son ', $zonasIds);
+            if(!empty($zonasIds)) {
+                \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasIds);
+            }
+
+            //dd('los predios son ', $prediosIds, ' las zonas son: ', $zonasIds);
+        }
 
         // Si es Super Admin, redirigir a la lista de clientes
         // Si no, redirigir a la lista de usuarios del cliente
