@@ -43,8 +43,8 @@ class ClientesController extends Controller
         if ($user->isSuperAdmin()) {
             $list = Clientes::all();
             return view('clientes.index', [
-                "section_name" => "Usuarios",
-                "section_description" => "Lista de Usuarios",
+                "section_name" => "Productores",
+                "section_description" => "Lista de Productores",
                 "list" => $list,
             ]);
         }
@@ -65,7 +65,7 @@ class ClientesController extends Controller
         }
 
         // Si no tiene cliente asignado, mostrar error
-        abort(403, 'No tiene un cliente asignado.');
+        abort(403, 'No tiene un productor asignado.');
     }
 
     /**
@@ -77,7 +77,7 @@ class ClientesController extends Controller
         /** @var User|null $user */
         $user = Auth::user();
         if (!$user || !$user->isSuperAdmin()) {
-            abort(403, 'Solo el Super Administrador puede crear clientes.');
+            abort(403, 'Solo el Super Administrador puede crear productores.');
         }
 
         return view('clientes.create', [

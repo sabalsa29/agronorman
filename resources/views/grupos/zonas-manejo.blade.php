@@ -10,12 +10,12 @@
                     <i class="icon-arrow-left7 mr-2"></i> Volver a Grupos
                 </a>
                 <div class="list-icons">
-                    <a class="list-icons-item" data-action="collapse"></a>
+                    <a class="list-icons-item" data-action="collapse"></a> 
                     <a class="list-icons-item" data-action="reload"></a>
                     <a class="list-icons-item" data-action="remove"></a>
                 </div>
             </div>
-        </div>
+        </div> 
 
         <div class="card-body">
             <p class="mb-4">{{ $section_description }}</p>
@@ -133,8 +133,8 @@
                                             ]),
                                         ) }}"
                                             class="btn btn-light">
-                                            <i class="icon-cross2"></i> Limpiar
-                                        </a>
+                                            <i class="icon-cross2"></i> Limpiar 
+                                        </a> 
                                     @endif
                                 </div>
                             </div>

@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function() {
             // Función para desactivar permisos CRUD de un menú
-            function disableCrudPermissions(menuKey, container) {
+            function disableCrudPermissions(menuKey, container) {  
                 const crudActions = ['create', 'edit', 'delete'];
                 crudActions.forEach(function(action) {
                     const crudCheckbox = container.find(`input[name="crud_permissions[${menuKey}][${action}]"]`);

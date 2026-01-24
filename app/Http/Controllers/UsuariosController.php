@@ -19,6 +19,7 @@ class UsuariosController extends Controller
      */
     public function index(Request $request)
     {
+
         $usuarios = User::where('cliente_id', $request->id)->get();
 
         // Obtener el nombre del cliente de forma segura
@@ -29,8 +30,11 @@ class UsuariosController extends Controller
             // Si no hay usuarios, intentar obtener el cliente directamente
             $cliente = \App\Models\Clientes::find($request->id);
             $clienteNombre = $cliente->nombre ?? "";
-        }
+        }   
+        dd($usuarios);
 
+        dd('llegue al index de usuarios');
+ 
         return view('clientes.usuarios.index', [
             "section_name" => "Lista de Usuarios" . ($clienteNombre ? " del usuario " . $clienteNombre : ""),
             "section_description" => "Usuarios del sistema",
@@ -157,6 +161,8 @@ class UsuariosController extends Controller
             }
         }
 
+        dd($request->all());
+
         $usuario = new User();
         $usuario->cliente_id = $request->cliente_id;
         $usuario->nombre = $request->nombre;
@@ -184,11 +190,9 @@ class UsuariosController extends Controller
             if (!is_array($asignacionesCache)) {
                 dd('asignaciones_cache inválido');
             }
-            //dd(collect($asignacionesCache)->pluck('predios'));
             // Validar lo siguiente, si dentro de asignaciones_cache vienen predios y dentro de predios zonas vienen vacias
-            //quiere decir que se creara un asignarPrediosAUsuario, y si dentro de zonas vienen datos, se creara un asignarZonasAUsuario
+            // quiere decir que se creara un asignarPrediosAUsuario, y si dentro de zonas vienen datos, se creara un asignarZonasAUsuario
             // IDs de predios (grupo -> predios -> [id])
-
             // dentro de prediosIds solo van a ir los ids de los predios que en zonas vengan vacias
 
             $prediosIds = collect($asignacionesCache)
@@ -406,13 +410,13 @@ class UsuariosController extends Controller
 
         // Obtener estructura de menús del sidebar
         $menuStructure = $this->getMenuStructure();
-
+ 
         // Obtener permisos actuales del usuario
         $permissions = $user->menuPermissions()
             ->get()
-            ->keyBy('menu_key')
+            ->keyBy('menu_key') 
             ->toArray();
-
+ 
         return view('clientes.usuarios.permissions', [
             "section_name" => "Permisos del usuario",
             "section_description" => "Configurar permisos de menú y roles del usuario",

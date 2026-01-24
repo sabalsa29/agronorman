@@ -29,6 +29,20 @@
                         <div class="col-lg-12">
                             <div class="row">
                                 <div class="col-3">
+                                    <label class="col-form-label col-lg-12">Productor <span class="text-danger">*</span></label>
+                                    <select name="role_id" class="form-control" required>
+                                        @foreach ($clientes as $productor)
+                                            <option value="{{ $productor->id }}"
+                                                {{ $usuario->cliente_id == $productor->id ? 'selected' : '' }}>
+                                                {{ $productor->nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('role_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-3">
                                     <label class="col-form-label col-lg-12">Nombre <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="nombre" value="{{ $usuario->nombre }}" class="form-control"
@@ -48,7 +62,7 @@
                                     <small class="form-text text-muted">Dejar vacío si no desea cambiar la
                                         contraseña</small>
                                 </div>
-                                <div class="col-3">
+                                {{--  <div class="col-3">
                                     <label class="col-form-label col-lg-12">Rol <span class="text-danger">*</span></label>
                                     <select name="role_id" class="form-control" required>
                                         <option value="">Seleccione un rol</option>
@@ -62,7 +76,7 @@
                                     @error('role_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div>  --}}
                             </div>
                             <div class="row mt-3">
                                 <div class="col-6">

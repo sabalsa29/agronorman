@@ -64,7 +64,7 @@
                         </span>
                     </a>
                 </li>
-
+  
                 @if (Auth::check() && Auth::user()->hasMenuPermission('usuarios'))
                     <li
                         class="nav-item nav-item-submenu {{ isActiveSection(['clientes.index, grupos.index']) ? 'nav-item-expanded nav-item-open' : '' }}">
@@ -74,6 +74,12 @@
                             @if (Auth::check() && Auth::user()->hasSubMenuPermission('usuarios', 'usuarios.clientes'))
                                 <li class="nav-item"><a href="{{ route('clientes.index') }}"
                                         class="nav-link {{ Route::is('clientes.index') ? 'active' : '' }}"><i
+                                            class="icon-user-tie"></i> Productores</a>
+                                </li>
+                            @endif
+                            @if (Auth::check() )
+                                <li class="nav-item"><a href="{{ route('usuarios.index') }}"
+                                        class="nav-link {{ Route::is('usuarios.index') ? 'active' : '' }}"><i
                                             class="icon-user-tie"></i> Usuarios</a>
                                 </li>
                             @endif

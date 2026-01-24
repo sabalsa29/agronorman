@@ -78,7 +78,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Verificar si el usuario es super administrador
+     * Verificar si el usuario es super administrador 
      * Super admin: role_id = 1 y cliente_id = null
      */
     public function isSuperAdmin(): bool

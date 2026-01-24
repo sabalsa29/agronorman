@@ -17,7 +17,7 @@
     <link href="{{ url('assets/css/colors.min.css') }}" rel="stylesheet" type="text/css">
     <!-- /global stylesheets -->
 
-    <!-- Core JS files -->
+    <!-- Core JS files --> 
     <script src="{{ url('global_assets/js/main/jquery.min.js') }}"></script>
     <script src="{{ url('global_assets/js/main/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url('global_assets/js/plugins/loaders/blockui.min.js') }}"></script>

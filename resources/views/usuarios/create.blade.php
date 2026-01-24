@@ -1,7 +1,6 @@
 @extends('layouts.web')
 @section('title', $section_name)
 @section('modelo', 'Agregar')
-@section('ruta_home', route('usuarios.index', ['id' => $cliente_id]))
 @section('content')
     <!-- Form inputs -->
     <style>
@@ -51,11 +50,22 @@
                     <div class="form-group row">
                         <div class="col-lg-12">
                             <div class="row">
+                                 <div class="col-3">
+                                    <label class="col-form-label col-lg-12">Productor <span class="text-danger">*</span></label>
+                                    <select name="cliente_id" class="form-control" required>
+                                        <option value="">Seleccione un productor</option>
+                                        @foreach ($clientes as $cliente)
+                                            <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('cliente_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="col-3">
                                     <label class="col-form-label col-lg-12">Nombre <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="nombre" class="form-control" placeholder="Nombre">
-                                    <input type="hidden" name="cliente_id" value="{{ $cliente_id }}">
                                 </div>
                                 <div class="col-3">
                                     <label class="col-form-label col-lg-12">Correo <span
@@ -67,7 +77,7 @@
                                             class="text-danger">*</span></label>
                                     <input type="password" name="password" class="form-control" placeholder="Contraseña">
                                 </div>
-                                <div class="col-3">
+                                {{--  <div class="col-3">
                                     <label class="col-form-label col-lg-12">Rol <span class="text-danger">*</span></label>
                                     <select name="role_id" class="form-control" required>
                                         <option value="">Seleccione un rol</option>
@@ -78,7 +88,7 @@
                                     @error('role_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div>  --}}
                             </div>
 
                            
@@ -86,7 +96,6 @@
                                 <div class="col-6">
                                     <label class="col-form-label col-lg-12">Grupo <span class="text-danger">*</span></label>
                                     <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
-                                       
                                          @foreach ($gruposDisponibles as $grupo)
                                             <option value="{{ $grupo['id'] }}"
                                                 {{ old('grupo_id', $grupoPadreId ?? null) == $grupo['id'] ? 'selected' : '' }}>

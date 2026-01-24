@@ -333,16 +333,18 @@ class GruposController extends Controller
         $user = auth()->user();
 
         // Obtener todas las zonas de manejo del usuario primero
+        // Modificar porque ahora va a cargar todas las zonas accesibles al usuario
+        // incluyendo las asignadas directamente y las de sus grupos y descendientes
         $todasLasZonas = \App\Models\ZonaManejos::with('grupo')
             ->forUser($user)
-            ->get();
-       
+            ->get(); 
+        
         // Determinar el grupo del usuario y todos sus ancestros
         $grupoUsuario = null;
         $gruposAncestros = collect(); // Todos los grupos hacia arriba (fijos)
         $grupoRaiz = null;
         $todasLasZonasParaConteo = $todasLasZonas;
-
+ 
         if ($user->isSuperAdmin()) {
             //dd($todasLasZonas);
             // Super admin: si hay múltiples grupos raíz, usar el primero o el seleccionado
@@ -367,7 +369,7 @@ class GruposController extends Controller
                 // Si el grupo no existe, no hay nada que mostrar
                 $zonasManejo = collect();
 
-                
+                 
                 return view('grupos.zonas-manejo', [
                     "section_name" => "Mis Zonas de Manejo",
                     "section_description" => "Seleccione una zona de manejo para ver su información completa",

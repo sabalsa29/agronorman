@@ -23,6 +23,7 @@ use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\ZonaManejosController;
 use App\Http\Controllers\ConfiguracionMqttController;
 use App\Http\Controllers\ConfiguracionMqttUsuarioController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGrupoController;
 use App\Http\Controllers\ZonaGrupoController;
 use Illuminate\Support\Facades\Route;
@@ -225,6 +226,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/forecast/parcela/{parcela}',           [ForeCastController::class, 'pronostico'])->name('forecast.pronostico');
     Route::get('/export-debug',                         [EstacionDatoExport::class, 'export']);
     Route::get('component_grafica_variables_multiples/{zonaManejoId}', [HomeController::class, 'view_grafica_variables_multiples'])->name('component_grafica_variables_multiples');
-});
 
+    //Rutas de usuario aparte clientes.
+    Route::prefix('usuarios')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('usuarios.index');
+        Route::get('/create', [UserController::class, 'create'])->name('usuarios.create');
+        Route::post('/', [UserController::class, 'store'])->name('usuarios.store');
+        Route::get('/{usuario}', [UserController::class, 'show'])->name('usuarios.show');
+        Route::get('/{usuario}/edit', [UserController::class, 'edit'])->name('usuarios.edit');
+        Route::put('/{usuario}', [UserController::class, 'update'])->name('usuarios.update');
+        Route::delete('/{usuario}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+    });
+});
 require __DIR__ . '/auth.php';
