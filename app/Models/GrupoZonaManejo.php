@@ -22,6 +22,11 @@ class GrupoZonaManejo extends Model
         return $this->belongsTo(Grupos::class, 'grupo_id');
     }
 
+    public function zonaManejo()
+    {
+        return $this->belongsTo(\App\Models\ZonaManejos::class, 'zona_manejo_id');
+    }
+
     public function zona_manejo ()
     {
         return $this->belongsTo(ZonaManejos::class, 'zona_manejo_id');
@@ -46,4 +51,6 @@ class GrupoZonaManejo extends Model
             }
         }
     }
+
+    
 }

@@ -34,6 +34,8 @@ class Grupos extends Model
         return $this->hasMany(Grupos::class, 'grupo_id');
     }
 
+    
+
     /**
      * Obtener la ruta completa del grupo (jerarquía completa)
      */

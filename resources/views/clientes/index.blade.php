@@ -103,15 +103,15 @@
                                     title="Ver parcelas">
                                     <i class="icon-menu6 ml-3 mr-3"></i>
                                 </a>
-                                <a href="{{ route('usuarios.index', [$row]) }}" class="list-icons-item text-warning"
+                                {{-- <a href="{{ route('usuarios.index', [$row]) }}" class="list-icons-item text-warning"
                                     title="Ver usuarios">
                                     <i class="icon-users"></i>
-                                </a>
+                                </a> --}}
                                 @if (Auth::check() && Auth::user()->isSuperAdmin())
-                                    <a href="{{ route('clientes.grupos', [$row]) }}" class="list-icons-item text-info"
+                                    {{-- <a href="{{ route('clientes.grupos', [$row]) }}" class="list-icons-item text-info"
                                         title="Gestionar grupos">
                                         <i class="icon-collaboration"></i>
-                                    </a>
+                                    </a> --}}
                                 @endif
                             </div>
                         </td>

@@ -30,7 +30,7 @@
         <div class="card-body">
             <p class="mb-4">{{ $section_description }}</p>
 
-            <form action="{{ route('parcelas.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('asignacion.parcelas.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <fieldset class="mb-3">
 
@@ -65,7 +65,7 @@
                                     <option value="{{ $parcela['id'] }}"
                                         {{ old('parcela_id', $parcelaId ?? null) == $parcela['id'] ? 'selected' : '' }}>
                                         {{ $parcela['nombre'] }}
-                                    </option>
+                                    </option> 
                                 @endforeach
                             </select>
                             <span class="form-text text-muted">

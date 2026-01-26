@@ -255,9 +255,10 @@
             }
 
            
-        });
+        }); 
 
          function cargarPredios() {
+            
                 var grupoId = document.getElementById('grupo_manual_id').value;
                 //Concexion ajax para obtener los predios del grupo
                 $.ajax({
@@ -334,12 +335,16 @@
             // $('#zona_ids').append(opt).trigger('change');
 
             function agregarZonaPredio() {
+
+
                 const $grupo = $('#grupo_manual_id');
                 const $predios = $('#predio_ids');
                 const $zonas = $('#zona_ids');
 
                 const grupoId = $grupo.val();
                 const predioIds = $predios.val() || [];
+
+                console.log($grupo);
 
                 // Obligatorios: grupo + al menos 1 predio
                 if (!grupoId) {

@@ -187,23 +187,23 @@ Route::middleware('auth')->group(function () {
         Route::get('parcelas/{parcela_id}/zona_manejo/permissions/{zona_manejo}',   [ZonaManejosController::class, 'permissions'])->name('zona_manejo.permissions');
         Route::post('parcelas/{parcela_id}/zona_manejo/permissions/store',          [ZonaManejosController::class, 'StoreZonaManejosUser'])->name('store_zona_manejos_user.store');
     });
-
+ 
     // Asignación de parcelas a grupos
     Route::get('asignacion/zonas', [ZonaGrupoController::class, 'index'])->name('accesos.zonas.index');
     Route::get('asignacion/zonas/asignar', [ZonaGrupoController::class, 'assign'])->name('zonas.assign');
     Route::post('asignacion/zonas/quitar', [ZonaGrupoController::class, 'remove'])->name('zonas.remove');
     Route::post('asignacion/zonas/guardar', [ZonaGrupoController::class, 'store'])->name('zonas.store');
 
-    //Ruta para obtener las zonas por predio
-    Route::get('/predios/{predio}/zonas', [ZonaGrupoController::class, 'zonasByPredio']) ->name('predios.zonas');
+    //Ruta para obtener las zonas por predio 
+    Route::get('predios/zonas', [ZonaGrupoController::class, 'zonasByPredio'])->name('predios.zonas');
     //Ruta para obtener predios por grupo
-    Route::get('/grupos/{grupo}/predios', [UserGrupoController::class, 'prediosByGrupo']) ->name('grupos.predios');
-    
+    Route::get('grupos/{grupo}/predios', [UserGrupoController::class, 'prediosByGrupo'])
+    ->name('grupos.predios');
 
     // Asignacion de zonas de manejo a grupos
     Route::get('asignacion/parcelas', [ParcelaGrupoController::class, 'index'])->name('accesos.parcelas.index');
     Route::get('asignacion/parcelas/asignar', [ParcelaGrupoController::class, 'assign'])->name('parcelas.assign');
-    Route::post('asignacion/parcelas/guardar', [ParcelaGrupoController::class, 'store'])->name('parcelas.store');
+    Route::post('asignacion/parcelas/guardar', [ParcelaGrupoController::class, 'store'])->name('asignacion.parcelas.store');
 
     Route::post('asignacion/parcelas/quitar', [ParcelaGrupoController::class, 'remove'])->name('parcelas.remove');
 

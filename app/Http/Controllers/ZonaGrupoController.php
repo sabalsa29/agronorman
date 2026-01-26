@@ -81,30 +81,53 @@ class ZonaGrupoController extends Controller
         ]);
     }
 
-    public function zonasByPredio($predioId)
+    public function zonasByPredio(Request $request)
     {
-        //predioId puede ser un array de ids separados por comas
-        //Agregar nombre del predio en la respuesta
-        $predioIds = explode(',', $predioId);
-        
-        $zonas =  ZonaManejos::query()
+        $predioIds = $request->input('predio_ids', []);
+
+        //dd($predioIds);
+
+        // Normalizar a array
+        if (!is_array($predioIds)) {
+            $predioIds = explode(',', (string) $predioIds);
+        }
+
+        $predioIds = collect($predioIds)
+            ->filter()
+            ->map(fn($v) => (int)$v)
+            ->unique()
+            ->values()
+            ->toArray();
+
+        if (count($predioIds) === 0) {
+            return response()->json([]);
+        }
+
+        // Traer nombres de predios en un solo query
+        $prediosMap = Parcelas::whereIn('id', $predioIds)
+            ->get(['id', 'nombre'])
+            ->keyBy('id');
+
+        $zonas = ZonaManejos::query()
             ->whereIn('parcela_id', $predioIds)
             ->orderBy('nombre')
-            ->get(['id', 'nombre','nombre as predio_nombre', 'parcela_id as predio_id'])
-            ->map(function ($zona) {
-                $predio = Parcelas::find($zona->predio_id);
-                return [
-                    'id' => $zona->id,
-                    'nombre' => $zona->nombre,
-                    'predio' => [
-                        'id' => $predio->id,
-                        'nombre' => $predio->nombre,
-                    ],
-                    'predio_id' => $zona->predio_id,
-                ];
-            });
+            ->get(['id', 'nombre', 'parcela_id']);
 
-        return response()->json($zonas);
+        $response = $zonas->map(function ($zona) use ($prediosMap) {
+            $predio = $prediosMap->get($zona->parcela_id);
+
+            return [
+                'id' => $zona->id,
+                'nombre' => $zona->nombre,
+                'predio_id' => $zona->parcela_id,
+                'predio' => [
+                    'id' => $zona->parcela_id,
+                    'nombre' => $predio?->nombre ?? '(Sin predio)',
+                ],
+            ];
+        });
+
+        return response()->json($response->values());
     }
 
     public function store(Request $request)

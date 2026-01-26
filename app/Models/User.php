@@ -208,4 +208,12 @@ class User extends Authenticatable
 
         return $permission->permitted && $permission->can_delete;
     }
-}
+
+    // Funcion para obtener los grupos asignados al usuario
+    // Se debe hacer la consulta a la tabla grupo_user del modelo GrupoUser
+    // Se debe obtener los id de los grupos asignados al usuario, puede ser uno o varios
+    public function grupos()
+    {
+        return $this->belongsToMany(Grupos::class, 'user_grupo', 'user_id', 'grupo_id');
+    }
+}   

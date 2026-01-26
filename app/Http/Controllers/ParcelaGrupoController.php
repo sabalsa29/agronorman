@@ -75,32 +75,39 @@ class ParcelaGrupoController extends Controller
 
     public function store(Request $request) 
 {
-    //dd( 'request recibido en store parcela grupo', $request->all() );
+
+    // De momento se va a redirigir con el mensaje de, favor de crear la relacion desde la seccion productores
+    return redirect()->back()->with('info', 'Por favor, cree la relación desde la sección Productores.');
+    dd( 'request recibido en store parcela grupo', $request->all() );
     // Normaliza grupos (name="grupo_id[]")
     $grupoIds = array_values(array_filter(Arr::wrap($request->input('grupo_id'))));
 
-    $request->validate([
-        'nombre'      => 'required|string|max:255',
-        'cliente_id'  => 'required|exists:clientes,id',
-        'superficie'  => 'required',
-        // 'lat'         => 'required',
-        // 'lon'         => 'required',
-        'status'      => 'required|in:0,1',
-        'grupo_id'    => 'required|array|min:1',
-        'grupo_id.*'  => 'exists:grupos,id',
-    ]);
+    // $request->validate([
+    //     'nombre'      => 'required|string|max:255',
+    //     'cliente_id'  => 'required|exists:clientes,id',
+    //     'superficie'  => 'required',
+    //     // 'lat'         => 'required',
+    //     // 'lon'         => 'required',
+    //     'status'      => 'required|in:0,1', 
+    //     'grupo_id'    => 'required|array|min:1',
+    //     'grupo_id.*'  => 'exists:grupos,id',
+    // ]);
+
+    // Debemos validar que parcela_ids venga y no esten vacios
+    $parcelaIds = array_values(array_filter(Arr::wrap($request->input('parcela_id'))));
+    if (empty($parcelaIds)) {
+        return redirect()->back()->withErrors(['parcela_id' => 'Seleccione al menos una parcela.']);
+    }
+
+    // Debemos validar que el grupo venga, en este caso es un solo grupo, a ese grupo se le asignaran las parcelas
+    if (empty($grupoIds)) {
+        return redirect()->back()->withErrors(['grupo_id' => 'Seleccione al menos un grupo.']);
+    }
+
+    dd( 'parcelaIds', $parcelaIds, 'grupoIds', $grupoIds );
+
 
     return DB::transaction(function () use ($request, $grupoIds) {
-
-        // 1) Crear parcela
-        $parcela = Parcelas::create([
-            'cliente_id'  => $request->input('cliente_id'),
-            'nombre'      => $request->input('nombre'),
-            'superficie'  => $request->input('superficie'),
-            'lat'         => $request->input('lat'),
-            'lon'         => $request->input('lon'),
-            'status'      => (int) $request->input('status'),
-        ]);
 
         // 2) Crear relaciones parcela ↔ grupo
         foreach ($grupoIds as $grupoId) {

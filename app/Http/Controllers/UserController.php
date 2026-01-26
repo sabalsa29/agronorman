@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clientes;
+use App\Models\GrupoParcela;
+use App\Models\GrupoZonaManejo;
 use App\Models\User;
 use App\Models\Usuarios;
 use GuzzleHttp\Client;
@@ -85,6 +87,73 @@ class UserController extends Controller
             'status' => 1,
         ]);
 
+         // Asignar grupos al usuario 
+        if($request->grupo_id) {
+            foreach ($request->grupo_id as $grupoId) {
+                $nuevoUserGrupo = new \App\Models\UserGrupo();
+                $nuevoUserGrupo->user_id = $usuario->id;
+                $nuevoUserGrupo->grupo_id = $grupoId;
+                $nuevoUserGrupo->save();
+            }
+        }
+
+          //Asignaciones manuales
+        if ($request->filled('asignaciones_cache')) {
+
+            $asignacionesCache = json_decode($request->input('asignaciones_cache'), true);
+
+            if (!is_array($asignacionesCache)) {
+                dd('asignaciones_cache inválido');
+            }
+            // Validar lo siguiente, si dentro de asignaciones_cache vienen predios y dentro de predios zonas vienen vacias
+            // quiere decir que se creara un asignarPrediosAUsuario, y si dentro de zonas vienen datos, se creara un asignarZonasAUsuario
+            // IDs de predios (grupo -> predios -> [id])
+            // dentro de prediosIds solo van a ir los ids de los predios que en zonas vengan vacias
+
+            $prediosIds = collect($asignacionesCache)
+                ->pluck('predios')
+                ->filter() // quita null
+                ->flatMap(function ($predios) {
+                    return collect($predios)
+                        ->filter(function ($predio) {
+                            return empty($predio['zonas']); // zonas vacío o no existe
+                        })
+                        ->pluck('id'); // o ->keys() si prefieres
+                })
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->toArray();
+
+            //dd($prediosIds);
+            // IDs de zonas (grupo -> predios -> zonas -> [id])
+            $zonasIds = collect($asignacionesCache)
+                ->pluck('predios')
+                ->filter()
+                ->flatMap(function ($predios) {
+                    return collect($predios)
+                        ->pluck('zonas')     // [ ['5'=>...,'19'=>...], ... ]
+                        ->filter()
+                        ->flatMap(fn ($zonas) => collect($zonas)->keys()); // ['5','19',...]
+                })
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->toArray();
+            
+            // Guardar las asignaciones en la base de datos
+            
+                if(!empty($prediosIds)) {
+                    \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
+                }
+            //dd('las zonas id son ', $zonasIds);
+            if(!empty($zonasIds)) {
+                \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasIds);
+            }
+
+            //dd('los predios son ', $prediosIds, ' las zonas son: ', $zonasIds);
+        }
+
         return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }   
 
@@ -145,9 +214,102 @@ class UserController extends Controller
             }
         }
 
-        dd($gruposDisponibles);
+        //Obtener los id de los grupos asignados al usuario
+        $gruposAsignadosIds = $user->grupos->pluck('id')->map(fn($v)=>(string)$v)->toArray();
 
-        //dd($clientes, $clienteId);
+        /**
+         * =========================
+         * Precargar asignaciones manuales (árbol)
+         * =========================
+         * Estructura esperada:
+         * {
+         *   "2": { id:"2", nombre:"Grupo X", predios:{ "6":{id:"6",nombre:"Predio",zonas:{ "5":{...}} } } }
+         * }
+         */
+        $asignacionesCache = [];
+
+        // 1) Predios asignados manualmente (grupo_parcela)
+       $parcelasRows = GrupoParcela::query()
+            ->with(['grupo.grupoPadre', 'parcela'])
+            ->where('user_id', $user->id)
+            ->get() 
+            ->map(function ($row) {
+                return [
+                    'grupo_id' => $row->grupo_id,
+                    'grupo_nombre' => optional($row->grupo)->ruta_completa ?? 'Sin grupo',
+                    'parcela_id' => $row->parcela_id,
+                    'parcela_nombre' => optional($row->parcela)->nombre,
+                ];
+            });
+
+
+        foreach ($parcelasRows as $row) {
+            $gidKey = (string)($row['grupo_id'] ?? 0); // 0 => "Sin grupo" si llega null
+
+            if (!isset($asignacionesCache[$gidKey])) {
+                $asignacionesCache[$gidKey] = [
+                    'id' => $row['grupo_id'] ? (string)$row['grupo_id'] : null,
+                    'nombre' => $row['grupo_nombre'] ?? 'Sin grupo',
+                    'predios' => [],
+                ];
+            }
+
+            $pidKey = (string)$row['parcela_id'];
+
+            if (!isset($asignacionesCache[$gidKey]['predios'][$pidKey])) {
+                $asignacionesCache[$gidKey]['predios'][$pidKey] = [
+                    'id' => (string)$row['parcela_id'],
+                    'nombre' => $row['parcela_nombre'] ?? '',
+                    'zonas' => [],
+                ];
+            }
+        }
+
+
+        // 2) Zonas asignadas manualmente (grupo_zona_manejo)
+        $zonasRows = GrupoZonaManejo::query()
+            ->with(['grupo.grupoPadre', 'zonaManejo.parcela'])
+            ->where('user_id', $user->id)
+            ->get();
+
+        foreach ($zonasRows as $row) {
+            $gidKey = (string)($row->grupo_id ?? 0);
+
+            if (!isset($asignacionesCache[$gidKey])) {
+                $asignacionesCache[$gidKey] = [
+                    'id' => $row->grupo_id ? (string)$row->grupo_id : null,
+                    'nombre' => optional($row->grupo)->ruta_completa ?? 'Sin grupo',
+                    'predios' => [],
+                ];
+            }
+
+            $parcela = $row->zonaManejo?->parcela;
+            if (!$parcela) {
+                continue;
+            }
+
+            $pidKey = (string)$parcela->id;
+
+            if (!isset($asignacionesCache[$gidKey]['predios'][$pidKey])) {
+                $asignacionesCache[$gidKey]['predios'][$pidKey] = [
+                    'id' => (string)$parcela->id,
+                    'nombre' => $parcela->nombre,
+                    'zonas' => [],
+                ];
+            }
+
+            $zidKey = (string)$row->zona_manejo_id;
+            $asignacionesCache[$gidKey]['predios'][$pidKey]['zonas'][$zidKey] = [
+                'id' => (string)$row->zona_manejo_id,
+                'nombre' => $row->zonaManejo?->nombre ?? '',
+            ];
+        }
+
+
+        // Esto es lo que tu JS/partial lee para pintar el árbol al cargar el edit
+        $asignaciones_cache = json_encode($asignacionesCache, JSON_UNESCAPED_UNICODE);
+
+        //dd($asignaciones_cache);
 
         return view('usuarios.edit', [
             "section_name" => "Editar Usuario",
@@ -156,8 +318,186 @@ class UserController extends Controller
             "cliente_id" => $clienteId,
             "gruposDisponibles" => $gruposDisponibles,
             "clientes" => $clientes,
+            "gruposAsignadosIds" => $gruposAsignadosIds,
+
+            "asignaciones_cache" => $asignaciones_cache,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $usuario = User::findOrFail($id);
+
+        // =========================
+        // 1) Validación base usuario
+        // =========================
+        $validated = $request->validate([
+            'nombre'     => 'required|string|max:255',
+            'email'      => 'required|email|max:255|unique:users,email,' . $usuario->id,
+            'cliente_id' => 'nullable|integer|exists:clientes,id',
+            'password'   => 'nullable|string|min:8',
+            'grupo_id'   => 'nullable|array',
+            'grupo_id.*' => 'integer|exists:grupos,id',
+
+            // asignaciones_cache puede venir:
+            // - null / ""  => borrar todo
+            // - JSON válido => actualizar
+            'asignaciones_cache' => 'nullable|string',
         ]);
 
-        dd('edit user '.$id);
+        // =========================
+        // 2) Update usuario
+        // =========================
+        $usuario->nombre = $validated['nombre'];
+        $usuario->email = $validated['email'];
+        $usuario->cliente_id = $validated['cliente_id'] ?? null;
+
+        if (!empty($validated['password'])) {
+            $usuario->password = bcrypt($validated['password']);
+        }
+        $usuario->save();
+
+        // =========================
+        // 3) Grupos (pivote user_grupo)
+        // - si viene null/ausente => elimina todos
+        // - si viene array => sync
+        // =========================
+        \App\Models\UserGrupo::where('user_id', $usuario->id)->delete();
+
+        $grupoIds = $request->input('grupo_id', []);
+        if (is_array($grupoIds) && !empty($grupoIds)) {
+            foreach ($grupoIds as $grupoId) {
+                \App\Models\UserGrupo::create([
+                    'user_id' => $usuario->id,
+                    'grupo_id' => (int)$grupoId,
+                ]);
+            }
+        }
+
+        // =========================
+        // 4) Asignaciones manuales (grupo_parcela / grupo_zona_manejo)
+        // Reglas:
+        // - Si asignaciones_cache viene null/"" => eliminar TODO y terminar
+        // - Si viene JSON => validar estructura, eliminar existentes y recrear
+        // =========================
+        $rawCache = $request->input('asignaciones_cache');
+
+        // Si viene explícitamente vacío o null => borrar todo
+        if ($rawCache === null || trim((string)$rawCache) === '') {
+            \App\Models\GrupoParcela::where('user_id', $usuario->id)->delete();
+            \App\Models\GrupoZonaManejo::where('user_id', $usuario->id)->delete();
+
+            return redirect()->route('usuarios.index')
+                ->with('success', 'Usuario actualizado. Asignaciones manuales eliminadas.');
+        }
+
+        // JSON decode
+        $asignacionesCache = json_decode($rawCache, true);
+
+        if (!is_array($asignacionesCache)) {
+            return back()
+                ->withInput()
+                ->withErrors(['asignaciones_cache' => 'asignaciones_cache inválido: no es JSON válido.']);
+        }
+
+        // =========================
+        // 4.1) Validación de estructura mínima
+        // Estructura esperada:
+        // {
+        //   "grupoId": { "id":"..", "nombre":"..", "predios": { "predioId": { "id":"..","nombre":"..","zonas":{...} } } }
+        // }
+        // =========================
+        foreach ($asignacionesCache as $gKey => $gNode) {
+            if (!is_array($gNode)) {
+                return back()->withInput()->withErrors(['asignaciones_cache' => "Estructura inválida en grupo {$gKey}."]);
+            }
+
+            if (!array_key_exists('predios', $gNode) || !is_array($gNode['predios'])) {
+                return back()->withInput()->withErrors(['asignaciones_cache' => "Falta predios en grupo {$gKey}."]);
+            }
+
+            foreach ($gNode['predios'] as $pKey => $pNode) {
+                if (!is_array($pNode) || !array_key_exists('id', $pNode)) {
+                    return back()->withInput()->withErrors(['asignaciones_cache' => "Predio inválido en grupo {$gKey}."]);
+                }
+                // zonas puede no existir o ser []
+                if (isset($pNode['zonas']) && !is_array($pNode['zonas'])) {
+                    return back()->withInput()->withErrors(['asignaciones_cache' => "Zonas inválidas en predio {$pKey} (grupo {$gKey})."]);
+                }
+            }
+        }
+
+        // =========================
+        // 4.2) Eliminar existentes ANTES de recrear
+        // =========================
+        \App\Models\GrupoParcela::where('user_id', $usuario->id)->delete();
+        \App\Models\GrupoZonaManejo::where('user_id', $usuario->id)->delete();
+
+        // =========================
+        // 4.3) Extraer prediosIds sin zonas y zonasIds
+        // - prediosIds: solo predios donde zonas esté vacío
+        // - zonasIds: ids de zonas existentes
+        // =========================
+        $prediosIds = collect($asignacionesCache)
+            ->pluck('predios')
+            ->filter()
+            ->flatMap(function ($predios) {
+                return collect($predios)
+                    ->filter(function ($predio) {
+                        $zonas = $predio['zonas'] ?? [];
+                        return empty($zonas);
+                    })
+                    ->pluck('id');
+            })
+            ->map(fn($id) => (int)$id)
+            ->filter(fn($id) => $id > 0)
+            ->unique()
+            ->values()
+            ->toArray();
+
+        $zonasIds = collect($asignacionesCache)
+            ->pluck('predios')
+            ->filter()
+            ->flatMap(function ($predios) {
+                return collect($predios)
+                    ->flatMap(function ($predio) {
+                        $zonas = $predio['zonas'] ?? [];
+                        // zonas viene como objeto keyed por id: { "5":{..}, "19":{..} }
+                        return collect($zonas)->keys();
+                    });
+            })
+            ->map(fn($id) => (int)$id)
+            ->filter(fn($id) => $id > 0)
+            ->unique()
+            ->values()
+            ->toArray();
+
+        // =========================
+        // 4.4) Validar existencia en BD (recomendado)
+        // =========================
+        if (!empty($prediosIds)) {
+            $validPredios = \App\Models\Parcelas::whereIn('id', $prediosIds)->pluck('id')->toArray();
+            $prediosIds = array_values(array_unique(array_map('intval', $validPredios)));
+        }
+
+        if (!empty($zonasIds)) {
+            $validZonas = \App\Models\ZonaManejos::whereIn('id', $zonasIds)->pluck('id')->toArray();
+            $zonasIds = array_values(array_unique(array_map('intval', $validZonas)));
+        }
+
+        // =========================
+        // 4.5) Insertar (usa tus métodos)
+        // Nota: tus métodos actualmente no manejan grupo_id.
+        // Si necesitas grupo_id por asignación, debe venir en el método.
+        // =========================
+        if (!empty($prediosIds)) {
+            \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
+        }
+
+        if (!empty($zonasIds)) {
+            \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasIds);
+        }
+
+        return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 }
