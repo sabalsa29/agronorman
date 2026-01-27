@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('grupo_id')->nullable();
+            $table->unsignedBigInteger('parcela_id');
             $table->unsignedBigInteger('zona_manejo_id');
 
             // Evita duplicados
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->index('user_id', 'idx_grupo_zona_manejo_user');
             $table->index('grupo_id', 'idx_grupo_zona_manejo_grupo');
             $table->index('zona_manejo_id', 'idx_grupo_zona_manejo_zona');
+            $table->index('parcela_id', 'idx_grupo_zona_manejo_parcela');
             // FKs
 
             $table->foreign('user_id')
@@ -32,6 +34,10 @@ return new class extends Migration
                 
             $table->foreign('grupo_id')
                 ->references('id')->on('grupos')
+                ->nullOnDelete(); 
+
+             $table->foreign('parcela_id')
+                ->references('id')->on('parcelas')
                 ->nullOnDelete(); 
 
             $table->foreign('zona_manejo_id')

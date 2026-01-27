@@ -328,10 +328,366 @@ class GruposController extends Controller
     /**
      * Mostrar zonas de manejo del usuario de forma simplificada
      */
+
     public function zonasManejo(Request $request)
+{
+    $user = auth()->user();
+    $esAdmin = $user && $user->isSuperAdmin();
+
+    // =========================
+    // 1) Resolver accesos (NO admin)
+    // =========================
+    $gruposRelacionIds = collect();       // IDs de grupos relacionados (pivot + asignaciones)
+    $gruposPermitidos = collect();        // grupos relacionados + descendientes
+    $parcelasAsignadasIds = collect();    // parcelas asignadas (directo o por zona)
+    $zonasAsignadasIds = collect();       // zonas asignadas individualmente
+
+    if (!$esAdmin && $user) {
+
+        // Grupos por relación directa (pivot)
+        $gruposPivotIds = $user->grupos()->pluck('grupos.id');
+
+        // Parcelas asignadas
+        $asigPredios = \App\Models\GrupoParcela::query()
+            ->where('user_id', $user->id)
+            ->get(['grupo_id', 'parcela_id']);
+
+        // Zonas asignadas individualmente
+        $asigZonas = \App\Models\GrupoZonaManejo::query()
+            ->where('user_id', $user->id)
+            ->get(['grupo_id', 'parcela_id', 'zona_manejo_id']); // ajusta si tu columna es distinta
+
+        $parcelasAsignadasIds = $asigPredios->pluck('parcela_id')
+            ->merge($asigZonas->pluck('parcela_id'))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $zonasAsignadasIds = $asigZonas->pluck('zona_manejo_id')
+            ->filter()
+            ->unique()
+            ->values();
+
+        $gruposRelacionIds = $gruposPivotIds
+            ->merge($asigPredios->pluck('grupo_id'))
+            ->merge($asigZonas->pluck('grupo_id'))
+            ->filter()
+            ->unique()
+            ->values();
+
+        // Usuario sin relación => no mostrar datos
+        if ($gruposRelacionIds->isEmpty() && $parcelasAsignadasIds->isEmpty() && $zonasAsignadasIds->isEmpty()) {
+            return view('grupos.zonas-manejo', [
+                "section_name" => "Mis Zonas de Manejo",
+                "section_description" => "Seleccione una zona de manejo para ver su información completa",
+                "zonasManejo" => collect(),
+                "gruposAncestros" => collect(),
+                "grupoUsuario" => null,
+                "subgrupos" => collect(),
+                "subgrupoFiltro" => null,
+                "busqueda" => $request->get('busqueda', ''),
+                "user" => $user,
+            ]);
+        }
+
+        // Expandir grupos a descendientes para permitir navegación/árbol
+        if ($gruposRelacionIds->isNotEmpty()) {
+            $gruposRelacion = Grupos::whereIn('id', $gruposRelacionIds)->get();
+            $gruposPermitidos = $gruposRelacion
+                ->flatMap(fn($g) => $g->obtenerDescendientes()) // debe devolver IDs incluyendo el propio
+                ->unique()
+                ->values();
+        }
+    }
+
+    // Closure de query base: devuelve zonas accesibles
+    $zonasAccesiblesQuery = function () use ($esAdmin, $gruposPermitidos, $parcelasAsignadasIds, $zonasAsignadasIds) {
+        $q = \App\Models\ZonaManejos::query();
+
+        if ($esAdmin) {
+            return $q;
+        }
+
+        return $q->where(function ($qq) use ($gruposPermitidos, $parcelasAsignadasIds, $zonasAsignadasIds) {
+            if ($gruposPermitidos->isNotEmpty()) {
+                $qq->orWhereIn('grupo_id', $gruposPermitidos);
+            }
+            if ($parcelasAsignadasIds->isNotEmpty()) {
+                $qq->orWhereIn('parcela_id', $parcelasAsignadasIds);
+            }
+            if ($zonasAsignadasIds->isNotEmpty()) {
+                $qq->orWhereIn('id', $zonasAsignadasIds);
+            }
+        });
+    };
+
+    // =========================
+    // 2) Zonas accesibles (para conteos/árbol)
+    // =========================
+    $todasLasZonas = $zonasAccesiblesQuery()
+        ->with('grupo')
+        ->get();
+
+    $todasLasZonasParaConteo = $todasLasZonas;
+
+    // =========================
+    // 3) Determinar grupoUsuario + ancestros + raíz
+    // =========================
+    $grupoUsuario = null;
+    $gruposAncestros = collect();
+    $grupoRaiz = null;
+
+    if ($esAdmin) {
+        // Admin: puede ver todo. El "grupoUsuario" se usa como ancla del árbol
+        $grupoFiltroRaiz = $request->get('grupo_raiz_id');
+
+        if ($grupoFiltroRaiz) {
+            $grupoRaiz = Grupos::find($grupoFiltroRaiz);
+            $grupoUsuario = $grupoRaiz;
+        } else {
+            $grupoRaiz = Grupos::whereNull('grupo_id')->first();
+            $grupoUsuario = $grupoRaiz;
+        }
+
+        // Conteo para admin: todo
+        $todasLasZonasParaConteo = \App\Models\ZonaManejos::with('grupo')->get();
+
+    } elseif ($user) {
+        // No admin: ancla del árbol = uno de los grupos relacionados (o por asignación)
+
+        $grupoFiltro = (int) $request->get('grupo_raiz_id');
+
+        $grupoBaseId = null;
+        if ($grupoFiltro && $gruposRelacionIds->contains($grupoFiltro)) {
+            $grupoBaseId = $grupoFiltro;
+        } else {
+            $grupoBaseId = $gruposRelacionIds->first();
+        }
+
+        if ($grupoBaseId) {
+            $grupoUsuario = Grupos::find($grupoBaseId);
+        }
+
+        // Si no hay grupo por pivot, pero sí por asignación (caso raro), intenta con los permitidos
+        if (!$grupoUsuario && $gruposPermitidos->isNotEmpty()) {
+            $grupoUsuario = Grupos::find($gruposPermitidos->first());
+        }
+
+        // Si aún no hay grupo, no se muestra nada (porque el usuario solo tenía asignaciones sin grupo válido)
+        if (!$grupoUsuario) {
+            return view('grupos.zonas-manejo', [
+                "section_name" => "Mis Zonas de Manejo",
+                "section_description" => "Seleccione una zona de manejo para ver su información completa",
+                "zonasManejo" => collect(),
+                "gruposAncestros" => collect(),
+                "grupoUsuario" => null,
+                "subgrupos" => collect(),
+                "subgrupoFiltro" => null,
+                "busqueda" => $request->get('busqueda', ''),
+                "user" => $user,
+            ]);
+        }
+
+        $grupoRaiz = $grupoUsuario;
+
+        // Ancestros hacia arriba hasta raíz
+        $grupoActual = $grupoUsuario->grupoPadre;
+        while ($grupoActual) {
+            $gruposAncestros->prepend($grupoActual);
+            $grupoRaiz = $grupoActual;
+            $grupoActual = $grupoActual->grupoPadre;
+        }
+
+        // Conteo para NO admin: solo accesibles
+        $todasLasZonasParaConteo = $zonasAccesiblesQuery()
+            ->with('grupo')
+            ->get();
+    }
+
+    // Si no hay grupoUsuario (por ejemplo, no hay grupos en BD), no hay árbol; pero admin igual ve zonas
+    if (!$grupoUsuario && !$esAdmin) {
+        return view('grupos.zonas-manejo', [
+            "section_name" => "Mis Zonas de Manejo",
+            "section_description" => "Seleccione una zona de manejo para ver su información completa",
+            "zonasManejo" => collect(),
+            "gruposAncestros" => collect(),
+            "grupoUsuario" => null,
+            "subgrupos" => collect(),
+            "subgrupoFiltro" => null,
+            "busqueda" => $request->get('busqueda', ''),
+            "user" => $user,
+        ]);
+    }
+
+    // =========================
+    // 4) Cargar árbol de subgrupos (si hay ancla)
+    // =========================
+    if ($grupoUsuario) {
+        $grupoUsuario->load(['subgrupos' => function ($query) {
+            $query->with([
+                'subgrupos' => function ($q) {
+                    $q->with([
+                        'subgrupos',
+                        'grupoPadre' => function ($q2) {
+                            $q2->with('grupoPadre');
+                        }
+                    ]);
+                },
+                'grupoPadre' => function ($q) {
+                    $q->with('grupoPadre');
+                }
+            ]);
+        }]);
+    }
+
+    // Construir árbol de subgrupos
+    if ($grupoUsuario && $grupoUsuario->grupoPadre) {
+        $grupoPadre = $grupoUsuario->grupoPadre;
+
+        $grupoPadre->load(['subgrupos.grupoPadre' => function ($query) {
+            $query->with('grupoPadre');
+        }]);
+
+        $subgrupos = collect();
+
+        foreach ($grupoPadre->subgrupos as $subgrupo) {
+            $gruposDescendientes = collect($subgrupo->obtenerDescendientes());
+
+            $zonasDelSubgrupo = $zonasAccesiblesQuery()
+                ->with('grupo')
+                ->whereIn('grupo_id', $gruposDescendientes)
+                ->get();
+
+            $totalZonas = $zonasDelSubgrupo->count();
+
+            if ($esAdmin || $totalZonas > 0 || $subgrupo->id == $grupoUsuario->id) {
+                $rutaCompleta = $subgrupo->ruta_completa;
+                $prefijo = $subgrupo->id == $grupoUsuario->id ? '★ ' : '';
+
+                $subgrupos->push([
+                    'id' => $subgrupo->id,
+                    'nombre' => $subgrupo->nombre,
+                    'nombre_completo' => $prefijo . $rutaCompleta,
+                    'zona_manejos_count' => $totalZonas,
+                    'nivel' => 0,
+                    'subgrupos' => $this->construirArbolSubgrupos($subgrupo, $todasLasZonasParaConteo, $user, 1, '  '),
+                ]);
+            }
+        }
+    } else {
+        $subgrupos = $grupoUsuario
+            ? $this->construirArbolSubgrupos($grupoUsuario, $todasLasZonasParaConteo, $user)
+            : collect();
+    }
+
+    // =========================
+    // 5) Filtros de vista (subgrupo + búsqueda)
+    // =========================
+    $subgrupoFiltro = $request->get('subgrupo_id');
+    $busqueda = $request->get('busqueda', '');
+
+    // Query principal (zonas accesibles + relaciones necesarias)
+    $query = $zonasAccesiblesQuery()
+        ->with(['parcela.cliente', 'tipoCultivos', 'grupo']);
+
+    // Filtro por subgrupo seleccionado (si aplica)
+    if ($subgrupoFiltro) {
+        $subgrupoSeleccionado = Grupos::find($subgrupoFiltro);
+
+        if ($subgrupoSeleccionado) {
+            $esAccesible = false;
+
+            if ($esAdmin) {
+                $esAccesible = true;
+            } else {
+                // Accesible si está dentro de los grupos permitidos (relacionados + descendientes)
+                $esAccesible = $gruposPermitidos->contains($subgrupoSeleccionado->id);
+            }
+
+            if ($esAccesible) {
+                $gruposFiltro = collect($subgrupoSeleccionado->obtenerDescendientes());
+                $query->whereIn('grupo_id', $gruposFiltro);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+    } else {
+        // Sin subgrupo seleccionado:
+        // - Admin: ver todo (sin filtro adicional)
+        // - No admin: ver todo lo accesible (sin filtro adicional, la base ya filtra)
+    }
+
+    // =========================
+    // 6) Mapear para la vista + filtros finales
+    // =========================
+    $zonasManejo = $query->get()
+        ->map(function ($zona) use ($user) {
+            $tipoCultivo = $zona->tipoCultivos()->first();
+            $tipoCultivoId = $tipoCultivo ? $tipoCultivo->id : null;
+
+            $etapaFenologicaId = null;
+            if ($tipoCultivoId) {
+                $etapaFenologica = \App\Models\EtapaFenologicaTipoCultivo::where('tipo_cultivo_id', $tipoCultivoId)
+                    ->orderBy('id')
+                    ->first();
+
+                $etapaFenologicaId = $etapaFenologica ? $etapaFenologica->etapa_fenologica_id : null;
+            }
+
+            return [
+                'id' => $zona->id,
+                'nombre' => $zona->nombre,
+                'parcela' => $zona->parcela ? $zona->parcela->nombre : 'Sin parcela',
+                'cliente' => $zona->parcela && $zona->parcela->cliente ? $zona->parcela->cliente->nombre : 'Sin cliente',
+                'cliente_id' => $zona->parcela && $zona->parcela->cliente ? $zona->parcela->cliente->id : null,
+                'parcela_id' => $zona->parcela_id,
+                'tipo_cultivo_id' => $tipoCultivoId,
+                'tipo_cultivo_nombre' => $tipoCultivo ? $tipoCultivo->nombre : 'Sin tipo de cultivo',
+                'etapa_fenologica_id' => $etapaFenologicaId,
+                'grupo' => $zona->grupo ? $zona->grupo->nombre : null,
+                'grupo_id' => $zona->grupo_id,
+            ];
+        })
+        ->filter(function ($zona) {
+            // Solo mostrar zonas que tengan todos los datos necesarios
+            return $zona['cliente_id'] && $zona['parcela_id'] && $zona['tipo_cultivo_id'] && $zona['etapa_fenologica_id'];
+        })
+        ->filter(function ($zona) use ($busqueda) {
+            if (empty($busqueda)) {
+                return true;
+            }
+
+            $terminoBusqueda = strtolower(trim($busqueda));
+
+            return (
+                str_contains(strtolower($zona['nombre']), $terminoBusqueda) ||
+                str_contains(strtolower($zona['cliente']), $terminoBusqueda) ||
+                str_contains(strtolower($zona['parcela']), $terminoBusqueda) ||
+                str_contains(strtolower($zona['tipo_cultivo_nombre']), $terminoBusqueda) ||
+                ($zona['grupo'] && str_contains(strtolower($zona['grupo']), $terminoBusqueda))
+            );
+        })
+        ->values();
+
+    // =========================
+    // 7) Retorno a la vista
+    // =========================
+    return view('grupos.zonas-manejo', [
+        "section_name" => "Mis Zonas de Manejo",
+        "section_description" => "Seleccione una zona de manejo para ver su información completa",
+        "zonasManejo" => $zonasManejo,
+        "gruposAncestros" => $gruposAncestros,
+        "grupoUsuario" => $grupoUsuario,
+        "subgrupos" => $subgrupos,
+        "subgrupoFiltro" => $subgrupoFiltro,
+        "busqueda" => $busqueda,
+        "user" => $user,
+    ]);
+}
+
+    public function zonasManejos(Request $request)
     {
         $user = auth()->user();
-
         // Obtener todas las zonas de manejo del usuario primero
         // Modificar porque ahora va a cargar todas las zonas accesibles al usuario
         // incluyendo las asignadas directamente y las de sus grupos y descendientes
@@ -344,7 +700,6 @@ class GruposController extends Controller
         $gruposAncestros = collect(); // Todos los grupos hacia arriba (fijos)
         $grupoRaiz = null;
         $todasLasZonasParaConteo = $todasLasZonas;
- 
         if ($user->isSuperAdmin()) {
             //dd($todasLasZonas);
             // Super admin: si hay múltiples grupos raíz, usar el primero o el seleccionado
@@ -364,7 +719,11 @@ class GruposController extends Controller
         } elseif ($user->grupo_id) {
 
             // Usuario con grupo: obtener el grupo del usuario y todos sus ancestros
+            // Mediante el usuario obtenemos los grupos que se encuentra asociados
+            // Al igual las que estan relacionadas de forma manual
             $grupoUsuario = $user->grupo;
+
+            //dd($grupoUsuario);
             if (!$grupoUsuario) {
                 // Si el grupo no existe, no hay nada que mostrar
                 $zonasManejo = collect();

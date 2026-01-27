@@ -127,34 +127,60 @@ class UserController extends Controller
 
             //dd($prediosIds);
             // IDs de zonas (grupo -> predios -> zonas -> [id])
-            $zonasIds = collect($asignacionesCache)
-                ->pluck('predios')
-                ->filter()
-                ->flatMap(function ($predios) {
-                    return collect($predios)
-                        ->pluck('zonas')     // [ ['5'=>...,'19'=>...], ... ]
-                        ->filter()
-                        ->flatMap(fn ($zonas) => collect($zonas)->keys()); // ['5','19',...]
+            // Zonas con contexto (grupo_id, parcela_id, zona_id)
+            $zonasAsignaciones = collect($asignacionesCache)
+                ->flatMap(function ($grupo, $grupoKey) {
+
+                    // El grupo puede venir con 'id' o usar la key del array
+                    $grupoId = (int) ($grupo['id'] ?? $grupoKey);
+
+                    $predios = $grupo['predios'] ?? [];
+
+                    return collect($predios)->flatMap(function ($predio, $predioKey) use ($grupoId) {
+
+                        // El predio/parcela puede venir con 'id' o usar la key del array
+                        $parcelaId = (int) ($predio['id'] ?? $predioKey);
+
+                        $zonas = $predio['zonas'] ?? [];
+
+                        if (empty($zonas)) {
+                            return collect(); // si no hay zonas, aquí no devuelve nada
+                        }
+
+                        return collect($zonas)->map(function ($zona, $zonaKey) use ($grupoId, $parcelaId) {
+
+                            // La zona puede venir con 'id' o usar la key del array
+                            $zonaId = (int) ($zona['id'] ?? $zonaKey);
+
+                            return [
+                                'zona_id'    => $zonaId,
+                                'parcela_id' => $parcelaId,
+                                'grupo_id'   => $grupoId,
+                            ];
+                        });
+                    });
                 })
-                ->map(fn ($id) => (int) $id)
-                ->unique()
+                ->filter(fn ($row) => !empty($row['zona_id']))
+                ->unique('zona_id')   // evita duplicados por zona
                 ->values()
                 ->toArray();
+
             
             // Guardar las asignaciones en la base de datos
             
                 if(!empty($prediosIds)) {
                     \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
                 }
-            //dd('las zonas id son ', $zonasIds);
-            if(!empty($zonasIds)) {
-                \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasIds);
+            //Se debe agregar en las zonasIds la parcela_id a la que pertenece la zona y ademas el grupo_id al cual pertenece esa parcela
+            //dd('las zonas id son ', $zonasAsignaciones);
+            if (!empty($zonasAsignaciones)) {
+                \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasAsignaciones);
             }
 
             //dd('los predios son ', $prediosIds, ' las zonas son: ', $zonasIds);
         }
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('usuarios.index')->with('success', 'Productor creado exitosamente.');
     }   
 
     public function edit($id)
@@ -236,7 +262,7 @@ class UserController extends Controller
             ->map(function ($row) {
                 return [
                     'grupo_id' => $row->grupo_id,
-                    'grupo_nombre' => optional($row->grupo)->ruta_completa ?? 'Sin grupo',
+                    'grupo_nombre' => optional($row->grupo)->ruta_completa ?? 'Sin grupo1',
                     'parcela_id' => $row->parcela_id,
                     'parcela_nombre' => optional($row->parcela)->nombre,
                 ];
@@ -249,7 +275,7 @@ class UserController extends Controller
             if (!isset($asignacionesCache[$gidKey])) {
                 $asignacionesCache[$gidKey] = [
                     'id' => $row['grupo_id'] ? (string)$row['grupo_id'] : null,
-                    'nombre' => $row['grupo_nombre'] ?? 'Sin grupo',
+                    'nombre' => $row['grupo_nombre'] ?? 'Sin grupo2',
                     'predios' => [],
                 ];
             }
@@ -278,7 +304,7 @@ class UserController extends Controller
             if (!isset($asignacionesCache[$gidKey])) {
                 $asignacionesCache[$gidKey] = [
                     'id' => $row->grupo_id ? (string)$row->grupo_id : null,
-                    'nombre' => optional($row->grupo)->ruta_completa ?? 'Sin grupo',
+                    'nombre' => optional($row->grupo)->ruta_completa ?? 'Sin grupo3',
                     'predios' => [],
                 ];
             }
@@ -382,13 +408,15 @@ class UserController extends Controller
         // =========================
         $rawCache = $request->input('asignaciones_cache');
 
+        //dd($rawCache);
+
         // Si viene explícitamente vacío o null => borrar todo
         if ($rawCache === null || trim((string)$rawCache) === '') {
             \App\Models\GrupoParcela::where('user_id', $usuario->id)->delete();
             \App\Models\GrupoZonaManejo::where('user_id', $usuario->id)->delete();
 
             return redirect()->route('usuarios.index')
-                ->with('success', 'Usuario actualizado. Asignaciones manuales eliminadas.');
+                ->with('success', 'Usuario actualizado.');
         }
 
         // JSON decode
@@ -401,31 +429,6 @@ class UserController extends Controller
         }
 
         // =========================
-        // 4.1) Validación de estructura mínima
-        // Estructura esperada:
-        // {
-        //   "grupoId": { "id":"..", "nombre":"..", "predios": { "predioId": { "id":"..","nombre":"..","zonas":{...} } } }
-        // }
-        // =========================
-        foreach ($asignacionesCache as $gKey => $gNode) {
-            if (!is_array($gNode)) {
-                return back()->withInput()->withErrors(['asignaciones_cache' => "Estructura inválida en grupo {$gKey}."]);
-            }
-
-            if (!array_key_exists('predios', $gNode) || !is_array($gNode['predios'])) {
-                return back()->withInput()->withErrors(['asignaciones_cache' => "Falta predios en grupo {$gKey}."]);
-            }
-
-            foreach ($gNode['predios'] as $pKey => $pNode) {
-                if (!is_array($pNode) || !array_key_exists('id', $pNode)) {
-                    return back()->withInput()->withErrors(['asignaciones_cache' => "Predio inválido en grupo {$gKey}."]);
-                }
-                // zonas puede no existir o ser []
-                if (isset($pNode['zonas']) && !is_array($pNode['zonas'])) {
-                    return back()->withInput()->withErrors(['asignaciones_cache' => "Zonas inválidas en predio {$pKey} (grupo {$gKey})."]);
-                }
-            }
-        }
 
         // =========================
         // 4.2) Eliminar existentes ANTES de recrear
@@ -455,34 +458,12 @@ class UserController extends Controller
             ->values()
             ->toArray();
 
-        $zonasIds = collect($asignacionesCache)
-            ->pluck('predios')
-            ->filter()
-            ->flatMap(function ($predios) {
-                return collect($predios)
-                    ->flatMap(function ($predio) {
-                        $zonas = $predio['zonas'] ?? [];
-                        // zonas viene como objeto keyed por id: { "5":{..}, "19":{..} }
-                        return collect($zonas)->keys();
-                    });
-            })
-            ->map(fn($id) => (int)$id)
-            ->filter(fn($id) => $id > 0)
-            ->unique()
-            ->values()
-            ->toArray();
-
         // =========================
         // 4.4) Validar existencia en BD (recomendado)
         // =========================
         if (!empty($prediosIds)) {
             $validPredios = \App\Models\Parcelas::whereIn('id', $prediosIds)->pluck('id')->toArray();
             $prediosIds = array_values(array_unique(array_map('intval', $validPredios)));
-        }
-
-        if (!empty($zonasIds)) {
-            $validZonas = \App\Models\ZonaManejos::whereIn('id', $zonasIds)->pluck('id')->toArray();
-            $zonasIds = array_values(array_unique(array_map('intval', $validZonas)));
         }
 
         // =========================
@@ -494,8 +475,39 @@ class UserController extends Controller
             \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
         }
 
-        if (!empty($zonasIds)) {
-            \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasIds);
+         $zonasAsignaciones = collect($asignacionesCache)
+                ->flatMap(function ($grupo, $grupoKey) {
+
+                    $grupoId = (int) ($grupo['id'] ?? $grupoKey);
+                    $predios = $grupo['predios'] ?? [];
+                    return collect($predios)->flatMap(function ($predio, $predioKey) use ($grupoId) {
+
+                        // El predio/parcela puede venir con 'id' o usar la key del array
+                        $parcelaId = (int) ($predio['id'] ?? $predioKey);
+                        $zonas = $predio['zonas'] ?? [];
+                        if (empty($zonas)) {
+                            return collect(); // si no hay zonas, aquí no devuelve nada
+                        }
+                        return collect($zonas)->map(function ($zona, $zonaKey) use ($grupoId, $parcelaId) {
+
+                            // La zona puede venir con 'id' o usar la key del array
+                            $zonaId = (int) ($zona['id'] ?? $zonaKey);
+                            return [
+                                'zona_id'    => $zonaId,
+                                'parcela_id' => $parcelaId,
+                                'grupo_id'   => $grupoId,
+                            ];
+                        });
+                    });
+                })
+                ->filter(fn ($row) => !empty($row['zona_id']))
+                ->unique('zona_id')   // evita duplicados por zona
+                ->values()
+                ->toArray();
+
+
+        if (!empty($zonasAsignaciones)) {
+            \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasAsignaciones);
         }
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');

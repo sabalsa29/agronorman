@@ -108,6 +108,9 @@
                 </div>
                 <div class="card-body">
                     <form method="GET" action="{{ route('grupos.zonas-manejo') }}" id="formBusqueda">
+                        @php
+                            dd($user);
+                        @endphp
                         @if ($user->isSuperAdmin() && $grupoUsuario)
                             <input type="hidden" name="grupo_raiz_id" value="{{ $grupoUsuario->id }}">
                         @endif

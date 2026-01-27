@@ -81,8 +81,8 @@ class ClientesController extends Controller
         }
 
         return view('clientes.create', [
-            "section_name" => "Nuevo Usuario",
-            "section_description" => "Crear un nuevo usuario",
+            "section_name" => "Nuevo Productor",
+            "section_description" => "Crear un nuevo productor",
         ]);
     }
 
@@ -122,10 +122,10 @@ class ClientesController extends Controller
             );
 
             return redirect()->route('clientes.index')
-                ->with('success', 'Usuario creado exitosamente.');
+                ->with('success', 'Productor creado exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al crear el usuario: ' . $e->getMessage())
+                ->with('error', 'Error al crear el productor: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -148,8 +148,8 @@ class ClientesController extends Controller
         );
 
         return view('clientes.show', [
-            "section_name" => "Detalles del Usuario",
-            "section_description" => "Información detallada del usuario",
+            "section_name" => "Detalles del Productor",
+            "section_description" => "Información detallada del productor",
             "cliente" => $cliente,
         ]);
     }
@@ -167,8 +167,8 @@ class ClientesController extends Controller
         }
 
         return view('clientes.edit', [
-            "section_name" => "Editar Usuario",
-            "section_description" => "Modificar información del usuario",
+            "section_name" => "Editar Productor",
+            "section_description" => "Modificar información del productor",
             "cliente" => $cliente,
         ]);
     }
@@ -216,10 +216,10 @@ class ClientesController extends Controller
             );
 
             return redirect()->route('clientes.index')
-                ->with('success', 'Usuario actualizado exitosamente.');
+                ->with('success', 'Productor actualizado exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al actualizar el usuario: ' . $e->getMessage())
+                ->with('error', 'Error al actualizar el productor: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -258,10 +258,10 @@ class ClientesController extends Controller
             );
 
             return redirect()->route('clientes.index')
-                ->with('success', "Usuario '{$nombre}' eliminado exitosamente.");
+                ->with('success', "Productor '{$nombre}' eliminado exitosamente.");
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al eliminar el usuario: ' . $e->getMessage());
+                ->with('error', 'Error al eliminar el productor: ' . $e->getMessage());
         }
     }
 

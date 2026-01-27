@@ -3,6 +3,8 @@
 @section('modelo', 'Agregar')
 @section('content')
     <!-- Form inputs -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
          /* Árbol simple */
         .tree ul { list-style: none; margin: 0; padding-left: 18px; }
@@ -72,10 +74,17 @@
                                             class="text-danger">*</span></label>
                                     <input type="email" name="email" class="form-control" placeholder="Correo">
                                 </div>
-                                <div class="col-3">
-                                    <label class="col-form-label col-lg-12">Contraseña <span
-                                            class="text-danger">*</span></label>
-                                    <input type="password" name="password" class="form-control" placeholder="Contraseña">
+                               <div class="col-3">
+                                <label class="col-form-label col-lg-12">
+                                    Contraseña <span class="text-danger">*</span>
+                                </label>
+
+                                <div class="input-group">
+                                    <input id="password" type="password" name="password" class="form-control" placeholder="Contraseña">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Mostrar contraseña">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
                                 </div>
                                 {{--  <div class="col-3">
                                     <label class="col-form-label col-lg-12">Rol <span class="text-danger">*</span></label>
@@ -155,7 +164,20 @@
                 script.src = "{{ url('global_assets/js/demo_pages/table_elements.js') }}";
                 document.body.appendChild(script);
             }
-           
+
+            (function () {
+                const input = document.getElementById('password');
+                const btn = document.getElementById('togglePassword');
+                const icon = document.getElementById('togglePasswordIcon');
+
+                btn.addEventListener('click', () => {
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                icon.classList.toggle('bi-eye', !isPassword);
+                icon.classList.toggle('bi-eye-slash', isPassword);
+                btn.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+                });
+            })();
         });
 
            // ========= AJAX: predios por grupo =========
