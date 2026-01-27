@@ -1401,15 +1401,20 @@ class GruposController extends Controller
         if ($esAdmin) {
 
             // ✅ Admin: toma parcelas/pivots globales
+            // validar que parcelas no se repitan en grupo_id 
             $parcelas = GrupoParcela::get();
+            $parcelas = $parcelas->unique(fn($p) => ($p->grupo_id ?? '0').'|'.($p->parcela_id ?? '0'))
+                ->values();
 
             // OJO: aquí estás trayendo "raíces" bajo grupo_id = 1 (Norman)
             $gruposRaiz = Grupos::where('is_root', false)
                 ->where('grupo_id', 1)
                 ->get();
-
+            //dd($parcelas);
             // Zonas reales a partir de las parcelas (una sola query, sin N+1)
             $parcelaIds = $parcelas->pluck('parcela_id')->filter()->unique()->values();
+
+            //dd($parcelaIds);
 
             $zonas = ZonaManejos::whereIn('parcela_id', $parcelaIds)
                 ->get(['id', 'parcela_id', 'grupo_id']);
@@ -1444,11 +1449,7 @@ class GruposController extends Controller
 
         } else {
 
-            // ✅ No admin: SOLO lo relacionado con el usuario
-            $parcelas = GrupoParcela::where('user_id', $user->id)->get();
-            $zonasDirectasPivot = GrupoZonaManejo::where('user_id', $user->id)->get();
-
-            // Grupos raíz del usuario desde user_grupo
+          // Grupos raíz del usuario desde user_grupo
             $userGrupoIds = UserGrupo::where('user_id', $user->id)
                 ->pluck('grupo_id')
                 ->filter()
@@ -1457,22 +1458,40 @@ class GruposController extends Controller
 
             $gruposRaiz = Grupos::whereIn('id', $userGrupoIds)->get();
 
-            // ==========================
-            // 1) Zonas por parcelas asignadas (grupo_parcela -> zona_manejos)
-            // ==========================
+            // Validar gruposRaiz, si alguno de esos grupos raiz son hijos de genesis directo, osea en grupo_id = 1
+            // entonces traer todos sus hijos tambien, ademas de cargar las parcelas y zonas adicionales
+            $gruposRaiz = $gruposRaiz->map(function($g) {
+                if ($g->grupo_id == 1) {
+                    // Traer todos sus hijos
+                    $hijos = Grupos::where('grupo_id', $g->id)->get();
+                    return collect([$g])->merge($hijos);
+                }
+                return collect([$g]);
+            })->flatten(1)->unique('id')->values();
+
+            // Agregar las parcelas de los subgrupos hijos de los grupos raíz del usuario
+            $parcelasDeSubgrupos = GrupoParcela::whereIn('grupo_id', $gruposRaiz->pluck('id'))->get();
+            $parcelasGru = $parcelas->merge($parcelasDeSubgrupos)->unique(fn($p) => ($p->grupo_id ?? '0').'|'.($p->parcela_id ?? '0'))->values();
+
+            $parcelasUser = GrupoParcela::where('user_id', $user->id)->get();
+
+            //todas las parcelas
+            $parcelas = $parcelasGru->merge($parcelasUser)
+                ->unique(fn($p) => ($p->grupo_id ?? '0').'|'.($p->parcela_id ?? '0'))
+                ->values();
+
             $parcelaIds = $parcelas->pluck('parcela_id')->filter()->unique()->values();
 
             $zonasPorParcelas = $parcelaIds->isEmpty()
                 ? collect()
-                : ZonaManejos::whereIn('parcela_id', $parcelaIds)->get(['id', 'parcela_id', 'grupo_id']);
+                : ZonaManejos::whereIn('parcela_id', $parcelaIds)->get(['id','parcela_id','grupo_id']);
 
-            $grupoByParcela = $parcelas
-                ->filter(fn ($gp) => !empty($gp->parcela_id))
-                ->keyBy('parcela_id');
+            // mapa parcela_id => grupo_id desde grupo_parcela para forzar el grupo del pivot
+            $grupoByParcela = $parcelas->filter(fn($gp)=>$gp->parcela_id)->keyBy('parcela_id');
 
-            $zonasPivotDesdeParcelas = $zonasPorParcelas->map(function ($z) use ($user, $grupoByParcela) {
+
+            $zonasPivotDesdeParcelas = $zonasPorParcelas->map(function($z) use ($user, $grupoByParcela){
                 $pivot = new GrupoZonaManejo();
-
                 $pivot->user_id = $user->id;
 
                 $gp = $grupoByParcela->get($z->parcela_id);
@@ -1484,11 +1503,13 @@ class GruposController extends Controller
                 return $pivot;
             });
 
+            //dd($zonasPivotDesdeParcelas);
+
             // ==========================
             // 2) Zonas asignadas directamente (grupo_zona_manejo)
             //    Aseguramos parcela_id para que tu árbol funcione.
             // ==========================
-            $zonaIdsDirectas = $zonasDirectasPivot->pluck('zona_manejo_id')->filter()->unique()->values();
+            $zonaIdsDirectas = $zonasPivotDesdeParcelas->pluck('zona_manejo_id')->filter()->unique()->values();
 
             $infoZonasDirectas = $zonaIdsDirectas->isEmpty()
                 ? collect()
@@ -1496,7 +1517,7 @@ class GruposController extends Controller
 
             $infoZonasDirectasById = $infoZonasDirectas->keyBy('id');
 
-            $zonasPivotDirectasNormalizadas = $zonasDirectasPivot->map(function ($pz) use ($user, $infoZonasDirectasById) {
+            $zonasPivotDirectasNormalizadas = $zonasPivotDesdeParcelas->map(function ($pz) use ($user, $infoZonasDirectasById) {
                 $info = $infoZonasDirectasById->get($pz->zona_manejo_id);
 
                 $pivot = new GrupoZonaManejo();
@@ -1512,23 +1533,23 @@ class GruposController extends Controller
 
                 return $pivot;
             });
+            //dd($zonasPivotDirectasNormalizadas);
 
             // ==========================
             // 3) Unir y deduplicar
             // ==========================
-            $zonasManejo = $zonasPivotDesdeParcelas
-                ->merge($zonasPivotDirectasNormalizadas)
-                ->filter(fn($i) => !empty($i->zona_manejo_id) && !empty($i->parcela_id)) // para árbol
-                ->unique(fn ($i) => ($i->grupo_id ?? '0').'|'.($i->parcela_id ?? '0').'|'.$i->zona_manejo_id)
-                ->values();
+            $zonasManejo = $zonasPivotDirectasNormalizadas;
 
-            // ==========================
+            //dd($zonasManejo);
+                        // ==========================
             // (Opcional) Si quieres incluir TODOS los subgrupos descendientes
             // de los grupos raíz del usuario en la lista de grupos (para tu árbol):
             // ==========================
             if ($gruposRaiz->isNotEmpty()) {
                 $allIds = $gruposRaiz->pluck('id')->values();
                 $queue  = $allIds->values();
+
+                //dd($allIds, $queue);
 
                 while ($queue->isNotEmpty()) {
                     $childIds = Grupos::whereIn('grupo_id', $queue)->pluck('id')->values();
@@ -1538,9 +1559,51 @@ class GruposController extends Controller
                     $queue  = $newIds;
                 }
 
+                //dd($allIds);
+
                 // Re-cargar todos para que tu vista pueda armar el árbol completo
                 $gruposRaiz = Grupos::whereIn('id', $allIds)->get();
             }
+            //Debemos obtener las parcelas de los grupos raiz y sus zonas de manejo
+            // Obtener las parcelas de los grupos raíz
+            $parcelasGruposRaiz = GrupoParcela::whereIn('grupo_id', $gruposRaiz->pluck('id'))->get();
+            
+            //dd($parcelasGruposRaiz);
+
+           $zonasManejoUsuario= GrupoZonaManejo::where('user_id', $user->id)->get();
+
+           $zonasManejo = $zonasManejo->merge($zonasManejoUsuario)
+            ->unique(fn($i) => ($i->grupo_id ?? '0').'|'.($i->parcela_id ?? '0').'|'.$i->zona_manejo_id)
+            ->values();
+
+            // Obtener las parcelas de las zonas de zonasManejo finales
+            $parcelaIdsFinales = $zonasManejo->pluck('parcela_id')->filter()->unique()->values();
+            $parcelas = GrupoParcela::whereIn('parcela_id', $parcelaIdsFinales)->get();
+            $parcelas = $parcelas->merge($parcelasDeSubgrupos)->unique(fn($p) => ($p->grupo_id ?? '0').'|'.($p->parcela_id ?? '0'))->values();
+            //validar que parcelas no se repitan
+            $parcelas = $parcelas->unique(fn($p) => ($p->grupo_id ?? '0').'|'.($p->parcela_id ?? '0'))
+            ->values();
+
+            //obtener zonas de manejo de parcelas finales
+            $parcelaIds = $parcelas->pluck('parcela_id')->filter()->unique()->values();
+            $zonas = ZonaManejos::whereIn('parcela_id', $parcelaIds)
+                ->get(['id', 'parcela_id', 'grupo_id']);
+
+            $zonasManejo = $zonas->map(function ($z) use ($user, $grupoByParcela) {
+                $pivot = new GrupoZonaManejo();
+
+                $pivot->user_id = $user->id;
+
+                $gp = $grupoByParcela->get($z->parcela_id);
+                $pivot->grupo_id = $gp ? $gp->grupo_id : $z->grupo_id;
+
+                $pivot->parcela_id = $z->parcela_id;
+                $pivot->zona_manejo_id = $z->id;
+
+                return $pivot;
+            })->unique(fn($i) => ($i->grupo_id ?? '0').'|'.($i->parcela_id ?? '0').'|'.$i->zona_manejo_id);
+
+            //dd($zonasManejo)->values();
         }
 
         $data = [
@@ -1552,7 +1615,7 @@ class GruposController extends Controller
             "user" => $user,
         ];
 
-        dd($data);
+        //dd($data);
 
         return view('grupos.zonas-manejo', $data);
     }

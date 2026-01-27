@@ -39,7 +39,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Predio</th>
+                    <th>Parcela</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -47,7 +47,7 @@
                 @forelse ($list as $row)
                     <tr>
                         <td>{{ $row->nombre ?? 'Sin nombre' }}</td>
-                        <td>{{ $row->parcela->nombre ?? 'Sin predio' }}</td>
+                        <td>{{ $row->parcela->nombre ?? 'Sin parcela' }}</td>
                         <td class="text-center">
                             <div class="list-icons">
                                 <a href="{{ route('zona_manejo.edit', ['id' => $cliente_id, 'parcela_id' => $parcela_id, $row]) }}"

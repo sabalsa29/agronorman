@@ -7,7 +7,7 @@
                     <td colspan="2">{{ $cliente->nombre }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Predio:</strong></td>
+                    <td colspan="2"><strong>Parcela:</strong></td>
                     <td colspan="2">{{ $parcela->nombre }}</td>
                 </tr>
                 <tr>

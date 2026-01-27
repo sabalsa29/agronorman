@@ -134,7 +134,7 @@
 
             // Placeholders específicos
             $('#grupo_id').select2({ placeholder: 'Seleccione un grupo', allowClear: true });
-            $('#predio_id').select2({ placeholder: 'Seleccione un predio', allowClear: true });
+            $('#predio_id').select2({ placeholder: 'Seleccione una parcela', allowClear: true });
             $('#zona_manejo_ids').select2({ placeholder: 'Seleccione una o más zonas', allowClear: true });
 
             // Cargar zonas según predio

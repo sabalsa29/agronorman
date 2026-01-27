@@ -249,7 +249,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
-                                    <label>PREDIO</label>
+                                    <label>PARCELA</label>
                                     <select class="form-control select-search" id="parcela_id" name="parcela_id">
                                         <option value="">Selecciona una parcela</option>
                                         @foreach ($parcelas as $item)
@@ -1488,7 +1488,7 @@
             }
 
             $('#cliente_id').change(function() {
-                mostrarLoader('Actualizando predios del usuario...');
+                mostrarLoader('Actualizando parcelas del usuario...');
                 actualizarURL();
             });
 

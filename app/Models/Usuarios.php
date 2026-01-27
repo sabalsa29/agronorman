@@ -17,6 +17,7 @@ class Usuarios extends Model
         'email',
         'password',
         'cliente_id',
+        'role_id',
         'status',
     ];
     public function cliente()

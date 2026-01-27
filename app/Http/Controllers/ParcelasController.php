@@ -20,8 +20,8 @@ class ParcelasController extends Controller
         $parcelas = Parcelas::where('cliente_id', $request->id)->get();
         $clienteNombre = $parcelas->isNotEmpty() ? $parcelas[0]->cliente->nombre : '';
         return view('clientes.parcelas.index', [
-            "section_name" => "Lista de predios del usuario " . $clienteNombre,
-            "section_description" => "Parcelas de los usuarios",
+            "section_name" => "Lista de parcelas del usuario " . $clienteNombre,
+            "section_description" => "Parcelas de los productores",
             "list" => $parcelas,
             "cliente_id" => $request->id,
         ]);

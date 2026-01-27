@@ -92,6 +92,31 @@
                                         Dejar vacío si no desea cambiar la contraseña
                                     </small>
                                 </div>
+                                @php
+                                    // Toma primero old() si existe, si no usa el role_id del usuario
+                                    $selectedRoleId = (int) old('role_id', data_get($usuario, 'role_id', 3));
+                                @endphp
+
+                                <div class="col-3">
+                                    <label class="col-form-label col-lg-12">Tipo Usuario</label>
+
+                                    <select name="role_id" class="form-control @error('role_id') is-invalid @enderror" required>
+
+                                        <option value="3" {{ $selectedRoleId === 3 ? 'selected' : '' }}>
+                                            Usuario general
+                                        </option>
+
+                                        <option value="1" {{ $selectedRoleId === 1 ? 'selected' : '' }}>
+                                            Usuario Norman
+                                        </option>
+                                    </select>
+
+                                    @error('role_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+
                             </div>
 
                             {{-- Grupos del usuario --}}
@@ -340,19 +365,35 @@
                     const zonas = p.zonas || {};
                     const zonaIds = Object.keys(zonas);
 
-                    html += `
-                        <li>
-                            <span class="node">
-                                <i class="icon-map5"></i>
-                                ${escapeHtml(p.nombre)}
-                                <span class="badge badge-info ml-2">${zonaIds.length} zona(s)</span>
-                                <span class="actions">
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-remove-predio="${gid}|${pid}">
-                                        <i class="icon-trash"></i>
-                                    </button>
+                    // validar zonaIds.length si es 0 poner todas las zonas
+                    if(zonaIds.length === 0){
+                        html += `<li>
+                                <span class="node">
+                                    <i class="icon-map5"></i>
+                                    ${escapeHtml(p.nombre)}
+                                    <span class="badge badge-info ml-2">Todas las zonas</span>
+                                    <span class="actions">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-remove-predio="${gid}|${pid}">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    </span>
                                 </span>
-                            </span>
-                    `;
+                            `;
+                    }else{
+                        html += `<li>
+                                <span class="node">
+                                    <i class="icon-map5"></i>
+                                    ${escapeHtml(p.nombre)}
+                                    <span class="badge badge-info ml-2">${zonaIds.length} zona(s)</span>
+                                    <span class="actions">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-remove-predio="${gid}|${pid}">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    </span>
+                                </span>
+                            `;
+                    }
+                   
 
                     if (zonaIds.length > 0) {
                         html += '<ul>';

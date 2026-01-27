@@ -95,7 +95,7 @@
                                         @endforeach
                                     </select>
                                     <small class="form-text text-muted">
-                                        Asignar grupos para permite acceso jerárquico a todos los predios y zonas dentro de esos grupos.
+                                        Asignar grupos para permite acceso jerárquico a todos las parcelas y zonas dentro de esos grupos.
                                     </small>
                                     @error('grupo_id')
                                         <span class="text-danger">{{ $message }}</span>
@@ -106,7 +106,7 @@
                     </div>
 
                    {{-- =========================
-                        Sección: Asignación manual (Grupo → Predios/Zonas)
+                        Sección: Asignación manual (Grupo → Parcelas/Zonas)
                         ========================= --}}
                     <div class="card border-left-3 border-left-primary rounded-left-0 mb-3">
                         <div class="card-header bg-light d-flex align-items-center">
@@ -310,7 +310,7 @@
                     }
                 });
                 // Aquí puedes agregar la lógica para cargar las zonas asociadas a los predios seleccionados
-                console.log('Cargando zonas para los predios IDs:', predioIds);
+                console.log('Cargando zonas para los parclas IDs:', predioIds);
             }
 
             /**

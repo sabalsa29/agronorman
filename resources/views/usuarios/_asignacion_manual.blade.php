@@ -59,13 +59,13 @@
 
                         <span class="form-text text-muted">
                             <i class="icon-info22 mr-1"></i>
-                            Seleccione un grupo para asignar predios o zonas de manejo.
+                            Seleccione un grupo para asignar parcela o zonas de manejo.
                         </span>
                     </div>
 
-                    <!-- Predios -->
+                    <!-- Parcelas -->
                     <div class="col-md-4">
-                        <label class="col-form-label">Predios</label>
+                        <label class="col-form-label">Parcelas</label>
                         <select onchange="cargarZonas()"
                                 name="predio_ids[]"
                                 id="predio_ids"

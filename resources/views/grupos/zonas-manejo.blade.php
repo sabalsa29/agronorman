@@ -21,7 +21,7 @@
     <div class="card-body">
         <p class="mb-4">{{ $section_description }}</p>
 
-        {{-- ✅ Buscador (se mantiene) --}}
+        {{-- ✅ Buscador --}}
         <div class="card border-top mb-4">
             <div class="card-header bg-transparent border-bottom">
                 <h6 class="card-title mb-0">
@@ -33,7 +33,7 @@
                 <div class="form-group mb-0">
                     <div class="input-group">
                         <input type="text" id="treeSearch" class="form-control"
-                            placeholder="Buscar por grupo, subgrupo, parcela o zona...">
+                               placeholder="Buscar por grupo, subgrupo, parcela o zona...">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-primary" id="btnClearSearch">
                                 <i class="icon-cross2"></i> Limpiar
@@ -49,72 +49,117 @@
 
         @php
             use App\Models\Grupos;
-            use App\Models\GrupoParcela;
-            use App\Models\GrupoZonaManejo;
+            use App\Models\ZonaManejos;
+            use App\Models\Parcelas;
 
-            // AJUSTA estos modelos si en tu proyecto tienen otro nombre:
-            // - Parcela model (tabla parcelas/predios)
-            // - ZonaManejos model (tabla zona_manejos)
-            use App\Models\Parcelas;        // <- ajusta si tu modelo se llama Predio o ParcelaModel
-            use App\Models\ZonaManejos;    // <- ajusta si tu modelo se llama ZonaManejo
-
-            // ---------------------------
-            // 1) Grupos raíz (vienen del controller)
-            // ---------------------------
+            // -----------------------------------------
+            // 1) Normalizar inputs del controller
+            // -----------------------------------------
             $rootGroups = collect($gruposRaiz ?? [])
-                ->flatten(1)
+                ->flatten(1)     // por si viene array de colecciones
                 ->filter()
+                ->unique('id')
                 ->values();
 
-            // ---------------------------
-            // 2) Traer TODOS los descendientes (N niveles) desde esas raíces
-            // ---------------------------
+            $parcelasCol = collect($parcelas ?? [])
+                ->flatten(1)
+                ->filter()
+                ->values(); // filas pivot GrupoParcela (grupo_id, parcela_id, ...)
+
+            $zonasCol = collect($zonasManejo ?? [])
+                ->flatten(1)
+                ->filter()
+                ->values(); // filas pivot GrupoZonaManejo (grupo_id, zona_manejo_id, [parcela_id opcional])
+
+            // -----------------------------------------
+            // 2) Sembrar también grupos que aparezcan en pivots
+            //    (para que el árbol incluya grupos con parcelas/zona aunque no vengan en user_grupo)
+            // -----------------------------------------
+            $extraGroupIds = collect()
+                ->merge($parcelasCol->pluck('grupo_id'))
+                ->merge($zonasCol->pluck('grupo_id'))
+                ->filter()
+                ->map(fn($x) => (int)$x)
+                ->unique()
+                ->values();
+
+            if ($extraGroupIds->isNotEmpty()) {
+                $extraGroups = Grupos::whereIn('id', $extraGroupIds)->get();
+                $rootGroups = $rootGroups->merge($extraGroups)->unique('id')->values();
+            }
+
+            // Si sigue vacío, no hay árbol que construir
+            // -----------------------------------------
+            // 3) Construir TODOS los grupos descendientes (N niveles) desde roots
+            // -----------------------------------------
             $allGroupsMap = $rootGroups->keyBy('id');
-            $pending = $rootGroups->pluck('id')->map(fn($x) => (int)$x)->values();
+
+            $pending = $rootGroups
+                ->pluck('id')
+                ->filter()
+                ->map(fn($x) => (int)$x)
+                ->values();
 
             while ($pending->isNotEmpty()) {
+                // hijos donde grupo_id es el padre
                 $kids = Grupos::whereIn('grupo_id', $pending)->get();
+
                 $newKids = $kids->reject(fn($g) => $allGroupsMap->has($g->id));
 
                 foreach ($newKids as $g) {
                     $allGroupsMap->put($g->id, $g);
                 }
 
-                $pending = $newKids->pluck('id')->map(fn($x) => (int)$x)->values();
+                $pending = $newKids
+                    ->pluck('id')
+                    ->filter()
+                    ->map(fn($x) => (int)$x)
+                    ->values();
             }
 
             $allGroups = $allGroupsMap->values();
 
-            // Parent -> children (para TODOS los niveles)
+            // Parent => children (para N niveles)
             $childrenByParent = $allGroups->groupBy(fn($g) => (int)($g->grupo_id ?? 0));
 
-            // ---------------------------
-            // 3) Parcelas por grupo usando SOLO la pivot grupo_parcela
-            //    $parcelas aquí son REGISTROS de GrupoParcela (grupo_id, parcela_id)
-            // ---------------------------
-            $parcelasCol = collect($parcelas ?? []);
+            // -----------------------------------------
+            // 4) Parcelas por grupo (SIEMPRE via pivot grupo_parcela)
+            // -----------------------------------------
             $parcelasByGrupo = $parcelasCol->groupBy(fn($gp) => (int)($gp->grupo_id ?? 0));
 
-            // Lookup de parcelas (para mostrar nombres) - 1 sola consulta
+            // Lookup de parcelas para nombre (1 query)
             $parcelaIds = $parcelasCol->pluck('parcela_id')->filter()->unique()->values();
             $parcelaById = $parcelaIds->isEmpty()
                 ? collect()
                 : Parcelas::whereIn('id', $parcelaIds)->get()->keyBy('id');
 
-            // ---------------------------
-            // 4) Zonas por parcela usando pivot grupo_zona_manejo
-            // ---------------------------
-            $zonasCol = collect($zonasManejo ?? []);
-            $zonasByParcela = $zonasCol->groupBy(fn($gz) => (int)($gz->parcela_id ?? 0));
-
-            // Lookup de zonas (para mostrar nombres) - 1 sola consulta
+            // -----------------------------------------
+            // 5) Zonas: lookup para nombre y para derivar parcela_id
+            //    (porque grupo_zona_manejo NO tiene parcela_id normalmente)
+            // -----------------------------------------
             $zonaIds = $zonasCol->pluck('zona_manejo_id')->filter()->unique()->values();
             $zonaById = $zonaIds->isEmpty()
                 ? collect()
-                : ZonaManejos::whereIn('id', $zonaIds)->get()->keyBy('id');
+                : ZonaManejos::whereIn('id', $zonaIds)->get(['id','parcela_id','grupo_id','nombre'])->keyBy('id');
 
-            // Helpers de nombre (ahora usando lookups)
-            $nombreGrupo = fn($g) => $g->nombre ?? ('Grupo #'.$g->id);
+            // Agrupar zonas por parcela:
+            // - si pivot trae parcela_id, usarlo
+            // - si no, derivarlo desde zona_manejos.parcela_id
+            $zonasByParcela = $zonasCol->groupBy(function($gz) use ($zonaById) {
+                $pid = (int)($gz->parcela_id ?? 0);
+
+                if (!$pid) {
+                    $zid = (int)($gz->zona_manejo_id ?? 0);
+                    $pid = (int)($zonaById->get($zid)->parcela_id ?? 0);
+                }
+
+                return $pid; // 0 => sin parcela derivable
+            });
+
+            // -----------------------------------------
+            // Helpers de nombre
+            // -----------------------------------------
+            $nombreGrupo = fn($g) => $g->nombre ?? ('Grupo #'.($g->id ?? ''));
 
             $nombreParcela = function($grupoParcelaRow) use ($parcelaById) {
                 $pid = (int) ($grupoParcelaRow->parcela_id ?? 0);
@@ -127,12 +172,22 @@
                 $z = $zonaById->get($zid);
                 return $z?->nombre ?? ('Zona ID: '.$zid);
             };
+
+            // -----------------------------------------
+            // 6) Definir raíces reales del árbol
+            //    (si el grupo padre no está en allGroups => es raíz visible)
+            // -----------------------------------------
+            $allIds = $allGroups->pluck('id')->map(fn($x)=>(int)$x)->flip();
+
+            $visibleRoots = $rootGroups->filter(function($g) use ($allIds){
+                $pid = (int)($g->grupo_id ?? 0);
+                return $pid === 0 || !$allIds->has($pid);
+            })->unique('id')->values();
         @endphp
 
         {{-- ✅ Árbol --}}
         <div id="treeRoot">
-
-            @if($allGroups->isEmpty())
+            @if($allGroups->isEmpty() || $visibleRoots->isEmpty())
                 <div class="alert alert-info">
                     No hay grupos disponibles para mostrar.
                 </div>
@@ -147,13 +202,10 @@
                         $nombreParcela,
                         $nombreZona
                     ) {
-                        $gid = (int) $group->id ?? 0;
+                        $gid = (int)($group->id ?? 0);
 
-                        // ✅ ahora sí existen hijos para N niveles
                         $children = collect($childrenByParent->get($gid, []));
                         $parcelas = collect($parcelasByGrupo->get($gid, []));
-                        
-                        //
 
                         $hasAny = $children->isNotEmpty() || $parcelas->isNotEmpty();
 
@@ -163,41 +215,35 @@
                         echo '  <summary style="padding-left: '.$pad.'px;">';
                         echo '      <i class="icon-collaboration mr-2"></i>';
                         echo '      <strong>'.e($nombreGrupo($group)).'</strong>';
-                        echo '      <span class="text-muted ml-2 small">(ID: '.$gid.')</span>';
+                        echo '      <span class="badge badge-light ml-2">'.(int)$children->count().' subgrupo(s)</span>';
+                        echo '      <span class="badge badge-light ml-2">'.(int)$parcelas->count().' parcela(s)</span>';
                         echo '  </summary>';
 
-                        if(!$hasAny) {
+                        if (!$hasAny) {
                             echo '<div class="tree-empty" style="padding-left: '.($pad+22).'px;">';
                             echo '  <span class="text-muted">Sin subgrupos ni parcelas.</span>';
                             echo '</div>';
+                            echo '</details>';
+                            return;
                         }
-                        //dd($parcelas);
+
                         // ✅ Subgrupos (N niveles)
-                        foreach($children as $child) {
+                        foreach ($children as $child) {
                             $renderGroup($child, $level + 1);
                         }
 
-                        // ✅ Parcelas del grupo/subgrupo actual
-                       
-                        // ✅ Parcelas del grupo/subgrupo actual (VIA grupo_parcela pivot)
-                        $parcelas = collect($parcelasByGrupo->get($gid, []));
-                        //dd($parcelas);
+                        // ✅ Parcelas (via pivot grupo_parcela)
                         if ($parcelas->isNotEmpty()) {
                             echo '<div class="tree-branch">';
 
                             foreach ($parcelas as $gp) {
-
-                                // ✅ OJO: ESTA ES LA ID REAL DE LA PARCELA (no uses $gp->id)
-                                $parcelaId = (int) ($gp->parcela_id ?? 0);
-
-                                // ✅ Zonas por parcela (una parcela puede tener MUCHAS zonas)
-                                $zonas = collect($zonasByParcela->get($parcelaId, []));
+                                $parcelaId = (int)($gp->parcela_id ?? 0);
+                                $zonas = $parcelaId ? collect($zonasByParcela->get($parcelaId, [])) : collect();
 
                                 echo '<details class="tree-node tree-parcela" data-text="'.e($nombreParcela($gp)).'">';
                                 echo '  <summary style="padding-left: '.($pad+18).'px;">';
                                 echo '      <i class="icon-map5 mr-2"></i>';
                                 echo '      <strong>'.e($nombreParcela($gp)).'</strong>';
-                                echo '      <span class="text-muted ml-2 small">(Parcela ID: '.$parcelaId.')</span>';
                                 echo '      <span class="badge badge-light ml-2">'.(int)$zonas->count().' zona(s)</span>';
                                 echo '  </summary>';
 
@@ -209,9 +255,8 @@
                                     echo '<ul class="tree-list" style="padding-left: '.($pad+44).'px;">';
 
                                     foreach ($zonas as $gz) {
-                                        $zonaId = (int) ($gz->zona_manejo_id ?? 0);
+                                        $zonaId = (int)($gz->zona_manejo_id ?? 0);
 
-                                        // Link (ajusta los params a tu dashboard real si aplica)
                                         $href = route('grupos.zonas-manejo', array_filter([
                                             'parcela_id' => $parcelaId,
                                             'zona_manejo_id' => $zonaId,
@@ -220,8 +265,8 @@
 
                                         echo '<li class="tree-leaf tree-zona" data-text="'.e($nombreZona($gz)).'">';
                                         echo '  <a href="'.e($href).'" class="tree-link">';
-                                        echo '      <i class="icon-location4 mr-2"></i>'.e($nombreZona($gz));
-                                        echo '      <span class="text-muted ml-2 small">(Zona ID: '.$zonaId.')</span>';
+                                        echo '      <i class="icon-location4 mr-2"></i>';
+                                        echo        e($nombreZona($gz));
                                         echo '  </a>';
                                         echo '</li>';
                                     }
@@ -237,19 +282,17 @@
 
                         echo '</details>';
                     };
-                    @endphp
+                @endphp
 
-                @foreach($rootGroups as $rg)
+                @foreach($visibleRoots as $rg)
                     @php $renderGroup($rg, 0); @endphp
                 @endforeach
             @endif
-
         </div>
     </div>
 </div>
 
 <style>
-    /* árbol base */
     .tree-node {
         border: 1px solid #e9ecef;
         border-radius: 10px;
@@ -266,14 +309,16 @@
         user-select: none;
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
     }
     .tree-node[open] > summary {
         background: #eef2ff;
     }
     .tree-node > summary::-webkit-details-marker { display: none; }
-    .tree-empty {
-        padding: 10px 12px;
-    }
+
+    .tree-empty { padding: 10px 12px; }
+
     .tree-list {
         margin: 0;
         padding-top: 10px;
@@ -290,6 +335,8 @@
         border-radius: 8px;
         text-decoration: none !important;
         border: 1px solid transparent;
+        width: fit-content;
+        max-width: 100%;
     }
     .tree-link:hover {
         background: #f8f9fa;
@@ -322,16 +369,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterTree(termRaw) {
         const term = normalize(termRaw);
 
-        // limpiar
         root.querySelectorAll('.tree-hit').forEach(el => el.classList.remove('tree-hit'));
         root.querySelectorAll('.tree-hidden').forEach(el => el.classList.remove('tree-hidden'));
 
-        if (!term) {
-            // si no hay búsqueda, no ocultar nada
-            return;
-        }
+        if (!term) return;
 
-        // recorremos todos los nodos (details y leaves)
         const allNodes = Array.from(root.querySelectorAll('.tree-node, .tree-leaf'));
 
         allNodes.forEach(node => {
@@ -341,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hit) {
                 node.classList.add('tree-hit');
 
-                // abrir todos sus padres details
+                // abrir padres
                 let parent = node.parentElement;
                 while (parent && parent !== root) {
                     if (parent.tagName === 'DETAILS') parent.open = true;
@@ -350,22 +392,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // ocultar nodos que NO tengan coincidencia en sí o en descendientes
+        // ocultar details sin hit en descendientes ni self
         const allDetails = Array.from(root.querySelectorAll('details.tree-node'));
         allDetails.reverse().forEach(details => {
             const hasHitInside = !!details.querySelector('.tree-hit');
             const selfHit = details.classList.contains('tree-hit');
-            if (!hasHitInside && !selfHit) {
-                details.classList.add('tree-hidden');
-            }
+            if (!hasHitInside && !selfHit) details.classList.add('tree-hidden');
         });
 
-        // hojas
+        // ocultar hojas sin hit
         const leaves = Array.from(root.querySelectorAll('.tree-leaf'));
         leaves.forEach(li => {
-            if (!li.classList.contains('tree-hit')) {
-                li.classList.add('tree-hidden');
-            }
+            if (!li.classList.contains('tree-hit')) li.classList.add('tree-hidden');
         });
     }
 

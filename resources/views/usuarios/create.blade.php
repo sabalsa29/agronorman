@@ -86,18 +86,25 @@
                                     </button>
                                 </div>
                                 </div>
-                                {{--  <div class="col-3">
-                                    <label class="col-form-label col-lg-12">Rol <span class="text-danger">*</span></label>
-                                    <select name="role_id" class="form-control" required>
-                                        <option value="">Seleccione un rol</option>
-                                        @foreach ($roles as $role)
-                                            <option value="{{ $role->id }}">{{ $role->nombre }}</option>
-                                        @endforeach
+                                {{-- Se agrega un check para marcar si es un usuario norman --}}
+                                <div class="col-3">
+                                    <label class="col-form-label col-lg-12">Tipo Usuario</label>
+                                    <select name="tipo_usuario" class="form-control @error('tipo_usuario') is-invalid @enderror" required>
+                                        <option value="general"
+                                            {{ old('tipo_usuario', $user->cliente_id ?? '') === '0' ? 'selected' : '' }}>
+                                            Usuario general
+                                        </option>
+                                        <option value="norman"
+                                            {{ old('tipo_usuario', $user->cliente_id ?? '') === '1' ? 'selected' : '' }}>
+                                            Usuario Norman
+                                        </option>
                                     </select>
-                                    @error('role_id')
+
+                                    @error('tipo_usuario')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>  --}}
+                                </div>
+ 
                             </div>
 
                            
@@ -113,7 +120,7 @@
                                         @endforeach
                                     </select>
                                     <small class="form-text text-muted">
-                                        Asignar grupos para permite acceso jerárquico a todos los predios y zonas dentro de esos grupos.
+                                        Asignar grupos para permite acceso jerárquico a todas las parcelas y zonas dentro de esos grupos.
                                     </small>
                                     @error('grupo_id')
                                         <span class="text-danger">{{ $message }}</span>
@@ -254,7 +261,7 @@
             return;
         }
         if (predioIds.length === 0) {
-            Swal.fire({ icon: 'warning', title: 'Faltan Predios', text: 'Seleccione al menos un predio.' });
+            Swal.fire({ icon: 'warning', title: 'Faltan Parcelas', text: 'Seleccione al menos una parcela.' });
             return;
         }
 
@@ -329,7 +336,7 @@
                     <span class="node">
                         <i class="icon-collaboration"></i>
                         <strong>${escapeHtml(g.nombre)}</strong>
-                        <span class="badge badge-primary ml-2">${predioIds.length} predio(s)</span>
+                        <span class="badge badge-primary ml-2">${predioIds.length} parcela(s)</span>
                         <span class="actions">
                             <button type="button" class="btn btn-sm btn-outline-danger" data-remove-group="${gid}">
                                 <i class="icon-trash"></i>
@@ -344,20 +351,33 @@
                 const zonas = p.zonas || {};
                 const zonaIds = Object.keys(zonas);
 
-                html += `
-                    <li>
-                        <span class="node">
-                            <i class="icon-map5"></i>
-                            ${escapeHtml(p.nombre)}
-                            <span class="badge badge-info ml-2">${zonaIds.length} zona(s)</span>
-                            <span class="actions">
-                                <button type="button" class="btn btn-sm btn-outline-danger"
-                                    data-remove-predio="${gid}|${pid}">
-                                    <i class="icon-trash"></i>
-                                </button>
-                            </span>
-                        </span>
-                `;
+                if(zonaIds.length === 0){
+                        html += `<li>
+                                <span class="node">
+                                    <i class="icon-map5"></i>
+                                    ${escapeHtml(p.nombre)}
+                                    <span class="badge badge-info ml-2">Todas las zonas</span>
+                                    <span class="actions">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-remove-predio="${gid}|${pid}">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    </span>
+                                </span>
+                            `;
+                    }else{
+                        html += `<li>
+                                <span class="node">
+                                    <i class="icon-map5"></i>
+                                    ${escapeHtml(p.nombre)}
+                                    <span class="badge badge-info ml-2">${zonaIds.length} zona(s)</span>
+                                    <span class="actions">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-remove-predio="${gid}|${pid}">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    </span>
+                                </span>
+                            `;
+                    }
 
                 if (zonaIds.length > 0) {
                     html += '<ul>';

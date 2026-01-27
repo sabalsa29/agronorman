@@ -97,7 +97,7 @@
                                         value="{{ $zona_manejo->fecha_siembra }}">
                                 </div>
 
-                                <div class="col-12">
+                                {{--  <div class="col-12">
                                     <label class="col-form-label col-lg-12">Grupo</label>
                                     <select name="grupo_id" id="grupo-select" class="form-control select2">
                                         <option value="">(Sin grupo - Opcional)</option>
@@ -111,7 +111,7 @@
                                     <span class="form-text text-muted">
                                         Seleccione un grupo para asociar esta zona de manejo a la jerarquía de grupos
                                     </span>
-                                </div>
+                                </div>  --}}
 
                             </div>
                         </div>

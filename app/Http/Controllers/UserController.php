@@ -65,14 +65,18 @@ class UserController extends Controller
             'nombre' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'tipo_usuario'  => 'required|string',
+
         ]);
+
+        //dd($request->all());
 
         $usuario = Usuarios::create([
             'nombre' => $validatedData['nombre'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
-            'role_id' => 3, // Asignar rol de usuario normal por defecto
-            'cliente_id' => 0,
+            'cliente_id' => ($validatedData['tipo_usuario'] === 'general') ? 0 : null,
+            'role_id' => ($validatedData['tipo_usuario'] === 'general') ? 3 : 1,
             'status' => 1,
         ]);
 
@@ -169,7 +173,7 @@ class UserController extends Controller
             //dd('los predios son ', $prediosIds, ' las zonas son: ', $zonasIds);
         }
 
-        return redirect()->route('usuarios.index')->with('success', 'Productor creado exitosamente.');
+        return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }   
 
     public function edit($id)
@@ -352,6 +356,7 @@ class UserController extends Controller
             'password'   => 'nullable|string|min:8',
             'grupo_id'   => 'nullable|array',
             'grupo_id.*' => 'integer|exists:grupos,id',
+            'role_id'    => 'required|integer|in:1,3',
 
             // asignaciones_cache puede venir:
             // - null / ""  => borrar todo
@@ -364,7 +369,7 @@ class UserController extends Controller
         // =========================
         $usuario->nombre = $validated['nombre'];
         $usuario->email = $validated['email'];
-       //$usuario->cliente_id = $validated['cliente_id'] ?? null;
+        $usuario->role_id = $validated['role_id'];
 
         if (!empty($validated['password'])) {
             $usuario->password = bcrypt($validated['password']);
