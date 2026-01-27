@@ -17,16 +17,6 @@ class UserController extends Controller
     {
 
     $usuarios = Usuarios::all();
-    //Validar el usuario si es superadmin o normal
-    $usuario = Auth::user();
-    $cliente_id = $usuario->cliente_id;
-
-    if (!$usuario->isSuperAdmin()) {
-        // Si no es superadmin, filtrar por cliente_id
-        $usuarios = Usuarios::where('cliente_id', $cliente_id)->get();
-    }
-
-    // Obtener grupos disponibles según el usuario autenticado Y el cliente
     $user = Auth::user();
 
     return view('usuarios.index', [
@@ -75,7 +65,6 @@ class UserController extends Controller
             'nombre' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'cliente_id' => 'nullable|integer|exists:clientes,id',
         ]);
 
         $usuario = Usuarios::create([
@@ -83,7 +72,7 @@ class UserController extends Controller
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
             'role_id' => 3, // Asignar rol de usuario normal por defecto
-            'cliente_id' => $validatedData['cliente_id'] ?? null,
+            'cliente_id' => 0,
             'status' => 1,
         ]);
 
@@ -360,7 +349,6 @@ class UserController extends Controller
         $validated = $request->validate([
             'nombre'     => 'required|string|max:255',
             'email'      => 'required|email|max:255|unique:users,email,' . $usuario->id,
-            'cliente_id' => 'nullable|integer|exists:clientes,id',
             'password'   => 'nullable|string|min:8',
             'grupo_id'   => 'nullable|array',
             'grupo_id.*' => 'integer|exists:grupos,id',
@@ -376,7 +364,7 @@ class UserController extends Controller
         // =========================
         $usuario->nombre = $validated['nombre'];
         $usuario->email = $validated['email'];
-        $usuario->cliente_id = $validated['cliente_id'] ?? null;
+       //$usuario->cliente_id = $validated['cliente_id'] ?? null;
 
         if (!empty($validated['password'])) {
             $usuario->password = bcrypt($validated['password']);

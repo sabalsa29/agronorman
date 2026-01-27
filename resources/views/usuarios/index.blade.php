@@ -37,7 +37,6 @@
         <table class="table datatable-responsive">
             <thead>
                 <tr>
-                    <th>Cliente</th>
                     <th>Nombre</th>
                     <th>Email</th>
                     <th class="text-center">Actions</th>
@@ -46,7 +45,6 @@
             <tbody>
                 @forelse ($usuarios as $row)
                     <tr>
-                        <td>{{ $row->cliente->nombre ?? 'Sin cliente' }}</td>
                         <td>{{ $row->nombre ?? 'Sin nombre' }}</td>
                         <td>{{ $row->email ?? 'Sin email' }}</td>
                         <td class="text-center">

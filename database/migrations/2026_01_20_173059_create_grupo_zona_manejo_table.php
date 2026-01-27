@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('grupo_id')->nullable();
-            $table->unsignedBigInteger('parcela_id');
+            $table->unsignedBigInteger('parcela_id')->nullable();
             $table->unsignedBigInteger('zona_manejo_id');
 
             // Evita duplicados
@@ -36,7 +36,7 @@ return new class extends Migration
                 ->references('id')->on('grupos')
                 ->nullOnDelete(); 
 
-             $table->foreign('parcela_id')
+            $table->foreign('parcela_id')
                 ->references('id')->on('parcelas')
                 ->nullOnDelete(); 
 

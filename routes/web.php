@@ -207,6 +207,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('asignacion/parcelas/quitar', [ParcelaGrupoController::class, 'remove'])->name('parcelas.remove');
 
+    Route::get('/grupos/{grupo}/subgrupos-json', [\App\Http\Controllers\GruposController::class, 'subgruposJson']);
+    Route::get('/grupos/{grupo}/parcelas-json',  [\App\Http\Controllers\GruposController::class, 'parcelasJson']);
+
+
     // Configuración de usuario, asignacion de grupos a usuario
     Route::get('asignacion/usuarios', [UserGrupoController::class, 'index'])->name('accesos.usuarios.index');
     Route::get('asignacion/usuarios/asignar', [UserGrupoController::class, 'assign'])->name('asignacion.usuarios.assign');

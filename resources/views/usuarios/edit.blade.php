@@ -55,7 +55,7 @@
                             <div class="row">
 
                                 {{-- Productor / Cliente --}}
-                                <div class="col-3">
+                                {{-- <div class="col-3">
                                     <label class="col-form-label col-lg-12">
                                         Productor <span class="text-danger">*</span>
                                     </label>
@@ -70,7 +70,7 @@
                                     @error('cliente_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <div class="col-3">
                                     <label class="col-form-label col-lg-12">Nombre <span class="text-danger">*</span></label>

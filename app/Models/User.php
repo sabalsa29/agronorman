@@ -83,7 +83,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin(): bool
     {
-        return $this->role_id === 1 && $this->cliente_id === null;
+        return $this->role_id === 1;
     }
 
     /**

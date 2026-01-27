@@ -52,7 +52,7 @@
                     <div class="form-group row">
                         <div class="col-lg-12">
                             <div class="row">
-                                 <div class="col-3">
+                                 {{-- <div class="col-3">
                                     <label class="col-form-label col-lg-12">Productor <span class="text-danger">*</span></label>
                                     <select name="cliente_id" class="form-control" required>
                                         <option value="">Seleccione un productor</option>
@@ -63,7 +63,7 @@
                                     @error('cliente_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div> --}}
                                 <div class="col-3">
                                     <label class="col-form-label col-lg-12">Nombre <span
                                             class="text-danger">*</span></label>
@@ -103,7 +103,7 @@
                            
                             <div class="row mt-3">
                                 <div class="col-6">
-                                    <label class="col-form-label col-lg-12">Grupo <span class="text-danger">*</span></label>
+                                    <label class="col-form-label col-lg-12">Grupo</label>
                                     <select name="grupo_id[]" multiple id="grupo_id" class="form-control select2">
                                          @foreach ($gruposDisponibles as $grupo)
                                             <option value="{{ $grupo['id'] }}"
