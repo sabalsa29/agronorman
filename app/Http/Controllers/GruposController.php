@@ -1400,53 +1400,77 @@ class GruposController extends Controller
 
         if ($esAdmin) {
 
-            // ✅ Admin: toma parcelas/pivots globales
             // validar que parcelas no se repitan en grupo_id 
             $parcelas = GrupoParcela::get();
             $parcelas = $parcelas->unique(fn($p) => ($p->grupo_id ?? '0').'|'.($p->parcela_id ?? '0'))
                 ->values();
 
-            // OJO: aquí estás trayendo "raíces" bajo grupo_id = 1 (Norman)
             $gruposRaiz = Grupos::where('is_root', false)
                 ->where('grupo_id', 1)
                 ->get();
-            //dd($parcelas);
+
             // Zonas reales a partir de las parcelas (una sola query, sin N+1)
             $parcelaIds = $parcelas->pluck('parcela_id')->filter()->unique()->values();
 
-            //dd($parcelaIds);
+            // ✅ TRAER ZONAS + TIPOS DE CULTIVO (relación) para evitar N+1
+            // Constarl tambien el cliente id para la zona, esta enlazado del modelo parcela que esta enlazado la zona
+          $zonas = ZonaManejos::whereIn('parcela_id', $parcelaIds)
+                ->select(['id', 'parcela_id', 'grupo_id']) // 👈 OBLIGATORIO incluir parcela_id
+                ->with([
+                    'tipoCultivos' => function ($q) {
+                        $q->orderBy('tipo_cultivos.id');
+                    },
+                    'parcelaRel:id,cliente_id', // 👈 eager load con columnas necesarias
+                ])
+                ->get();
 
-            $zonas = ZonaManejos::whereIn('parcela_id', $parcelaIds)
-                ->get(['id', 'parcela_id', 'grupo_id']);
+       
+            // ✅ Sacar el primer tipo_cultivo_id por zona (como hacías con ->first())
+            $tipoCultivoIds = $zonas->map(function ($z) {
+                    return optional($z->tipoCultivos->first())->id;
+                })
+                ->filter()
+                ->unique()
+                ->values();
+
+            // ✅ Mapa: tipo_cultivo_id => primera etapa_fenologica_id (por id asc)
+            $etapaByTipoCultivo = \App\Models\EtapaFenologicaTipoCultivo::whereIn('tipo_cultivo_id', $tipoCultivoIds)
+                ->orderBy('id')
+                ->get(['tipo_cultivo_id', 'etapa_fenologica_id'])
+                ->groupBy('tipo_cultivo_id')
+                ->map(fn($rows) => optional($rows->first())->etapa_fenologica_id);
 
             // Mapa parcela_id => grupo_id desde grupo_parcela (para forzar el grupo del pivot)
             $grupoByParcela = $parcelas
                 ->filter(fn ($gp) => !empty($gp->parcela_id))
                 ->keyBy('parcela_id');
 
-            $zonasManejo = $zonas->map(function ($z) use ($user, $grupoByParcela) {
+            $zonasManejo = $zonas->map(function ($z) use ($user, $grupoByParcela, $etapaByTipoCultivo) {
                 $pivot = new GrupoZonaManejo();
 
                 $pivot->user_id = $user->id;
+                $pivot->cliente_id = $z->cliente_id;
 
                 $gp = $grupoByParcela->get($z->parcela_id);
                 $pivot->grupo_id = $gp ? $gp->grupo_id : $z->grupo_id;
+                $pivot->cliente_id = $z->parcelaRel->cliente_id;
 
                 // aunque no esté en $fillable, se puede asignar como atributo
                 $pivot->parcela_id = $z->parcela_id;
 
                 $pivot->zona_manejo_id = $z->id;
 
+                // ✅ tipo_cultivo_id y etapa_fenologica_id calculados
+                $tipoCultivoId = optional($z->tipoCultivos->first())->id;
+                $pivot->tipo_cultivo_id = $tipoCultivoId ?: null;
+                $pivot->etapa_fenologica_id = $tipoCultivoId ? ($etapaByTipoCultivo->get($tipoCultivoId) ?? null) : null;
+
                 return $pivot;
             });
-
-            // (Opcional) Si quieres también incluir los registros reales existentes en grupo_zona_manejo:
-            // $zonasManejo = $zonasManejo->merge(GrupoZonaManejo::get());
 
             $zonasManejo = $zonasManejo
                 ->unique(fn ($i) => ($i->grupo_id ?? '0').'|'.($i->parcela_id ?? '0').'|'.$i->zona_manejo_id)
                 ->values();
-
         } else {
 
           // Grupos raíz del usuario desde user_grupo
@@ -1599,6 +1623,8 @@ class GruposController extends Controller
 
                 $pivot->parcela_id = $z->parcela_id;
                 $pivot->zona_manejo_id = $z->id;
+                $pivot->tipo_cultivo_id = $z->tipo_cultivo_id ?? null;
+                $pivot->etapa_fenologica_id = $z->etapa_fenologica_id ?? null;
 
                 return $pivot;
             })->unique(fn($i) => ($i->grupo_id ?? '0').'|'.($i->parcela_id ?? '0').'|'.$i->zona_manejo_id);
@@ -1618,6 +1644,20 @@ class GruposController extends Controller
         //dd($data);
 
         return view('grupos.zonas-manejo', $data);
+    }
+
+    public function prueba(){
+                $tipoCultivo = $zona->tipoCultivos()->first();
+                $tipoCultivoId = $tipoCultivo ? $tipoCultivo->id : null;
+
+                // Obtener la primera etapa fenológica del tipo de cultivo
+                $etapaFenologicaId = null;
+                if ($tipoCultivoId) {
+                    $etapaFenologica = \App\Models\EtapaFenologicaTipoCultivo::where('tipo_cultivo_id', $tipoCultivoId)
+                        ->orderBy('id')
+                        ->first();
+                    $etapaFenologicaId = $etapaFenologica ? $etapaFenologica->etapa_fenologica_id : null;
+                }
     }
 
 

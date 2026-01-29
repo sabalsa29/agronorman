@@ -255,11 +255,15 @@
                                     echo '<ul class="tree-list" style="padding-left: '.($pad+44).'px;">';
 
                                     foreach ($zonas as $gz) {
+                                        //dd($gz);
                                         $zonaId = (int)($gz->zona_manejo_id ?? 0);
 
-                                        $href = route('grupos.zonas-manejo', array_filter([
+                                        $href = route('dashboard', array_filter([
+                                            'cliente_id' => $gz->cliente_id,
                                             'parcela_id' => $parcelaId,
                                             'zona_manejo_id' => $zonaId,
+                                            'tipo_cultivo_id' => $gz->tipo_cultivo_id,
+                                            'etapa_fenologica_id' => $gz->etapa_fenologica_id,
                                             'periodo' => 1,
                                         ]));
 

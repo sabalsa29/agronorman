@@ -52,6 +52,12 @@ class ZonaManejos extends Model
         return $this->belongsTo(Parcelas::class);
     }
 
+     public function parcelaRel()
+    {
+        // Cambia Parcelas::class si tu modelo se llama distinto (ej. Parcela, Predio, ParcelaModel)
+        return $this->belongsTo(Parcelas::class, 'parcela_id', 'id');
+    }
+
     public function tipo_suelo()
     {
         return $this->belongsTo(TipoSuelo::class);

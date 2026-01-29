@@ -261,18 +261,18 @@ class HomeController extends Controller
             $unidadesChart = $this->unidadesChart($zonaManejo->id, $periodo, $fechaInicial, $fechaFinal);
         }
 
-        return view('home.motor', [
-            'section_name' => 'Plataforma de inteligencia agronómica',
+        $data = [ 'section_name' => 'Plataforma de inteligencia agronómica',
             'clientes' => $clientes,
             'zonaManejo' => $zonaManejoList,
-            'tipoCultivo' => $tipoCultivoList,
+            'tipoCultivo' => $tipoCultivoList, 
             'parcelas' => $parcelas,
             'zonaManejoModel' => $zonaManejo,
             'tipoCultivoModel' => $tipoCultivo,
             'etapaFenologica' => $etapaFenologicaList,
             'bloqueUno' => $bloqueUno,
-            'unidadesChart' => $unidadesChart,
-        ]);
+            'unidadesChart' => $unidadesChart];
+
+        return view('home.motor', $data);
     }
 
     // Carga datos de etapas fenológicas
