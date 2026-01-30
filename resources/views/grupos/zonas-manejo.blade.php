@@ -47,6 +47,46 @@
             </div>
         </div>
 
+        {{-- Cuadro para mostrar los datos de icamex de las zonas cargadas  --}}
+        <div class="card border-top mb-4">
+            <div class="card-header bg-transparent border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="icon-database mr-2"></i>
+                    <strong>Datos Icamex de Zonas de Manejo</strong>
+                </h6>
+            </div>
+            <div class="card-body">
+                @if(isset($zonasManejo) && $zonasManejo->isNotEmpty())
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Zona de Manejo</th>
+                                <th>Datos Icamex</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($zonasManejo as $zona)
+                                <tr>
+                                    <td>{{ $zona->nombre }}</td>
+                                    <td>
+                                        @if(isset($zona->icamex_data) && !empty($zona->icamex_data))
+                                            <pre>{{ print_r($zona->icamex_data[0], true) }}</pre>
+                                        @else
+                                            <em>No hay datos Icamex disponibles.</em>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="alert alert-info">
+                        No hay zonas de manejo disponibles para mostrar datos Icamex.
+                    </div>
+                @endif
+            </div>
+        </div>
+
         @php
             use App\Models\Grupos;
             use App\Models\ZonaManejos;

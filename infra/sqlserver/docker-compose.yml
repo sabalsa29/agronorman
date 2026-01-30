@@ -1,0 +1,18 @@
+services:
+  mssql:
+    platform: linux/amd64
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: agronorman-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "S@fePassword123"
+      MSSQL_PID: "Developer"
+    ports:
+      - "14333:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+      - ./backup:/var/opt/mssql/backup
+    restart: unless-stopped
+
+volumes:
+  mssql_data:

@@ -98,20 +98,35 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'sqlsrv' => [
-            'driver' => 'sqlsrv',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => env('DB_CHARSET', 'utf8'),
+        'external' => [
+            'driver' => env('DB_EXTERNAL_CONNECTION', 'sqlsrv'),
+            'host' => env('DB_EXTERNAL_HOST', '127.0.0.1'),
+            'port' => env('DB_EXTERNAL_PORT', '14333'),
+            'database' => env('DB_EXTERNAL_DATABASE', 'icamex2'),
+            'username' => env('DB_EXTERNAL_USERNAME', ''),
+            'password' => env('DB_EXTERNAL_PASSWORD', ''),
+            'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
-            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+            'encrypt' => env('DB_EXTERNAL_ENCRYPT', 'false'),
+            'trust_server_certificate' => env('DB_EXTERNAL_TRUST_CERT', 'true'),
         ],
+
+
+        // 'sqlsrv' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('DB_URL'),
+        //     'host' => env('DB_HOST', 'localhost'),
+        //     'port' => env('DB_PORT', '1433'),
+        //     'database' => env('DB_DATABASE', 'laravel'),
+        //     'username' => env('DB_USERNAME', 'root'),
+        //     'password' => env('DB_PASSWORD', ''),
+        //     'charset' => env('DB_CHARSET', 'utf8'),
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+        //     // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        // ],
 
         'pia_dev' => [
             'driver' => 'mysql',
