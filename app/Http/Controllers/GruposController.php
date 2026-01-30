@@ -7,6 +7,7 @@ use App\Models\Grupos;
 use App\Models\GrupoZonaManejo;
 use App\Models\UserGrupo;
 use App\Models\ZonaManejos;
+use App\Services\Icp\IcpClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -581,10 +582,16 @@ class GruposController extends Controller
             //dd($zonasManejo)->values();
         }
 
-        // Obtener los datos de Icamex para las zonas de manejo en un adición al objeto
+        // Obtener los datos de ICP para las zonas de manejo en un adición al objeto
+        // Consulta en desarrollo
         $zonasManejo->each(function ($zona) {
             $zona->icamex_data = $this->getDatosIcamex($zona->zona_manejo_id);
         });
+
+         // Consulta en Produccion 
+        // $zonasManejo->each(function ($zona) {
+        //     $zona->icamex_data = (new IcpClient())->get_resultados_lote($zona->zona_manejo_id);
+        // });
 
         $data = [
             "section_name" => "Mis Zonas de Manejo",
@@ -598,6 +605,8 @@ class GruposController extends Controller
         return view('grupos.zonas-manejo', $data);
     }
 
+    // Funcion getDatosIcamex es para obtener los datos de icp desde la base de datos externa
+    // y solo se usa en desarrollo mientras se integra el servicio de ICP
     private function getDatosIcamex($zona_id): array
     {
         $zonaManejoLote = \App\Models\ZonaManejoLoteIcamex::where('zona_manejo_id', $zona_id)->first();
@@ -622,6 +631,21 @@ class GruposController extends Controller
 
         return array_map(fn($r) => (array)$r, $rows);
     }
+
+    private function getDatosIndicaderesIcp()
+    {
+        // $indicadores = collect();
+
+        // // Se crea query para obtener todos los indicadores de ICP
+        // $query = "
+        //     SELECT DISTINCT lii.id_indicador_icp
+        //     FROM dbo.lote_indicador_icp lii
+           
+            
+        // ";
+        // $rows = DB::connection('external')->select($query, );
+
+    }       
 
 
     /**
