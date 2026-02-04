@@ -609,13 +609,13 @@ class GruposController extends Controller
     // y solo se usa en desarrollo mientras se integra el servicio de ICP
     private function getDatosIcamex($zona_id): array
     {
-        $zonaManejoLote = \App\Models\ZonaManejoLoteIcamex::where('zona_manejo_id', $zona_id)->first();
+        $zonaManejoLote = \App\Models\ZonaManejoLoteExterno::where('zona_manejo_id', $zona_id)->first();
 
         if (!$zonaManejoLote) {
             return [];
         }
 
-        $loteId = $zonaManejoLote->icamex_lote_id; // <-- usa el valor real de la pivote
+        $loteId = $zonaManejoLote->externo_lote_id; // <-- usa el valor real de la pivote
 
         $query = "
             SELECT *

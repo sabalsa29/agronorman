@@ -111,7 +111,7 @@ class UsuariosController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        
+        //dd($request->all());
 
         if (!$user) {
             return redirect()->back()
@@ -161,7 +161,7 @@ class UsuariosController extends Controller
             }
         }
 
-        dd($request->all());
+        //dd($request->all());
 
         $usuario = new User();
         $usuario->cliente_id = $request->cliente_id;
@@ -170,6 +170,7 @@ class UsuariosController extends Controller
         $usuario->password = bcrypt($request->password);
         $usuario->role_id = $request->role_id;
         $usuario->grupo_id = null;
+        $usuario->acceso_app = $request->acceso_app; // Guardar accesos
         $usuario->save();
 
         // Asignar grupos al usuario 
@@ -370,7 +371,6 @@ class UsuariosController extends Controller
                 }
             }
         }
-
         $usuario->nombre = $request->nombre;
         $usuario->email = $request->email;
         if ($request->password) {
@@ -382,6 +382,7 @@ class UsuariosController extends Controller
         if ($request->has('grupo_id')) {
             $usuario->grupo_id = $request->grupo_id ?: null;
         }
+        $usuario->acceso_app = $request->acceso_app; // Actualizar accesos
         $usuario->save();
 
         return redirect()->route('usuarios.index', ['id' => $id])->with('success', 'Usuario actualizado correctamente');

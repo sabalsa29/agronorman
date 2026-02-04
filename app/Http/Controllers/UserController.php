@@ -66,6 +66,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'tipo_usuario'  => 'required|string',
+            'acceso_app' => 'nullable|array',
+            'acceso_app.*' => 'string|in:pia,bitacora',
 
         ]);
 
@@ -78,6 +80,7 @@ class UserController extends Controller
             'cliente_id' => ($validatedData['tipo_usuario'] === 'general') ? 0 : null,
             'role_id' => ($validatedData['tipo_usuario'] === 'general') ? 3 : 1,
             'status' => 1,
+            'acceso_app' => $validatedData['acceso_app'] ?? null,
         ]);
 
          // Asignar grupos al usuario 
@@ -357,6 +360,8 @@ class UserController extends Controller
             'grupo_id'   => 'nullable|array',
             'grupo_id.*' => 'integer|exists:grupos,id',
             'role_id'    => 'required|integer|in:1,3',
+            'acceso_app' => 'nullable|array',
+            'acceso_app.*' => 'string|in:pia,bitacora',
 
             // asignaciones_cache puede venir:
             // - null / ""  => borrar todo
@@ -370,6 +375,7 @@ class UserController extends Controller
         $usuario->nombre = $validated['nombre'];
         $usuario->email = $validated['email'];
         $usuario->role_id = $validated['role_id'];
+        $usuario->acceso_app = $validated['acceso_app'];
 
         if (!empty($validated['password'])) {
             $usuario->password = bcrypt($validated['password']);

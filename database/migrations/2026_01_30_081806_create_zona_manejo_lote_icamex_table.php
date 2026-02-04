@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('zona_manejo_lote_icamex', function (Blueprint $table) {
+         Schema::create('zona_manejo_lote_externo', function (Blueprint $table) {
             $table->id();
 
             // Agronorman
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('name')->nullable();
 
             // Icamex (externo): guardamos el id del lote (o la clave) como referencia
-            $table->unsignedBigInteger('icamex_lote_id');
+            $table->unsignedBigInteger('externo_lote_id');
 
             // Opcional: guardar también el station_id asociado o metadata
             // $table->unsignedBigInteger('icamex_station_id')->nullable();
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Evita duplicados
-            $table->unique(['zona_manejo_id', 'icamex_lote_id'], 'uq_zm_icamex_lote');
+            $table->unique(['zona_manejo_id', 'externo_lote_id'], 'uq_zm_externo_lote');
 
             // FK solo al lado Agronorman (local)
             $table->foreign('zona_manejo_id')
@@ -38,7 +38,6 @@ return new class extends Migration
                 ->on('zona_manejos')
                 ->onDelete('cascade');
 
-            // No FK hacia Icamex porque es BD externa
         });
     }
 
@@ -47,6 +46,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('zona_manejo_lote_icamex');
+        Schema::dropIfExists('zona_manejo_lote_externo');
     }
 };

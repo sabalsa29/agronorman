@@ -30,6 +30,8 @@ class UpdateUsuariosRequest extends FormRequest
             'cliente_id' => 'nullable|exists:clientes,id',
             'role_id' => 'required|exists:roles,id',
             'grupo_id' => 'nullable|exists:grupos,id',
+            'acceso_app' => 'nullable|array',
+            'acceso_app.*' => 'in:pia,bitacora',
         ];
     }
 }

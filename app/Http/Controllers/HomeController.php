@@ -5191,4 +5191,6 @@ class HomeController extends Controller
             $fin->format('Y-m-d H:00:00')      // Hora exacta de fin
         ];
     }
+
+    
 }

@@ -596,6 +596,14 @@
                                         <span class="h6 mb-0">Interacción de factores</span>
                                     </a>
                                 </li>
+                                {{-- Creamos un nuevo apartado para el ICP (Índice de Capacidad Productiva) --}}
+                                <li class="nav-item">
+                                    <a href="#justified-right-icon-tab8" class="nav-link" data-toggle="tab">
+                                        <img src="{{ url('/assets/images/nutricion.jpeg') }}" class="pr-2 img-fluid"
+                                            style="width: 40px; object-fit: cover;" alt="">
+                                        <span class="h6 mb-0">ICP</span>
+                                    </a>
+                                </li>
                             </ul>
 
                             <div class="tab-content">
@@ -993,6 +1001,158 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                {{-- Creamos un nuevo apartado para el ICP (Índice de Capacidad Productiva) --}}
+                                <div class="tab-pane fade" id="justified-right-icon-tab8">
+                                <ul class="nav nav-pills nav-pills-bordered nav-justified" id="tab8TabsBootstrap" role="tablist">
+                                    <li class="nav-item">
+                                        <a href="#tab8-planta" class="nav-link active" data-toggle="tab" role="tab">
+                                            <span class="h6 mb-0 font-weight-bold">Planta</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#tab8-agua" class="nav-link" data-toggle="tab" role="tab">
+                                            <span class="h6 mb-0 font-weight-bold">Agua</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#tab8-suelo" class="nav-link" data-toggle="tab" role="tab">
+                                            <span class="h6 mb-0 font-weight-bold">Suelo</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#tab8-tiempo" class="nav-link" data-toggle="tab" role="tab">
+                                            <span class="h6 mb-0 font-weight-bold">Tiempo Atmosférico</span>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="tab8TabsContentBootstrap">
+                                    <!-- PLANTA -->
+                                    <div class="tab-pane fade show active" id="tab8-planta" role="tabpanel">
+                                        <div class="card-body">
+                                            <div id="component_tab8_planta">
+                                                <div class="text-center">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="sr-only">Cargando...</span>
+                                                    </div>
+                                                    <p class="mt-2">Cargando información de planta...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- AGUA -->
+                                    <div class="tab-pane fade" id="tab8-agua" role="tabpanel">
+                                        <div class="card-body">
+                                            <div id="component_tab8_agua">
+                                                <div class="text-center">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="sr-only">Cargando...</span>
+                                                    </div>
+                                                    <p class="mt-2">Cargando información de agua...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- SUELO -->
+                                    <div class="tab-pane fade" id="tab8-suelo" role="tabpanel">
+                                        <div class="card-body">
+
+                                            <!-- Subtabs internos de SUELO -->
+                                            <ul class="nav nav-pills nav-pills-bordered nav-justified mb-3" id="tab8SueloTabs" role="tablist">
+                                                <li class="nav-item">
+                                                    <a href="#tab8-suelo-fertilidad" class="nav-link active" data-toggle="tab" role="tab">
+                                                        <span class="h6 mb-0 font-weight-bold">Fertilidad</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="#tab8-suelo-correctivos" class="nav-link" data-toggle="tab" role="tab" id="btnTabCorrectivos">
+                                                        <span class="h6 mb-0 font-weight-bold">Correctivos</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                            <div class="tab-content" id="tab8SueloTabsContent">
+                                                <!-- Fertilidad -->
+                                                <div class="tab-pane fade show active" id="tab8-suelo-fertilidad" role="tabpanel">
+                                                    <div id="component_tab8_suelo_fertilidad">
+                                                        <div class="text-center">
+                                                            <div class="spinner-border text-primary" role="status">
+                                                                <span class="sr-only">Cargando...</span>
+                                                            </div>
+                                                            <p class="mt-2">Cargando información de fertilidad...</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Correctivos -->
+                                                <div class="tab-pane fade" id="tab8-suelo-correctivos" role="tabpanel">
+                                                    <div id="component_tab8_suelo_correctivos">
+
+                                                        <!-- Select de años (solo visible al estar en Correctivos) -->
+                                                        <div class="form-group">
+                                                            <label for="selectCorrectivosAnio" class="font-weight-bold mb-1">Año</label>
+                                                            <select class="form-control" id="selectCorrectivosAnio">
+                                                                <option value="" selected disabled>Selecciona un año</option>
+                                                                <option value="2024">2024</option>
+                                                                <option value="2025">2025</option>
+                                                                <option value="2026">2026</option>
+                                                            </select>
+                                                            <small class="text-muted">Selecciona el año para cargar la recomendación de correctivos.</small>
+                                                        </div>
+
+                                                        <!-- Tabla -->
+                                                        <div class="table-responsive mt-3">
+                                                            <table class="table table-striped table-bordered mb-0" id="tablaCorrectivos">
+                                                                <thead class="thead-light">
+                                                                    <tr>
+                                                                        <th>Correctivo</th>
+                                                                        <th>Cantidad Sugerida</th>
+                                                                        <th>Unidades</th>
+                                                                        <th>Efecto Esperado</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tablaCorrectivosBody">
+                                                                    <!-- Filas dinámicas -->
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-center text-muted">
+                                                                            Selecciona un año para mostrar los correctivos sugeridos.
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <!-- TIEMPO ATMOSFÉRICO -->
+                                    <div class="tab-pane fade" id="tab8-tiempo" role="tabpanel">
+                                        <div class="card-body">
+                                            <div id="component_tab8_tiempo_atmosferico">
+                                                <div class="text-center">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="sr-only">Cargando...</span>
+                                                    </div>
+                                                    <p class="mt-2">Cargando información de tiempo atmosférico...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             </div>
                         </div>
 
@@ -3742,13 +3902,98 @@
                     }, 1000 + (index * 500)); // Espaciado para no sobrecargar
                 });
             }
-        </script>
 
+            function initTab8SueloCorrectivos() {
+    const selectAnio = document.getElementById('selectCorrectivosAnio');
+    const tbody = document.getElementById('tablaCorrectivosBody');
+
+    // Si no existe en el DOM, salimos para evitar errores
+    if (!selectAnio || !tbody) return;
+
+    // Datos mock por año (reemplazar por API)
+    const dataPorAnio = {
+        "2024": [
+            { correctivo: "Yeso agrícola", cantidad: "200", unidades: "kg/ha", efecto: "Mejora estructura y reduce sodicidad" },
+            { correctivo: "Cal agrícola", cantidad: "1.5", unidades: "t/ha", efecto: "Aumenta pH y disponibilidad de nutrientes" }
+        ],
+        "2025": [
+            { correctivo: "Dolomita", cantidad: "1.0", unidades: "t/ha", efecto: "Aporta Ca y Mg; ajusta pH" }
+        ],
+        "2026": [
+            { correctivo: "Azufre elemental", cantidad: "150", unidades: "kg/ha", efecto: "Disminuye pH en suelos alcalinos" }
+        ]
+    };
+
+    function renderTabla(rows) {
+        tbody.innerHTML = "";
+
+        if (!rows || rows.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-muted">
+                        No hay correctivos para el año seleccionado.
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        rows.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${r.correctivo ?? ""}</td>
+                <td>${r.cantidad ?? ""}</td>
+                <td>${r.unidades ?? ""}</td>
+                <td>${r.efecto ?? ""}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Estado inicial (mensaje)
+    function renderEstadoInicial() {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center text-muted">
+                    Selecciona un año para mostrar los correctivos sugeridos.
+                </td>
+            </tr>`;
+    }
+
+    // Limpia listeners anteriores si se llama múltiples veces (opcional)
+    // Usamos una marca para no duplicar listeners.
+    if (selectAnio.dataset.listenerAdded === "true") {
+        // Ya se inicializó, no hacemos nada adicional
+        return;
+    }
+    selectAnio.dataset.listenerAdded = "true";
+
+    renderEstadoInicial();
+
+    selectAnio.addEventListener('change', function () {
+        const anio = this.value;
+
+        // MOCK (reemplazar por fetch)
+        const rows = dataPorAnio[anio] || [];
+        renderTabla(rows);
+
+        // Ejemplo para usar API en lugar del mock:
+        // const zonaManejoId = document.getElementById('zona_manejo_id')?.value; // si aplica
+        // fetch(`/api/correctivos?anio=${encodeURIComponent(anio)}&zona_manejo_id=${encodeURIComponent(zonaManejoId)}`)
+        //   .then(r => r.json())
+        //   .then(data => renderTabla(data))
+        //   .catch(() => renderTabla([]));
+    });
+}
+
+
+            
+        </script>
         <script>
             $(document).ready(function() {
                 ocultarLoader();
                 activateTab();
                 getTab();
+                initTab8SueloCorrectivos();
             });
         </script>
     @endsection

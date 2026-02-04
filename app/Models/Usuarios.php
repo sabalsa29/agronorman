@@ -19,7 +19,13 @@ class Usuarios extends Model
         'cliente_id',
         'role_id',
         'status',
+        'acceso_app',
     ];
+
+    protected $casts = [
+        'acceso_app' => 'array',
+    ];
+
     public function cliente()
     {
         return $this->belongsTo(Clientes::class, 'cliente_id');

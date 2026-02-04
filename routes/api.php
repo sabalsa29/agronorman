@@ -8,6 +8,9 @@ use App\Http\Controllers\AtmosfericosEtapaFenologicaTipoCultivoApiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InteraccionFactoresController;
 use App\Models\VariablesMedicion;
+use App\Http\Controllers\Api\AppBitacoraAuthController;
+use App\Http\Controllers\Api\AppBitacoraAccesosController;
+use App\Http\Controllers\Api\AppBitacoraActividadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,3 +103,23 @@ Route::get('test-pronostico-enfermedades', [HomeController::class, 'testPronosti
 
 // Endpoint para probar datos reales de enfermedades
 Route::get('test-datos-reales-enfermedades', [HomeController::class, 'testDatosRealesEnfermedades'])->name('api.test-datos-reales-enfermedades');
+
+// Endpoint de login para App Bitácora
+
+Route::prefix('v1/app-bitacora')->group(function () {
+
+    // Login (sin token)
+    Route::post('/login', [AppBitacoraAuthController::class, 'login'])
+        ->middleware('throttle:10,1');
+
+    // Protegidas con token
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/accesos', [AppBitacoraAccesosController::class, 'index']);
+        Route::post('/logout', [AppBitacoraAuthController::class, 'logout']);
+        Route::get('/me', [AppBitacoraAuthController::class, 'me']);
+        Route::post('/zonas/{id_zm}/actividades', [AppBitacoraActividadController::class, 'store']);
+        Route::get('/actividades/{id}', [AppBitacoraActividadController::class, 'show']);
+        Route::post('/actividades/{id}', [AppBitacoraActividadController::class, 'update']);
+
+    });
+});

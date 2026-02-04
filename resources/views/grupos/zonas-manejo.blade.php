@@ -48,7 +48,7 @@
         </div>
 
         {{-- Cuadro para mostrar los datos de icamex de las zonas cargadas  --}}
-        <div class="card border-top mb-4">
+        {{-- <div class="card border-top mb-4">
             <div class="card-header bg-transparent border-bottom">
                 <h6 class="card-title mb-0">
                     <i class="icon-database mr-2"></i>
@@ -85,7 +85,7 @@
                     </div>
                 @endif
             </div>
-        </div>
+        </div> --}}
 
         @php
             use App\Models\Grupos;

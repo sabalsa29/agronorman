@@ -106,7 +106,6 @@
                                 </div>
  
                             </div>
-
                            
                             <div class="row mt-3">
                                 <div class="col-6">
@@ -126,6 +125,59 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                         
+                                {{-- Se agrega select de Aceesos App, dos opciones, un check para selecionar PIA o/y App Bitacora --}}
+                                {{-- Acceso a Aplicaciones (0, 1 o 2 opciones) --}}
+                                <div class="col-3">
+                                    <label class="col-form-label col-lg-12">Acceso a Aplicaciones</label>
+
+                                    <div class="d-flex flex-column">
+                                        @php
+                                            // Soporta:
+                                            // - old('acceso_app') => array (cuando falla validación)
+                                            // - $user->acceso_app => array o string tipo "pia,bitacora" o json
+                                            $oldAccesos = old('acceso_app');
+
+                                            if (is_array($oldAccesos)) {
+                                                $selected = $oldAccesos;
+                                            } else {
+                                                $raw = $user->acceso_app ?? [];
+
+                                                if (is_string($raw)) {
+                                                    // intenta JSON, si no, separa por coma
+                                                    $json = json_decode($raw, true);
+                                                    $selected = is_array($json) ? $json : array_filter(array_map('trim', explode(',', $raw)));
+                                                } else {
+                                                    $selected = is_array($raw) ? $raw : [];
+                                                }
+                                            }
+                                        @endphp
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox"
+                                                class="custom-control-input @error('acceso_app') is-invalid @enderror"
+                                                id="acceso_pia"
+                                                name="acceso_app[]"
+                                                value="pia"
+                                                {{ in_array('pia', $selected) ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="acceso_pia">PIA</label>
+                                        </div>
+
+                                        <div class="custom-control custom-checkbox mt-1">
+                                            <input type="checkbox"
+                                                class="custom-control-input @error('acceso_app') is-invalid @enderror"
+                                                id="acceso_bitacora"
+                                                name="acceso_app[]"
+                                                value="bitacora"
+                                                {{ in_array('bitacora', $selected) ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="acceso_bitacora">App Bitácora</label>
+                                        </div>
+
+                                        @error('acceso_app')
+                                            <span class="text-danger mt-1">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
