@@ -7,9 +7,12 @@ use App\Models\Plaga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LogsPlatformActions;
 
 class PlagaController extends Controller
 {
+    use LogsPlatformActions;
+
     /**
      * Display a listing of the resource.
      */
@@ -21,6 +24,14 @@ class PlagaController extends Controller
         foreach ($plagues as $plaga) {
             $plaga->nombres_cultivos = $plaga->cultivos->pluck('nombre')->implode(', ');
         }
+
+        // Crear log de visualización de la lista de plagas
+        $this->logPlatformAction(
+            seccion: 'plagas',
+            accion: 'visualizar_lista',
+            entidadTipo: 'Plaga',
+            descripcion: 'Visualización de la lista de plagas',
+        );
 
         return view('plagas.index', [
             "section_name" => "Plagas",
@@ -59,6 +70,23 @@ class PlagaController extends Controller
         ]);
 
         $plaga->cultivos()->sync($request['cultivo_id']);
+
+            // Crear log de creación de plaga
+            $this->logPlatformAction(
+                seccion: 'plagas',
+                accion: 'crear',
+                entidadTipo: 'Plaga',
+                descripcion: "Creación de la plaga '{$plaga->nombre}'",
+                entidadId: $plaga->id,
+                datosAdicionales: [
+                    'nombre' => $plaga->nombre,
+                    'descripcion' => $plaga->descripcion,
+                    'unidades_calor_ciclo' => $plaga->unidades_calor_ciclo,
+                    'umbral_min' => $plaga->umbral_min,
+                    'umbral_max' => $plaga->umbral_max,
+                    'cultivo_id' => $request['cultivo_id'],
+                ]
+            );
 
         // Redirecciona a la ruta que prefieras (ajusta según tu routes/web.php)
         return redirect()->route('plaga.index')->with('success', 'Plaga creada correctamente.');
@@ -100,6 +128,23 @@ class PlagaController extends Controller
         // 'sync' se encargará de insertar en la tabla pivote.
         $plaga->cultivos()->sync($request['cultivo_id']);
 
+            // Crear log de actualización de plaga
+            $this->logPlatformAction(
+                seccion: 'plagas',
+                accion: 'actualizar',
+                entidadTipo: 'Plaga',
+                descripcion: "Actualización de la plaga '{$plaga->nombre}' (ID: {$plaga->id})",
+                entidadId: $plaga->id,
+                datosAdicionales: [
+                    'nombre' => $plaga->nombre,
+                    'descripcion' => $plaga->descripcion,
+                    'unidades_calor_ciclo' => $plaga->unidades_calor_ciclo,
+                    'umbral_min' => $plaga->umbral_min,
+                    'umbral_max' => $plaga->umbral_max,
+                    'cultivo_id' => $request['cultivo_id'],
+                ]
+            );
+
         // Redirecciona a la ruta que prefieras (ajusta según tu routes/web.php)
         return redirect()->route('plaga.index')->with('success', 'Plaga actualizada correctamente.');
     }
@@ -109,6 +154,23 @@ class PlagaController extends Controller
      */
     public function destroy(Plaga $plaga)
     {
+        // Crear log de eliminación de plaga
+        $this->logPlatformAction(
+            seccion: 'plagas',
+            accion: 'eliminar',
+            entidadTipo: 'Plaga',
+            descripcion: "Eliminación de la plaga '{$plaga->nombre}' (ID: {$plaga->id})",
+            entidadId: $plaga->id,
+            datosAdicionales: [
+                'nombre' => $plaga->nombre,
+                'descripcion' => $plaga->descripcion,
+                'unidades_calor_ciclo' => $plaga->unidades_calor_ciclo,
+                'umbral_min' => $plaga->umbral_min,
+                'umbral_max' => $plaga->umbral_max,
+                'cultivo_id' => $plaga->cultivos()->pluck('cultivo_id')->toArray(),
+            ]
+        );
+
         // Elimina la plaga
         $plaga->delete();
         // Redirecciona (ajusta la ruta según tu archivo de rutas)

@@ -194,6 +194,14 @@ class HomeController extends Controller
         /** @var \App\Models\User|null $user */
         $user = Auth::check() ? Auth::user() : null;
 
+        // Si el usuario no tiene acceso pia, no puede iniciar sesion y se le cierra la secion
+        // if ($user && !($user->acceso_app['pia'] ?? false)) {
+        //     Auth::logout();
+        //     return redirect()->route('login')->withErrors([
+        //         'email' => __('auth.no_access'),
+        //     ]);
+        // }
+
         if ($user && $user->role_id === 1 && $user->cliente_id === null) {
             // Super admin ve todos los clientes
             $clientes = Cliente::where('status', 1)->orderBy('nombre')->get();
@@ -5192,5 +5200,142 @@ class HomeController extends Controller
         ];
     }
 
-    
+public function lectura_correctivos_por_zona($zonaIdExt){
+    // Lógica para la lectura de fechas correctivos por zona_id
+    $correctivos = DB::table('lote_correctivo as lc')
+    ->join('correctivos as c', 'lc.correctivo_id', '=', 'c.id')
+    ->join('zona_manejo_lote_externo as zmle', 'lc.lote_id', '=', 'zmle.externo_lote_id')
+    ->join('zona_manejos as zm', 'zmle.zona_manejo_id', '=', 'zm.id')
+    ->where('lc.lote_id', $zonaIdExt)
+    ->select(
+        'lc.id',
+        DB::raw('c.nombre as correctivo'),
+        'c.unidad_medida',
+        'c.efecto_esperado',
+        'lc.fecha_aplicacion',
+        'lc.cantidad_sugerida'
+    )
+    ->get();
+
+    return response()->json($correctivos);
+}
+
+public function lectura_correctivos_por_fecha($zonaIdExt, $fecha){
+    // Lógica para la lectura de correctivos por zona_id y fecha
+    // fecha viene 2026-01-01
+
+    $anio = Carbon::parse($fecha)->year;
+
+    $correctivos = DB::table('lote_correctivo as lc')
+    ->join('correctivos as c', 'lc.correctivo_id', '=', 'c.id')
+    ->join('zona_manejo_lote_externo as zmle', 'lc.lote_id', '=', 'zmle.externo_lote_id')
+    ->join('zona_manejos as zm', 'zmle.zona_manejo_id', '=', 'zm.id')
+    ->where('lc.lote_id', $zonaIdExt)
+    ->when($anio, function ($q) use ($anio) {
+        return $q->whereYear('lc.fecha_aplicacion', (int) $anio);
+    })
+    ->select(
+        'lc.id',
+        DB::raw('c.nombre as correctivo'),
+        'c.unidad_medida',
+        'c.efecto_esperado',
+        'lc.fecha_aplicacion',
+        'lc.cantidad_sugerida'
+    )
+    ->get();
+
+
+    return response()->json($correctivos);  
+}
+public function cargar_correctivos_por_zona_anio(Request $request, $zonaIdExt, $anio){
+    // Lógica para la lectura de correctivos por zona_id y año
+    // en  zona_manejo_lote_externo  es donde se encuentra zona_manejo_id y lote_id (externo_lote_id) que se relaciona con lote_correctivo.lote_id
+    $correctivos = DB::table('zona_manejo_lote_externo as zmle')
+    ->join('lote_correctivo as lc', 'zmle.externo_lote_id', '=', 'lc.lote_id')
+    ->join('correctivos as c', 'lc.correctivo_id', '=', 'c.id')
+    ->where('zmle.zona_manejo_id', $zonaIdExt)
+    ->whereYear('lc.fecha_aplicacion', (int) $anio)
+    ->select(
+        'lc.id',
+        DB::raw('c.nombre as correctivo'),
+        'c.unidad_medida',
+        'c.efecto_esperado',
+        'lc.fecha_aplicacion',
+        'lc.cantidad_sugerida'
+    )
+    ->get();
+
+    return response()->json($correctivos);
+}
+  public function fertilidad(Request $request)
+{
+    // 1) Validar query param
+    $zonaId = $request->query('zona_manejo_id');
+
+    if (!$zonaId) {
+        return response()->json([
+            'success' => false,
+            'message' => 'zona_manejo_id es requerido'
+        ], 422);
+    }
+
+    // 2) Obtener externo_lote_id (local MySQL)
+    $externoLoteId = DB::table('zona_manejo_lote_externo')
+        ->where('zona_manejo_id', $zonaId)
+        ->value('externo_lote_id'); // más directo que pluck()->first()
+
+    if (!$externoLoteId) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró externo_lote_id para la zona indicada',
+            'zona_manejo_id' => (int) $zonaId
+        ], 404);
+    }
+
+    // 3) Consultar año máximo en SQL Server (external)
+    $anioMax = DB::connection('external')
+        ->table('icamex2.dbo.lote_indicador_icp')
+        ->where('id_lote', $externoLoteId)
+        ->max('anio');
+
+    if (!$anioMax) {
+        return response()->json([
+            'success' => true,
+            'zona_manejo_id' => (int) $zonaId,
+            'externo_lote_id' => (int) $externoLoteId,
+            'anio' => null,
+            'data' => []
+        ]);
+    }
+
+    // 4) Traer la estructura requerida para el último año
+    $data = DB::connection('external')
+        ->table('icamex2.dbo.lote_indicador_icp as li')
+        ->join('icamex2.dbo.indicador as ind', 'ind.id_indicador', '=', 'li.id_indicador')
+        ->where('li.id_lote', $externoLoteId)
+        ->where('li.anio', $anioMax)
+        ->where ('li.id_seccion', 1) // Solo indicadores de fertilidad (Saturacion de las Bases)
+        ->select([
+            'ind.indicador as indicador',
+            'li.icp as icp',
+            'li.resultado as resultado',
+            'li.fp as Ponderacion',
+            'li.fr as Restriccion',
+            'li.nivel as Nivel',
+            'ind.descripcion as descripcion',
+        ])
+        ->orderBy('li.id_seccion')
+        ->orderBy('li.id_indicador')
+        ->get();
+
+    // 5) Respuesta
+    return response()->json([
+        'success' => true,
+        'zona_manejo_id' => (int) $zonaId,
+        'externo_lote_id' => (int) $externoLoteId,
+        'anio' => (int) $anioMax,
+        'data' => $data
+    ]);
+}
+
 }

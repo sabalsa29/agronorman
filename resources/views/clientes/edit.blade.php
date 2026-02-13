@@ -100,7 +100,7 @@
                         <i class="icon-cross2 mr-2"></i>Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="icon-paperplane mr-2"></i>Actualizar Usuario
+                        <i class="icon-paperplane mr-2"></i>Actualizar Productor
                     </button>
                 </div>
             </form>

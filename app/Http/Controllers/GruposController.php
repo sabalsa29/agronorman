@@ -9,10 +9,14 @@ use App\Models\UserGrupo;
 use App\Models\ZonaManejos;
 use App\Services\Icp\IcpClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LogsPlatformActions;
+
 
 class GruposController extends Controller
 {
+    use LogsPlatformActions;
     /**
      * Display a listing of the resource.
      */
@@ -31,14 +35,23 @@ class GruposController extends Controller
             ->with(['subgrupos', 'zonaManejos', 'usuarios'])
             ->get();
 
-        //dd($gruposRaiz);
-            
-
         $estructuraJerarquica = collect();
 
         foreach ($gruposRaiz as $grupoRaiz) {
             $estructuraJerarquica->push($this->construirEstructuraGrupo($grupoRaiz, $user));
         }
+
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'grupos',
+            accion: 'ver',
+            entidadTipo: 'Grupos',
+            descripcion: "Visualización de la estructura jerárquica de grupos para el usuario '{$user->nombre}' (ID: {$user->id})",
+            entidadId: $user->id,
+            datosAdicionales: [
+                'nombre' => $user->nombre,
+            ]
+        );
 
         return view('grupos.index', [
             "section_name" => "Grupos",
@@ -101,6 +114,18 @@ class GruposController extends Controller
         $grupos->status = $request->status ?? 1;
         $grupos->grupo_id = $request->grupo_id ?: $id_norman;
         $grupos->save();
+
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'grupos',
+            accion: 'crear',
+            entidadTipo: 'Grupos',
+            descripcion: "Creación del grupo '{$grupos->nombre}' (ID: {$grupos->id})",
+            entidadId: $grupos->id,
+            datosAdicionales: [
+                'nombre' => $grupos->nombre,
+            ]
+        );
 
         return redirect()->route('grupos.index')->with('success', 'Grupo creado correctamente.');
     }
@@ -211,6 +236,18 @@ class GruposController extends Controller
         $grupo->status = $request->status ?? $grupo->status;
         $grupo->grupo_id = $request->grupo_id ?: $id_norman;
         $grupo->save();
+
+        // crear log, se deben guardar los grupos antes y después para tener un historial completo de cambios en la jerarquía
+        $this->logPlatformAction(
+            seccion: 'grupos',
+            accion: 'actualizar',
+            entidadTipo: 'Grupos',
+            descripcion: "Actualización del grupo '{$grupo->nombre}' (ID: {$grupo->id})",
+            entidadId: $grupo->id,
+            datosAdicionales: [
+                'nombre' => $grupo->nombre,
+            ]
+        );
 
         return redirect()->route('grupos.index')->with('success', 'Grupo actualizado correctamente.');
     }
@@ -339,6 +376,21 @@ class GruposController extends Controller
     {
 
         $user = auth()->user();
+        //dd($user);
+        // Si el usuario tiene pia puede ingresar a la plataforma de lo contrario lo saca
+        // accesos_app = array ["pia", "otro"]
+        if (
+            $user
+            && !in_array('pia', $user->acceso_app ?? [], true)
+            && ! $user->isSuperAdmin()
+        ) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => __('auth.no_access'),
+            ]);
+        }
+
+
         $esAdmin = $user && $user->isSuperAdmin();
 
         // Inicializar para evitar "undefined"
@@ -592,6 +644,18 @@ class GruposController extends Controller
         // $zonasManejo->each(function ($zona) {
         //     $zona->icamex_data = (new IcpClient())->get_resultados_lote($zona->zona_manejo_id);
         // });
+
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'grupos',
+            accion: 'ver',
+            entidadTipo: 'Grupos',
+            descripcion: "Visualización de las zonas de manejo para el usuario '{$user->nombre}' (ID: {$user->id})",
+            entidadId: $user->id,
+            datosAdicionales: [
+                'nombre' => $user->nombre,
+            ]
+        );  
 
         $data = [
             "section_name" => "Mis Zonas de Manejo",

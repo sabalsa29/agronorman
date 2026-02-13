@@ -1086,7 +1086,29 @@
                                                             <div class="spinner-border text-primary" role="status">
                                                                 <span class="sr-only">Cargando...</span>
                                                             </div>
-                                                            <p class="mt-2">Cargando información de fertilidad...</p>
+                                                        <!-- Tabla Fertilidad -->
+                                                        <div class="table-responsive mt-3">
+                                                                <table class="table table-striped table-bordered mb-0" id="tablaFertilidad">
+                                                                    <thead class="thead-light">
+                                                                    <tr>
+                                                                        <th>Indicador</th>
+                                                                        <th>ICP</th>
+                                                                        <th>Resultado</th>
+                                                                        <th>Ponderacion</th>
+                                                                        <th>Restriccion</th>
+                                                                        <th>Nivel</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tablaFertilidadBody">
+                                                                    <!-- Filas dinámicas -->
+                                                                    <tr>
+                                                                        <td colspan="6" class="text-center text-muted">
+                                                                            Cargando resultados de fertilidad...
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -3903,90 +3925,233 @@
                 });
             }
 
-            function initTab8SueloCorrectivos() {
-    const selectAnio = document.getElementById('selectCorrectivosAnio');
-    const tbody = document.getElementById('tablaCorrectivosBody');
+    function initTab8SueloCorrectivos() {
+        const $selectAnio = $('#selectCorrectivosAnio');
+        const $tbody = $('#tablaCorrectivosBody');
 
-    // Si no existe en el DOM, salimos para evitar errores
-    if (!selectAnio || !tbody) return;
+        // Si no existe en el DOM, salimos
+        if (!$selectAnio.length || !$tbody.length) return;
 
-    // Datos mock por año (reemplazar por API)
-    const dataPorAnio = {
-        "2024": [
-            { correctivo: "Yeso agrícola", cantidad: "200", unidades: "kg/ha", efecto: "Mejora estructura y reduce sodicidad" },
-            { correctivo: "Cal agrícola", cantidad: "1.5", unidades: "t/ha", efecto: "Aumenta pH y disponibilidad de nutrientes" }
-        ],
-        "2025": [
-            { correctivo: "Dolomita", cantidad: "1.0", unidades: "t/ha", efecto: "Aporta Ca y Mg; ajusta pH" }
-        ],
-        "2026": [
-            { correctivo: "Azufre elemental", cantidad: "150", unidades: "kg/ha", efecto: "Disminuye pH en suelos alcalinos" }
-        ]
-    };
+        // Evitar duplicar listeners si se llama múltiples veces
+        if ($selectAnio.data('listenerAdded')) return;
+        $selectAnio.data('listenerAdded', true);
 
-    function renderTabla(rows) {
-        tbody.innerHTML = "";
+        // Para abortar requests anteriores si cambias rápido de año
+        let abortController = null;
 
-        if (!rows || rows.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="4" class="text-center text-muted">
-                        No hay correctivos para el año seleccionado.
-                    </td>
-                </tr>`;
-            return;
+        function getZonaManejoId() {
+            // 1) desde tus filtros globales
+            let zonaId = (window.filtros && window.filtros.zona_manejo_id) ? window.filtros.zona_manejo_id : null;
+
+            // 2) fallback: select de zonas
+            if (!zonaId) zonaId = $('#zonas').val();
+
+            // 3) fallback: input hidden (si existe)
+            if (!zonaId) zonaId = $('#zona_manejo_id').val();
+
+            // 4) fallback: querystring
+            if (!zonaId) zonaId = new URLSearchParams(window.location.search).get('zona_manejo_id');
+
+            return zonaId && zonaId !== "0" ? zonaId : null;
         }
 
-        rows.forEach(r => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${r.correctivo ?? ""}</td>
-                <td>${r.cantidad ?? ""}</td>
-                <td>${r.unidades ?? ""}</td>
-                <td>${r.efecto ?? ""}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    // Estado inicial (mensaje)
-    function renderEstadoInicial() {
-        tbody.innerHTML = `
+        function renderEstado(msg) {
+            $tbody.html(`
             <tr>
-                <td colspan="4" class="text-center text-muted">
-                    Selecciona un año para mostrar los correctivos sugeridos.
-                </td>
-            </tr>`;
-    }
+                <td colspan="4" class="text-center text-muted">${msg}</td>
+            </tr>
+            `);
+        }
 
-    // Limpia listeners anteriores si se llama múltiples veces (opcional)
-    // Usamos una marca para no duplicar listeners.
-    if (selectAnio.dataset.listenerAdded === "true") {
-        // Ya se inicializó, no hacemos nada adicional
-        return;
-    }
-    selectAnio.dataset.listenerAdded = "true";
+        function normalizeRow(r) {
+            // Acepta varias formas típicas de respuesta del API
+            const correctivo = r.correctivo ?? r.nombre ?? r.correctivo_nombre ?? '';
+            const cantidad = r.cantidad ?? r.cantidad_sugerida ?? '';
+            const unidades = r.unidades ?? r.unidad_medida ?? '';
+            const efecto = r.efecto ?? r.efecto_esperado ?? '';
+            return { correctivo, cantidad, unidades, efecto };
+        }
 
-    renderEstadoInicial();
+        function renderTabla(rows) {
+            if (!rows || rows.length === 0) {
+            renderEstado('No hay correctivos para el año seleccionado.');
+            return;
+            }
 
-    selectAnio.addEventListener('change', function () {
-        const anio = this.value;
+            const html = rows.map((raw) => {
+            const r = normalizeRow(raw);
+            return `
+                <tr>
+                <td>${r.correctivo}</td>
+                <td>${r.cantidad}</td>
+                <td>${r.unidades}</td>
+                <td>${r.efecto}</td>
+                </tr>
+            `;
+            }).join('');
 
-        // MOCK (reemplazar por fetch)
-        const rows = dataPorAnio[anio] || [];
-        renderTabla(rows);
+            $tbody.html(html);
+        }
 
-        // Ejemplo para usar API en lugar del mock:
-        // const zonaManejoId = document.getElementById('zona_manejo_id')?.value; // si aplica
-        // fetch(`/api/correctivos?anio=${encodeURIComponent(anio)}&zona_manejo_id=${encodeURIComponent(zonaManejoId)}`)
-        //   .then(r => r.json())
-        //   .then(data => renderTabla(data))
-        //   .catch(() => renderTabla([]));
-    });
-}
+        async function cargarCorrectivos({ anio = null } = {}) {
+            const zonaManejoId = getZonaManejoId();
 
+            if (!zonaManejoId) {
+            renderEstado('Selecciona una zona de manejo para mostrar correctivos.');
+            return;
+            }
 
+            // Si no eligió año, muestra mensaje (o si quieres, puedes traer "todos" sin anio)
+            if (!anio) {
+            renderEstado('Selecciona un año para mostrar los correctivos sugeridos.');
+            return;
+            }
+
+            // Abort request anterior
+            if (abortController) abortController.abort();
+            abortController = new AbortController();
+
+            // UI loading (tu loader global)
+            if (typeof mostrarLoader === 'function') mostrarLoader('Cargando correctivos...');
+            renderEstado('Cargando correctivos...');
+
+            try {
+            const params = new URLSearchParams();
+            params.set('zona_manejo_id', zonaManejoId);
+            params.set('anio', anio);
+
+            const url = `/api/correctivos/${encodeURIComponent(zonaManejoId)}/${encodeURIComponent(anio)}`;
             
+            const resp = await fetch(url, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                signal: abortController.signal
+            });
+
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+            const json = await resp.json();
+
+            // Soporta respuestas tipo: []  ó {data: []} ó {correctivos: []}
+            const rows = Array.isArray(json) ? json : (json.data ?? json.correctivos ?? []);
+            renderTabla(rows);
+            } catch (e) {
+            // Si fue abort, no hagas nada
+            if (e.name === 'AbortError') return;
+
+            console.error('Error cargando correctivos:', e);
+            renderEstado('Error al cargar correctivos. Intenta nuevamente.');
+            } finally {
+            if (typeof ocultarLoader === 'function') ocultarLoader();
+            }
+        }
+
+        // Listener: cambio de año => consulta API
+        $selectAnio.on('change', function () {
+            const anio = this.value || null;
+            cargarCorrectivos({ anio });
+        });
+
+            // Estado inicial: si ya viene un año seleccionado, auto-carga
+            const anioInicial = $selectAnio.val();
+            if (anioInicial) {
+                cargarCorrectivos({ anio: anioInicial });
+            } else {
+                renderEstado('Selecciona un año para mostrar los correctivos sugeridos.');
+            }
+        }
+
+        function initFertilidad() {
+
+            function getZonaManejoId() {
+                // 1) desde tus filtros globales
+                let zonaId = (window.filtros && window.filtros.zona_manejo_id) ? window.filtros.zona_manejo_id : null;
+
+                // 2) fallback: select de zonas
+                if (!zonaId) zonaId = $('#zonas').val();
+
+                // 3) fallback: input hidden (si existe)
+                if (!zonaId) zonaId = $('#zona_manejo_id').val();
+
+                // 4) fallback: querystring
+                if (!zonaId) zonaId = new URLSearchParams(window.location.search).get('zona_manejo_id');
+
+                return zonaId && zonaId !== "0" ? zonaId : null;
+            }
+            // Inicializa los elementos para cargar fertilidad (similar a correctivos, puedes unificar si quieres)
+            $tbody = $('#tablaFertilidadBody');
+            if (!$tbody.length) return;
+
+            //Se genera la consulta
+            const zonaManejoId = getZonaManejoId();
+            if (!zonaManejoId) {
+                renderEstado('Selecciona una zona de manejo para mostrar fertilidad.');
+                return;
+            }
+
+            //Se generan los parámetros, solo la zona id
+            const params = new URLSearchParams();
+            params.set('zona_manejo_id', zonaManejoId);
+
+            //url de la consulta, por ejemplo: /api/fertilidad?zona_manejo_id=123
+            const url = `/api/fertilidad?${params.toString()}`;
+            console.log('Cargando fertilidad con URL:', url);
+            //UI loading
+            //if (typeof mostrarLoader === 'function') mostrarLoader('Cargando fertilidad...');
+            // $tbody.html(`
+            //     <tr></tr>
+            //         <td colspan="4" class="text-center text-muted">
+            //             <div class="spinner-border text-primary" role="status">
+            //                 <span class="sr-only">Cargando...</span>
+            //             </div>
+            //             <p class="mt-2">Cargando fertilidad...</p>
+            //         </td>
+            //     </tr>
+            // `); 
+            
+
+            fetch(url, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(resp => {
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                return resp.json();
+            })
+            .then(json => {
+                // Soporta respuestas tipo: []  ó {data: []} ó {fertilidad: []}
+                const rows = Array.isArray(json) ? json : (json.data ?? json.fertilidad ?? []);
+                if (!rows || rows.length === 0) {
+                    $tbody.html(`
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No hay datos de fertilidad para esta zona de manejo.</td>
+                        </tr>
+                    `);
+                    return;
+                }
+
+                // Renderizar filas de datos
+                $tbody.html(rows.map(row => `
+                    <tr>
+                        <td>${row.descripcion}</td>
+                        <td>${row.icp}</td>
+                        <td>${row.resultado}</td>
+                        <td>${row.Ponderacion}</td>
+                        <td>${row.Restriccion}</td>
+                        <td>${row.Nivel}</td>
+
+                    </tr>
+                `).join(''));
+            })
+            .catch(error => {
+                console.error('Error cargando fertilidad:', error);
+                $tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">Error al cargar fertilidad. Intenta nuevamente.</td>
+                    </tr>
+                `);
+            });
+        }
         </script>
         <script>
             $(document).ready(function() {
@@ -3994,6 +4159,8 @@
                 activateTab();
                 getTab();
                 initTab8SueloCorrectivos();
+                //Funcion para cargar fertilidad
+                initFertilidad();
             });
         </script>
     @endsection

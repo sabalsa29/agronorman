@@ -50,7 +50,7 @@
                 <!-- Login card -->
                 <form class="login-form" action="{{ route('login') }}" method="POST">
                     @csrf
-                    <div class="card mb-0">
+                    <div class="card mb-0"> 
                         <div class="card-body">
                             <div class="text-center mb-3">
                                 <img src="{{ url('assets/images/logo.png') }}" style="width: 250px;" alt="">

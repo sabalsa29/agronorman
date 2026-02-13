@@ -103,9 +103,9 @@
 
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-form-label col-lg-4 font-weight-semibold">Usuarios Asociados:</label>
+                        <label class="col-form-label col-lg-4 font-weight-semibold">Productores Asociados:</label>
                         <div class="col-lg-8">
-                            <span class="form-control-plaintext">{{ $cliente->users->count() }} usuarios</span>
+                            <span class="form-control-plaintext">{{ $cliente->users->count() }} productores</span>
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                     <i class="icon-pencil7 mr-2"></i>Editar
                 </a>
                 <a href="{{ route('usuarios.index', $cliente) }}" class="btn btn-warning mr-2">
-                    <i class="icon-users mr-2"></i>Ver Usuarios
+                    <i class="icon-users mr-2"></i>Ver Productores
                 </a>
                 <a href="{{ route('parcelas.index', $cliente) }}" class="btn btn-success">
                     <i class="icon-menu6 mr-2"></i>Ver Parcelas

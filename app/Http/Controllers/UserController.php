@@ -10,14 +10,30 @@ use App\Models\Usuarios;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Traits\LogsPlatformActions;
+
 
 class UserController extends Controller
 {
+    use LogsPlatformActions;
+
     public function index()
     {
 
     $usuarios = Usuarios::all();
+
     $user = Auth::user();
+
+    $this->logPlatformAction(
+        seccion: 'usuarios',
+        accion: 'ver',
+        entidadTipo: 'Usuarios',
+        descripcion: "Visualización de detalles del usuario '{$user->nombre}' (ID: {$user->id})",
+        entidadId: $user->id,
+        datosAdicionales: [
+            'nombre' => $user->nombre,
+        ]
+    );
 
     return view('usuarios.index', [
         "section_name" => "Usuarios",
@@ -82,6 +98,18 @@ class UserController extends Controller
             'status' => 1,
             'acceso_app' => $validatedData['acceso_app'] ?? null,
         ]);
+
+        // validar si se creo el usuario crear el log
+        $this->logPlatformAction(
+            seccion: 'usuarios',
+            accion: 'crear',
+            entidadTipo: 'Usuarios',
+            descripcion: "Visualización de detalles del usuario '{$usuario->nombre}' (ID: {$usuario->id} creado)",
+            entidadId: $usuario->id,
+            datosAdicionales: [
+                'nombre' => $usuario->nombre
+            ]
+        );
 
          // Asignar grupos al usuario 
         if($request->grupo_id) {
@@ -162,15 +190,45 @@ class UserController extends Controller
                 ->toArray();
 
             
-            // Guardar las asignaciones en la base de datos
+                // Guardar las asignaciones en la base de datos
             
-                if(!empty($prediosIds)) {
-                    \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
+            if(!empty($prediosIds)) {
+                \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
+
+                // Guardar log de asignación de predios
+                foreach ($prediosIds as $predioId) {
+                    $this->logPlatformAction(
+                        seccion: 'usuarios',
+                        accion: 'asignar_predio',
+                        entidadTipo: 'Usuarios',
+                        descripcion: "Asignación del predio ID {$predioId} al usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+                        entidadId: $usuario->id,
+                        datosAdicionales: [
+                            'nombre' => $usuario->nombre,
+                        ]
+                    );
                 }
+            }
             //Se debe agregar en las zonasIds la parcela_id a la que pertenece la zona y ademas el grupo_id al cual pertenece esa parcela
             //dd('las zonas id son ', $zonasAsignaciones);
             if (!empty($zonasAsignaciones)) {
                 \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasAsignaciones);
+
+                // Guardar log de asignación de zonas
+                foreach ($zonasAsignaciones as $zona) {
+                    $this->logPlatformAction(
+                        seccion: 'usuarios',
+                        accion: 'asignar_zona',
+                        entidadTipo: 'Usuarios',
+                        descripcion: "Asignación de la zona ID {$zona['zona_id']} al usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+                        entidadId: $usuario->id,
+                        datosAdicionales: [
+                            'nombre' => $usuario->nombre,
+                            'parcela_id' => $zona['parcela_id'],
+                            'grupo_id' => $zona['grupo_id'],
+                        ]
+                    );
+                }
             }
 
             //dd('los predios son ', $prediosIds, ' las zonas son: ', $zonasIds);
@@ -382,6 +440,18 @@ class UserController extends Controller
         }
         $usuario->save();
 
+        // Validar si se actualizo el usuario y crear el log
+        $this->logPlatformAction(
+            seccion: 'usuarios',
+            accion: 'editar',
+            entidadTipo: 'Usuarios',
+            descripcion: "Edición del usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+            entidadId: $usuario->id,
+            datosAdicionales: [
+                'nombre' => $usuario->nombre,
+            ]
+        );
+
         // =========================
         // 3) Grupos (pivote user_grupo)
         // - si viene null/ausente => elimina todos
@@ -412,8 +482,29 @@ class UserController extends Controller
         // Si viene explícitamente vacío o null => borrar todo
         if ($rawCache === null || trim((string)$rawCache) === '') {
             \App\Models\GrupoParcela::where('user_id', $usuario->id)->delete();
+            // crear log de eliminación masiva de asignaciones
+            $this->logPlatformAction(
+                seccion: 'usuarios',
+                accion: 'eliminar_asignaciones',
+                entidadTipo: 'Usuarios',
+                descripcion: "Eliminación de todas las asignaciones manuales (predios y zonas) para el usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+                entidadId: $usuario->id,
+                datosAdicionales: [
+                    'nombre' => $usuario->nombre,
+                ]
+            );
             \App\Models\GrupoZonaManejo::where('user_id', $usuario->id)->delete();
-
+            // crear log de eliminación masiva de asignaciones
+            $this->logPlatformAction(
+                seccion: 'usuarios',
+                accion: 'eliminar_zonas_asignaciones',
+                entidadTipo: 'Usuarios',
+                descripcion: "Eliminación de todas las asignaciones manuales (predios y zonas) para el usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+                entidadId: $usuario->id,
+                datosAdicionales: [
+                    'nombre' => $usuario->nombre,
+                ]
+            );
             return redirect()->route('usuarios.index')
                 ->with('success', 'Usuario actualizado.');
         }
@@ -433,6 +524,7 @@ class UserController extends Controller
         // 4.2) Eliminar existentes ANTES de recrear
         // =========================
         \App\Models\GrupoParcela::where('user_id', $usuario->id)->delete();
+        // crear log de eliminación de asignaciones        
         \App\Models\GrupoZonaManejo::where('user_id', $usuario->id)->delete();
 
         // =========================
@@ -472,6 +564,19 @@ class UserController extends Controller
         // =========================
         if (!empty($prediosIds)) {
             \App\Models\GrupoParcela::asignarPrediosAUsuario($usuario->id, $prediosIds);
+                // Guardar log de asignación de predios
+                foreach ($prediosIds as $predioId) {
+                    $this->logPlatformAction(
+                        seccion: 'usuarios',
+                        accion: 'asignar_predio',
+                        entidadTipo: 'Usuarios',
+                        descripcion: "Asignación del predio ID {$predioId} al usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+                        entidadId: $usuario->id,
+                        datosAdicionales: [
+                            'nombre' => $usuario->nombre,
+                        ]
+                    );
+                }
         }
 
          $zonasAsignaciones = collect($asignacionesCache)
@@ -507,6 +612,21 @@ class UserController extends Controller
 
         if (!empty($zonasAsignaciones)) {
             \App\Models\GrupoZonaManejo::asignarZonasAUsuario($usuario->id, $zonasAsignaciones);
+                // Guardar log de asignación de zonas
+                foreach ($zonasAsignaciones as $zona) {
+                    $this->logPlatformAction(
+                        seccion: 'usuarios',
+                        accion: 'asignar_zona',
+                        entidadTipo: 'Usuarios',
+                        descripcion: "Asignación de la zona ID {$zona['zona_id']} al usuario '{$usuario->nombre}' (ID: {$usuario->id})",
+                        entidadId: $usuario->id,
+                        datosAdicionales: [
+                            'nombre' => $usuario->nombre,
+                            'parcela_id' => $zona['parcela_id'],
+                            'grupo_id' => $zona['grupo_id'],
+                        ]
+                    );
+                }
         }
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');

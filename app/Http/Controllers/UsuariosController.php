@@ -9,11 +9,15 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\UserMenuPermission;
 use App\Models\Usuarios;
+use App\Traits\LogsPlatformActions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class UsuariosController extends Controller
 {
+    use LogsPlatformActions;
+
     /**
      * Display a listing of the resource.
      */
@@ -21,7 +25,6 @@ class UsuariosController extends Controller
     {
 
         $usuarios = User::where('cliente_id', $request->id)->get();
-
         // Obtener el nombre del cliente de forma segura
         $clienteNombre = "";
         if ($usuarios->isNotEmpty() && $usuarios->first()->cliente) {
@@ -31,7 +34,7 @@ class UsuariosController extends Controller
             $cliente = \App\Models\Clientes::find($request->id);
             $clienteNombre = $cliente->nombre ?? "";
         }   
-        dd($usuarios);
+        //dd($usuarios);
 
         dd('llegue al index de usuarios');
  
@@ -407,16 +410,17 @@ class UsuariosController extends Controller
             abort(403, 'Solo el Super Administrador puede gestionar permisos de usuarios.');
         }
 
-        $roles = Role::all();
+        $roles = Role::all(); 
 
         // Obtener estructura de menús del sidebar
         $menuStructure = $this->getMenuStructure();
- 
+  
         // Obtener permisos actuales del usuario
         $permissions = $user->menuPermissions()
             ->get()
             ->keyBy('menu_key') 
             ->toArray();
+        //dd($permissions, 'menuStructure', $menuStructure);
  
         return view('clientes.usuarios.permissions', [
             "section_name" => "Permisos del usuario",
@@ -436,58 +440,60 @@ class UsuariosController extends Controller
     {
         return [
             [
-                'key' => 'usuarios',
-                'name' => 'Usuarios',
+                'key' => 'clientes',
+                'name' => 'Productores',
                 'icon' => 'icon-user-tie',
+                'route' => 'clientes.index',
                 'submenus' => [
                     [
-                        'key' => 'usuarios.clientes',
+                        'key' => 'clientes.usuarios',
                         'name' => 'Usuarios',
-                        'route' => 'clientes.index',
+                        'route' => 'usuarios.index',
                         'icon' => 'icon-user-tie',
                     ],
                     [
-                        'key' => 'usuarios.grupos',
+                        'key' => 'clientes.grupos',
                         'name' => 'Grupos',
                         'route' => 'grupos.index',
                         'icon' => 'icon-collaboration',
                     ],
+                     [
+                        'key' => 'clientes.logs',
+                        'name' => 'Logs',
+                        'route' => 'platform-logs.index',
+                        'icon' => 'icon-list',
+                    ],
                 ],
             ],
             [
-                'key' => 'estaciones',
-                'name' => 'Estaciones de medición',
-                'icon' => 'icon-station',
+                'key' => 'fabricantes',
+                'name' => 'Fabricantes',
+                'icon' => 'icon-wrench3',
+                'route' => 'fabricantes.index',
                 'submenus' => [
                     [
-                        'key' => 'estaciones.fabricantes',
-                        'name' => 'Fabricantes',
-                        'route' => 'fabricantes.index',
-                        'icon' => 'icon-wrench3',
-                    ],
-                    [
-                        'key' => 'estaciones.tipo_estacion',
+                        'key' => 'fabricantes.tipo_estacion',
                         'name' => 'Tipos de estaciones',
                         'route' => 'tipo_estacion.index',
                         'icon' => 'icon-satellite-dish2',
                     ],
                     [
-                        'key' => 'estaciones.grupos',
-                        'name' => 'Grupos',
-                        'route' => 'grupos.index',
-                        'icon' => 'icon-collaboration',
-                    ],
-                    [
-                        'key' => 'estaciones.almacenes',
+                        'key' => 'fabricantes.almacenes',
                         'name' => 'Almacenes',
                         'route' => 'almacenes.index',
                         'icon' => 'icon-home7',
                     ],
                     [
-                        'key' => 'estaciones.alta',
+                        'key' => 'fabricantes.alta_estaciones',
                         'name' => 'Alta de estaciones',
                         'route' => 'estaciones.index',
                         'icon' => 'icon-station',
+                    ],
+                    [
+                        'key' => 'fabricantes.zonas_manejo',
+                        'name' => 'Zonas de manejo',
+                        'route' => 'grupos.zonas-manejo',
+                        'icon' => 'icon-satellite-dish2',
                     ],
                     [
                         'key' => 'estaciones.configuracion_mqtt',
@@ -518,36 +524,31 @@ class UsuariosController extends Controller
                 ],
             ],
             [
-                'key' => 'parametros',
-                'name' => 'Parámetros agronómicos',
-                'icon' => 'icon-stats-dots',
+                'key' => 'etapas_fenologicas',
+                'name' => 'Etapas fenológicas y parámetros',
+                'route' => 'etapasfenologicas.index',
+                'icon' => 'icon-sun3',
                 'submenus' => [
                     [
-                        'key' => 'parametros.etapas_fenologicas',
-                        'name' => 'Etapas fenológicas',
-                        'route' => 'etapasfenologicas.index',
-                        'icon' => 'icon-sun3',
-                    ],
-                    [
-                        'key' => 'parametros.plagas',
+                        'key' => 'etapas_fenologicas.plagas',
                         'name' => 'Plagas',
                         'route' => 'plaga.index',
                         'icon' => 'icon-bug2',
                     ],
                     [
-                        'key' => 'parametros.cultivos',
+                        'key' => 'etapas_fenologicas.cultivos',
                         'name' => 'Cultivos',
                         'route' => 'cultivos.index',
                         'icon' => 'icon-fan',
                     ],
                     [
-                        'key' => 'parametros.textura_suelo',
+                        'key' => 'etapas_fenologicas.textura_suelo',
                         'name' => 'Textura de suelo',
                         'route' => 'textura-suelo.index',
                         'icon' => 'icon-cube4',
                     ],
                     [
-                        'key' => 'parametros.enfermedades',
+                        'key' => 'etapas_fenologicas.enfermedades',
                         'name' => 'Enfermedades',
                         'route' => 'enfermedades.index',
                         'icon' => 'icon-aid-kit',
@@ -562,24 +563,11 @@ class UsuariosController extends Controller
         /** @var User|null $currentUser */
         $currentUser = Auth::user();
 
-        // Solo Super Administrador puede actualizar permisos
-        if (!$currentUser || !$currentUser->isSuperAdmin()) {
-            abort(403, 'Solo el Super Administrador puede gestionar permisos de usuarios.');
-        }
-
         $user = User::find($request->user_id);
         if (!$user) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
 
-        if (!$request->has('role_id')) {
-            return redirect()->back()->with('error', 'El rol es requerido.');
-        }
-
-        $user->role_id = $request->role_id;
-        $user->save();
-
-        // Guardar permisos de menú
         // Eliminar permisos existentes del usuario
         UserMenuPermission::where('user_id', $user->id)->delete();
 
@@ -612,6 +600,21 @@ class UsuariosController extends Controller
                 'can_edit' => $mainPermitted && $mainCanEdit,
                 'can_delete' => $mainPermitted && $mainCanDelete,
             ]);
+
+            $this->logPlatformAction(
+                seccion: 'Permisos de usuario',
+                accion: 'permisos_actualizados',
+                entidadTipo: 'Permisos de menú',
+                descripcion: "Actualización de permisos para el usuario ID: {$user->id} en el menú: {$mainMenu['name']}. Permiso principal: " . ($mainPermitted ? 'Permitido' : 'Bloqueado') . ". CRUD: Create(" . ($mainCanCreate ? 'Sí' : 'No') . "), Edit(" . ($mainCanEdit ? 'Sí' : 'No') . "), Delete(" . ($mainCanDelete ? 'Sí' : 'No') . ")",
+                entidadId: $user->id,
+                datosAdicionales: [
+                    'menu_key' => $mainMenuKey,
+                    'permitted' => $mainPermitted,
+                    'can_create' => $mainCanCreate,
+                    'can_edit' => $mainCanEdit,
+                    'can_delete' => $mainCanDelete,
+                ]
+            );
 
             // Guardar permisos de secundarias (siempre, incluso si la principal está bloqueada)
             if (isset($mainMenu['submenus'])) {

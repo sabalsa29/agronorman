@@ -9,9 +9,12 @@ use App\Models\Fabricante;
 use App\Models\TipoEstacion;
 use App\Models\VariablesMedicion;
 use Illuminate\Http\Request;
+use App\Traits\LogsPlatformActions;
 
 class EstacionesController extends Controller
 {
+    use LogsPlatformActions;
+
     /**
      * Display a listing of the resource.
      */
@@ -33,6 +36,14 @@ class EstacionesController extends Controller
 
                 return $est;
             });
+
+        // crear log de visualización de la lista de estaciones de medición
+        $this->logPlatformAction(
+            seccion: 'estaciones',
+            accion: 'visualizar_lista',
+            entidadTipo: 'Estaciones',
+            descripcion: 'Visualización de la lista de estaciones de medición',
+        );
 
         return view('estaciones.index', [
             'section_name'        => 'Estaciones de Medición',
@@ -72,6 +83,23 @@ class EstacionesController extends Controller
         $variables = $request->input('variables_medicion_id', []);
         $estacion->variables()->sync($variables);
         $estacion->save();
+
+            // crear log
+            $this->logPlatformAction(
+                seccion: 'estaciones',
+                accion: 'crear',
+                entidadTipo: 'Estaciones',
+                descripcion: "Creación de la estación de medición '{$estacion->nombre}' (ID: {$estacion->id})",
+                entidadId: $estacion->id,
+                datosAdicionales: [
+                    'nombre' => $estacion->nombre,
+                    'tipo_estacion_id' => $estacion->tipo_estacion_id,
+                    'fabricante_id' => $estacion->fabricante_id,
+                    'almacen_id' => $estacion->almacen_id,
+                    'estatus' => $estacion->estatus,
+                    'variables_medicion_id' => $variables,
+                ]
+            );
         return redirect()->route('estaciones.index')->with('success', 'Estación de Medición creada correctamente.');
     }
 
@@ -120,6 +148,23 @@ class EstacionesController extends Controller
         $variables = $request->input('variables_medicion_id', []);
         $estacione->variables()->sync($variables);
         $estacione->save();
+
+            // crear log
+            $this->logPlatformAction(
+                seccion: 'estaciones',
+                accion: 'actualizar',
+                entidadTipo: 'Estaciones',
+                descripcion: "Actualización de la estación de medición '{$estacione->nombre}' (ID: {$estacione->id})",
+                entidadId: $estacione->id,
+                datosAdicionales: [
+                    'nombre' => $estacione->nombre,
+                    'tipo_estacion_id' => $estacione->tipo_estacion_id,
+                    'fabricante_id' => $estacione->fabricante_id,
+                    'almacen_id' => $estacione->almacen_id,
+                    'estatus' => $estacione->estatus,
+                    'variables_medicion_id' => $variables,
+                ]
+            );
         return redirect()->route('estaciones.index')->with('success', 'Estación de Medición actualizada correctamente.');
     }
 
@@ -128,6 +173,22 @@ class EstacionesController extends Controller
      */
     public function destroy(Estaciones $estacione)
     {
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'estaciones',
+            accion: 'eliminar',
+            entidadTipo: 'Estaciones',
+            descripcion: "Eliminación de la estación de medición '{$estacione->nombre}' (ID: {$estacione->id})",
+            entidadId: $estacione->id,
+            datosAdicionales: [
+                'nombre' => $estacione->nombre,
+                'tipo_estacion_id' => $estacione->tipo_estacion_id,
+                'fabricante_id' => $estacione->fabricante_id,
+                'almacen_id' => $estacione->almacen_id,
+                'estatus' => $estacione->estatus,
+            ]
+        );
+
         $estacione->delete();
         return redirect()->route('estaciones.index')->with('success', 'Estación de Medición eliminada correctamente.');
     }

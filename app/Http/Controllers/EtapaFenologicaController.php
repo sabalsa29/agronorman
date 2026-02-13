@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\EtapaFenologica;
 use Illuminate\Http\Request;
+use App\Traits\LogsPlatformActions;
 
 class EtapaFenologicaController extends Controller
 {
+    use LogsPlatformActions;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $list = EtapaFenologica::where('status', 1)->whereNotNull('nombre')->get();
+        // crear log de visualización de la lista de etapas fenologicas
+        $this->logPlatformAction(
+            seccion: 'etapas_fenologicas',
+            accion: 'visualizar_lista',
+            entidadTipo: 'EtapaFenologica',
+            descripcion: 'Visualización de la lista de etapas fenologicas',
+        );
         return view('etapasfenologicas.index', [
             "section_name" => "Etapas Fenologicas",
             "section_description" => "Etapas Fenologicas de las plantas",
@@ -42,6 +52,17 @@ class EtapaFenologicaController extends Controller
 
         EtapaFenologica::create($request->all());
 
+            // crear log de creación de etapa fenologica
+            $this->logPlatformAction(
+                seccion: 'etapas_fenologicas',
+                accion: 'crear',
+                entidadTipo: 'EtapaFenologica',
+                descripcion: "Creación de la etapa fenológica '{$request->nombre}'",
+                datosAdicionales: [
+                    'nombre' => $request->nombre,
+                ]
+            );
+
         return redirect()->route('etapasfenologicas.index')->with('success', 'Etapa Fenologica creada correctamente.');
     }
 
@@ -68,6 +89,18 @@ class EtapaFenologicaController extends Controller
 
         $etapasfenologica->update($request->all());
 
+            // crear log de actualización de etapa fenologica
+            $this->logPlatformAction(
+                seccion: 'etapas_fenologicas',
+                accion: 'actualizar',
+                entidadTipo: 'EtapaFenologica',
+                descripcion: "Actualización de la etapa fenológica '{$etapasfenologica->nombre}' (ID: {$etapasfenologica->id})",
+                entidadId: $etapasfenologica->id,
+                datosAdicionales: [
+                    'nombre' => $request->nombre,
+                ]
+            );
+
         return redirect()->route('etapasfenologicas.index')->with('success', 'Etapa Fenologica actualizada correctamente.');
     }
 
@@ -76,6 +109,17 @@ class EtapaFenologicaController extends Controller
      */
     public function destroy(EtapaFenologica $etapasfenologica)
     {
+        // crear log de eliminación de etapa fenologica
+        $this->logPlatformAction(
+            seccion: 'etapas_fenologicas',
+            accion: 'eliminar',
+            entidadTipo: 'EtapaFenologica',
+            descripcion: "Eliminación de la etapa fenológica '{$etapasfenologica->nombre    }' (ID: {$etapasfenologica->id})",
+            entidadId: $etapasfenologica->id,
+            datosAdicionales: [
+                'nombre' => $etapasfenologica->nombre,
+            ]
+        );  
         $etapasfenologica->delete();
         return redirect()->route('etapasfenologicas.index')->with('success', 'Etapa Fenologica eliminada correctamente.');
     }

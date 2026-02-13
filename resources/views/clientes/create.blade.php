@@ -96,7 +96,7 @@
                         <i class="icon-cross2 mr-2"></i>Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="icon-paperplane mr-2"></i>Crear Usuario
+                        <i class="icon-paperplane mr-2"></i>Crear Productor
                     </button>
                 </div>
             </form>

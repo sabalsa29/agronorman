@@ -6,15 +6,25 @@ use App\Models\Cultivo;
 use App\Models\EtapaFenologica;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsPlatformActions;
 
 class CultivoController extends Controller
 {
+    use LogsPlatformActions;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $cultivos = Cultivo::all();
+        // Crear log de visualización de la lista de cultivos
+        $this->logPlatformAction(
+            seccion: 'cultivos',
+            accion: 'visualizar_lista',
+            entidadTipo: 'Cultivo',
+            descripcion: 'Visualización de la lista de cultivos',
+        );
         return view('cultivos.index', [
             "section_name" => "Cultivos",
             "section_description" => "Cultivos de las plantas",
@@ -106,6 +116,24 @@ class CultivoController extends Controller
         }
 
         $cultivo->save();
+
+        // CrEar log de actualización de cultivo
+        $this->logPlatformAction(
+            seccion: 'cultivos',
+            accion: 'actualizar',
+            entidadTipo: 'Cultivo',
+            descripcion: "Actualización del cultivo '{$cultivo->nombre}' (ID: {$cultivo->id})",
+            entidadId: $cultivo->id,
+            datosAdicionales: [
+                'nombre' => $cultivo->nombre,
+                'descripcion' => $cultivo->descripcion,
+                'temp_base_calor' => $cultivo->temp_base_calor,
+                'tipo_vida' => $cultivo->tipo_vida,
+                'imagen' => $cultivo->imagen,
+                'icono' => $cultivo->icono,
+                'etapas_fenologicas' => $request->input('etapas_fenologicas', []),
+            ]
+        );
 
         return redirect()->route('cultivos.edit', $cultivo)->with('success', 'Cultivo actualizado correctamente.');
     }

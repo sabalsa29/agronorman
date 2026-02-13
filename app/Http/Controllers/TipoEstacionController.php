@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\TipoEstacion;
 use Illuminate\Http\Request;
+use App\Traits\LogsPlatformActions;
 
 class TipoEstacionController extends Controller
 {
+    use LogsPlatformActions;
     /**
      * Display a listing of the resource.
      */
@@ -14,6 +16,14 @@ class TipoEstacionController extends Controller
     {
         // Se cargan las etapas fenologicas con su estatus
         $list = TipoEstacion::all();
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'tipo_estaciones',
+            accion: 'ver',
+            entidadTipo: 'TipoEstacion',
+            descripcion: 'Visualización de la lista de tipos de estaciones',
+        );
+
         return view('tipo_estacion.index', [
             "section_name" => "Tipo de Estación",
             "section_description" => "Listado de tipos de estaciones",
@@ -43,6 +53,20 @@ class TipoEstacionController extends Controller
         $tipoEstacion->status = $request->status;
         $tipoEstacion->save();
 
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'tipo_estaciones',
+            accion: 'crear',
+            entidadTipo: 'TipoEstacion',
+            descripcion: "Creación del tipo de estación '{$tipoEstacion->nombre}' (ID: {$tipoEstacion->id})",
+            entidadId: $tipoEstacion->id,
+            datosAdicionales: [
+                'nombre' => $tipoEstacion->nombre,
+                'tipo_nasa' => $tipoEstacion->tipo_nasa,
+                'status' => $tipoEstacion->status,
+            ]
+        );
+
         return redirect()->route('tipo_estacion.index')->with('success', 'Tipo de estación creada correctamente.');
     }
 
@@ -68,6 +92,20 @@ class TipoEstacionController extends Controller
         $tipo_estacion->status = $request->status;
         $tipo_estacion->save();
 
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'tipo_estaciones',
+            accion: 'actualizar',
+            entidadTipo: 'TipoEstacion',
+            descripcion: "Actualización del tipo de estación '{$tipo_estacion->nombre}' (ID: {$tipo_estacion->id})",
+            entidadId: $tipo_estacion->id,
+            datosAdicionales: [
+                'nombre' => $tipo_estacion->nombre,
+                'tipo_nasa' => $tipo_estacion->tipo_nasa,
+                'status' => $tipo_estacion->status,
+            ]
+        );
+
         return redirect()->route('tipo_estacion.index')->with('success', 'Tipo de estación actualizada correctamente.');
     }
 
@@ -76,6 +114,19 @@ class TipoEstacionController extends Controller
      */
     public function destroy(TipoEstacion $tipo_estacion)
     {
+            // crear log
+            $this->logPlatformAction(
+                seccion: 'tipo_estaciones',
+                accion: 'eliminar',
+                entidadTipo: 'TipoEstacion',
+                descripcion: "Eliminación del tipo de estación '{$tipo_estacion->nombre}' (ID: {$tipo_estacion->id})",
+                entidadId: $tipo_estacion->id,
+                datosAdicionales: [
+                    'nombre' => $tipo_estacion->nombre,
+                    'tipo_nasa' => $tipo_estacion->tipo_nasa,
+                    'status' => $tipo_estacion->status,
+                ]
+            );
         $tipo_estacion->delete();
         return redirect()->route('tipo_estacion.index')->with('success', 'Tipo de estación eliminada correctamente.');
     }

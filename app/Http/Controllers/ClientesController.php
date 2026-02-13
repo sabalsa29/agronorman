@@ -26,18 +26,29 @@ class ClientesController extends Controller
         }
 
         // Registrar visualización en el log (solo para super admin)
-        if ($user->isSuperAdmin()) {
-            $this->logPlatformAction(
-                seccion: 'clientes',
-                accion: 'ver_lista',
-                entidadTipo: 'Clientes',
-                descripcion: 'Visualización de lista de clientes',
-                entidadId: null,
-                datosAdicionales: [
-                    'total_clientes' => Clientes::count(),
-                ]
-            );
-        }
+        // if ($user->isSuperAdmin()) {
+        //     $this->logPlatformAction(
+        //         seccion: 'clientes',
+        //         accion: 'ver_lista',
+        //         entidadTipo: 'Clientes',
+        //         descripcion: 'Visualización de lista de clientes',
+        //         entidadId: null,
+        //         datosAdicionales: [
+        //             'total_clientes' => Clientes::count(),
+        //         ]
+        //     );
+        // }
+        // Se debe registrar log 
+        $this->logPlatformAction(
+            seccion: 'productores',
+            accion: 'ver_lista',
+            entidadTipo: 'Productores',
+            descripcion: 'Visualización de lista de productores',
+            entidadId: null,
+            datosAdicionales: [
+                'total_productores' => Clientes::count(),
+            ]
+        );
 
         // Si es Super Admin, muestra la lista de todos los clientes
         if ($user->isSuperAdmin()) {
@@ -109,10 +120,10 @@ class ClientesController extends Controller
 
             // Registrar en el log
             $this->logPlatformAction(
-                seccion: 'clientes',
+                seccion: 'Productores',
                 accion: 'crear',
-                entidadTipo: 'Clientes',
-                descripcion: "Cliente '{$cliente->nombre}' creado exitosamente",
+                entidadTipo: 'Productores',
+                descripcion: "Productor '{$cliente->nombre}' creado exitosamente",
                 entidadId: $cliente->id,
                 datosNuevos: $this->getModelDataForLog($cliente, ['nombre', 'empresa', 'ubicacion', 'telefono', 'status']),
                 datosAdicionales: [
@@ -135,12 +146,12 @@ class ClientesController extends Controller
      */
     public function show(Clientes $cliente)
     {
-        // Registrar visualización en el log
+        // Registrar visualización en el log 
         $this->logPlatformAction(
-            seccion: 'clientes',
+            seccion: 'productores',
             accion: 'ver',
-            entidadTipo: 'Clientes',
-            descripcion: "Visualización de detalles del cliente '{$cliente->nombre}' (ID: {$cliente->id})",
+            entidadTipo: 'Productores',
+            descripcion: "Visualización de detalles del productor '{$cliente->nombre}' (ID: {$cliente->id})",
             entidadId: $cliente->id,
             datosAdicionales: [
                 'nombre' => $cliente->nombre,
@@ -203,10 +214,10 @@ class ClientesController extends Controller
 
             // Registrar en el log
             $this->logPlatformAction(
-                seccion: 'clientes',
+                seccion: 'productores',
                 accion: 'editar',
-                entidadTipo: 'Clientes',
-                descripcion: "Cliente '{$cliente->nombre}' (ID: {$cliente->id}) actualizado",
+                entidadTipo: 'Productores',
+                descripcion: "Productor '{$cliente->nombre}' (ID: {$cliente->id}) actualizado",
                 entidadId: $cliente->id,
                 datosAnteriores: $datosAnteriores,
                 datosNuevos: $datosNuevos,
@@ -246,10 +257,10 @@ class ClientesController extends Controller
 
             // Registrar en el log
             $this->logPlatformAction(
-                seccion: 'clientes',
+                seccion: 'productores',
                 accion: 'eliminar',
-                entidadTipo: 'Clientes',
-                descripcion: "Cliente '{$nombre}' (ID: {$clienteId}) eliminado",
+                entidadTipo: 'Productores',
+                descripcion: "Productor '{$nombre}' (ID: {$clienteId}) eliminado",
                 entidadId: $clienteId,
                 datosAnteriores: $datosAnteriores,
                 datosAdicionales: [

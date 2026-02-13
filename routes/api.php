@@ -104,14 +104,21 @@ Route::get('test-pronostico-enfermedades', [HomeController::class, 'testPronosti
 // Endpoint para probar datos reales de enfermedades
 Route::get('test-datos-reales-enfermedades', [HomeController::class, 'testDatosRealesEnfermedades'])->name('api.test-datos-reales-enfermedades');
 
+// Endpoint lectura_fechas_correctivos por zona_id, debe incluir la zona id
+Route::get('lectura_correctivos_por_zona/{zonaIdExt}', [HomeController::class, 'lectura_correctivos_por_zona'])->name('api.lectura_correctivos_por_zona');
+
+// Endpoint lectura_correctivos_por_fecha por zona_id y fecha
+Route::get('lectura_correctivos_por_fecha/{zonaIdExt}/{fecha}', [HomeController::class, 'lectura_correctivos_por_fecha'])->name('api.lectura_correctivos_por_fecha');
+
+// enpoint para cargar correctivos por zona_id y anio
+Route::get('correctivos/{zonaIdExt}/{anio}', [HomeController::class, 'cargar_correctivos_por_zona_anio'])->name('api.cargar_correctivos_por_zona_anio');
+// Endpoint para cargar datos de fertilidad por zona_id
+Route::get('fertilidad', [HomeController::class, 'fertilidad'])->name('api.fertilidad');
 // Endpoint de login para App Bitácora
-
 Route::prefix('v1/app-bitacora')->group(function () {
-
     // Login (sin token)
     Route::post('/login', [AppBitacoraAuthController::class, 'login'])
         ->middleware('throttle:10,1');
-
     // Protegidas con token
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/accesos', [AppBitacoraAccesosController::class, 'index']);

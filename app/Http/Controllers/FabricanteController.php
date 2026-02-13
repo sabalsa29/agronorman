@@ -4,15 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Fabricante;
 use Illuminate\Http\Request;
+use App\Traits\LogsPlatformActions;
+
 
 class FabricanteController extends Controller
 {
+    use LogsPlatformActions;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $fabricantes = Fabricante::all();
+
+        // guardar log de visualización de la lista de fabricantes
+        $this->logPlatformAction(
+            seccion: 'fabricantes',
+            accion: 'visualizar_lista',
+            entidadTipo: 'Fabricante',
+            descripcion: 'Visualización de la lista de fabricantes',
+        );
+
         return view('fabricantes.index', [
             "section_name" => "Fabricantes",
             "section_description" => "Fabricantes de estaciones meteorológicas",
@@ -41,6 +53,19 @@ class FabricanteController extends Controller
         $fabricante->status = 1;
         $fabricante->save();
 
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'fabricantes',
+            accion: 'crear',
+            entidadTipo: 'Fabricante',
+            descripcion: "Creación del fabricante '{$fabricante->nombre}' (ID: {$fabricante->id})",
+            entidadId: $fabricante->id,
+            datosAdicionales: [
+                'nombre' => $fabricante->nombre,
+                'status' => $fabricante->status,
+            ]
+        );
+
         return redirect()->route('fabricantes.index')->with('success', 'Fabricante creado correctamente.');
     }
 
@@ -66,6 +91,19 @@ class FabricanteController extends Controller
         $fabricante->status = $request->status;
         $fabricante->save();
 
+           // crear log
+        $this->logPlatformAction(
+            seccion: 'fabricantes',
+            accion: 'editar',
+            entidadTipo: 'Fabricante',
+            descripcion: "Edición del fabricante '{$fabricante->nombre}' (ID: {$fabricante->id})",
+            entidadId: $fabricante->id,
+            datosAdicionales: [
+                'nombre' => $fabricante->nombre,
+                'status' => $fabricante->status,
+            ]
+        );
+
         return redirect()->route('fabricantes.index')->with('success', 'Fabricante actualizado correctamente.');
     }
 
@@ -74,6 +112,19 @@ class FabricanteController extends Controller
      */
     public function destroy(Fabricante $fabricante)
     {
+        // crear log
+        $this->logPlatformAction(
+            seccion: 'fabricantes',
+            accion: 'eliminar',
+            entidadTipo: 'Fabricante',
+            descripcion: "Eliminación del fabricante '{$fabricante->nombre}' (ID: {$fabricante->id})",
+            entidadId: $fabricante->id,
+            datosAdicionales: [
+                'nombre' => $fabricante->nombre,
+                'status' => $fabricante->status,
+            ]
+        );
+
         $fabricante->delete();
         return redirect()->route('fabricantes.index')->with('success', 'Fabricante eliminado correctamente.');
     }
