@@ -28,22 +28,22 @@ return new class extends Migration
             $table->index('parcela_id', 'idx_grupo_zona_manejo_parcela');
             // FKs
 
-            $table->foreign('user_id')
-                ->references('id')->on('users')
-                ->onDelete('cascade');
+            // $table->foreign('user_id')
+            //     ->references('id')->on('users')
+            //     ->onDelete('cascade');
                 
-            $table->foreign('grupo_id')
-                ->references('id')->on('grupos')
-                ->nullOnDelete(); 
+            // $table->foreign('grupo_id')
+            //     ->references('id')->on('grupos')
+            //     ->nullOnDelete(); 
 
-            $table->foreign('parcela_id')
-                ->references('id')->on('parcelas')
-                ->nullOnDelete(); 
+            // $table->foreign('parcela_id')
+            //     ->references('id')->on('parcelas')
+            //     ->nullOnDelete(); 
 
-            $table->foreign('zona_manejo_id')
-                ->references('id')->on('zona_manejos')
-                ->onDelete('cascade');
-            $table->timestamps();
+            // $table->foreign('zona_manejo_id')
+            //     ->references('id')->on('zona_manejos')
+            //     ->onDelete('cascade');
+            // $table->timestamps();
         });
     }
 

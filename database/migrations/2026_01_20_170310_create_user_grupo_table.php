@@ -21,8 +21,8 @@ return new class extends Migration
             $table->unique(['user_id', 'grupo_id'], 'uq_user_grupo');
 
             // Índices
-            $table->index('user_id', 'idx_user_grupo_user');
-            $table->index('grupo_id', 'idx_user_grupo_grupo');
+            // $table->index('user_id', 'idx_user_grupo_user');
+            // $table->index('grupo_id', 'idx_user_grupo_grupo');
 
             // $table->foreign('user_id')
             //     ->references('id')->on('users')

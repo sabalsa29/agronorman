@@ -15,10 +15,10 @@ return new class extends Migration {
 
             $table->unique(['user_id', 'zona_manejo_id'], 'ux_user_zona');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             // Ajusta el nombre de tabla real de zonas si difiere:
-            $table->foreign('zona_manejo_id')->references('id')->on('zona_manejos')->onDelete('cascade');
+            //$table->foreign('zona_manejo_id')->references('id')->on('zona_manejos')->onDelete('cascade');
         });
     }
 
