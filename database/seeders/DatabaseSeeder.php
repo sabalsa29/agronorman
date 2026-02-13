@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             ZonaManejosEstacionesSeeder::class,
             ZonaManejosUserSeeder::class,
             GrupoGenesisSeeder::class,
+            ZonaManejoLoteExternoSeeder::class,
         ]);
     }
 }
